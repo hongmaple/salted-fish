@@ -131,9 +131,11 @@
 					  data: {
 					  },
 					  callBack: function (res) {
-						  console.log(res);
-					    uni.setStorageSync('token',res.data);
+						var token = res.data;
+						console.log(res.data);
 					    uni.setStorageSync("loginResult",res);
+						// console.log(token);
+						// uni.setStorageSync('token',token);
 					  }
 					};
 					http.request(params);
