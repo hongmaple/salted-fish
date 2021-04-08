@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 07/04/2021 16:53:32
+ Date: 08/04/2021 17:41:06
 */
 
 SET NAMES utf8mb4;
@@ -35,7 +35,7 @@ CREATE TABLE `evaluation`  (
   `updated_time` datetime(0) NULL DEFAULT NULL,
   `is_deleted` tinyint(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `to_user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评价/评论' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评价/评论' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_address
@@ -97,7 +97,7 @@ CREATE TABLE `tb_cart`  (
   `price` double NULL DEFAULT NULL COMMENT '价格 单位元',
   `num` int(0) NULL DEFAULT NULL COMMENT '数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_cart
@@ -128,20 +128,20 @@ INSERT INTO `tb_category` VALUES (4, '其他');
 DROP TABLE IF EXISTS `tb_flower`;
 CREATE TABLE `tb_flower`  (
   `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `cid` bigint(0) NULL DEFAULT NULL COMMENT '分类id',
-  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `cid` bigint(0) NOT NULL COMMENT '分类id',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `images` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面',
-  `images_list` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片列表',
-  `price` double NULL DEFAULT NULL COMMENT '价格 单位元',
-  `specification` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '规格',
-  `degree` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '新旧程度',
+  `images_list` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图片列表',
+  `price` double NOT NULL COMMENT '价格 单位元',
+  `specification` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '规格',
+  `old_new_level` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '新旧程度',
   `brief` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简介',
-  `type` int(0) NULL DEFAULT NULL COMMENT '类型',
+  `type` int(0) NOT NULL COMMENT '类型',
   `contact_way` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系方式',
   `depositing_time` datetime(0) NULL DEFAULT NULL COMMENT '寄放时间',
-  `audit_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态',
+  `audit_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '审核状态',
   `Inventory_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '入库状态',
-  `create_id` bigint(0) NULL DEFAULT NULL COMMENT '发布人',
+  `create_id` bigint(0) NOT NULL COMMENT '发布人',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `is_deleted` tinyint(0) NULL DEFAULT 0 COMMENT '是否删除',
@@ -151,14 +151,14 @@ CREATE TABLE `tb_flower`  (
 -- ----------------------------
 -- Records of tb_flower
 -- ----------------------------
-INSERT INTO `tb_flower` VALUES (1, 2, '一路上有你 [泰国进口] 真空玫瑰花，红玫瑰系列', '/profile/upload/2021/03/16/3ac4761a-619b-44d1-9889-dac25275185c.jpg', '/profile/upload/2021/03/18/06cdf7be-b59f-4125-a159-e665cb2c66ba.jpg,/profile/upload/2021/03/18/0a3bb2c4-5d82-468f-a343-56834ffa060f.jpg,', 368, '情感美丽永恒', '情侣', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 14:25:27', '2021-03-18 17:09:32', 0);
-INSERT INTO `tb_flower` VALUES (2, 2, '你是唯一 [11枝新品 一心一意的爱] 卡罗拉红玫瑰11枝', '/profile/upload/2021/03/16/2e691a23-9678-4bd4-bdbd-23bfeff3f5b8.jpg', '/profile/upload/2021/03/18/0e27ece2-49ec-407f-b7ca-3dc1b4ecfbf1.jpg,/profile/upload/2021/03/18/b4e22182-bb97-4379-b598-d1d9523363cd.jpg,/profile/upload/2021/03/18/5d377f93-df0a-4f6c-b0a7-b1edde1a5099.jpg,/profile/upload/2021/03/18/e8d7c402-4877-49a9-9c18-a012526b7b0e.jpg,', 168, '情感美丽永恒', '情侣', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 15:21:00', '2021-03-18 17:12:10', 0);
-INSERT INTO `tb_flower` VALUES (3, 4, '蝴蝶兰4株', '/profile/upload/2021/03/16/aefb92ae-6dd4-4510-baa3-a09144f794be.jpg', '/profile/upload/2021/03/16/aefb92ae-6dd4-4510-baa3-a09144f794be.jpg', 388, '4种被称为“卡特莱女王”的蝴蝶兰越来越受到花迷的青睐', '通用', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 15:29:58', '2021-03-16 15:29:58', 0);
-INSERT INTO `tb_flower` VALUES (4, 4, '吉祥如意', '/profile/upload/2021/03/16/d4832824-a70e-4704-8261-09b748868102.jpg', '/profile/upload/2021/03/16/d4832824-a70e-4704-8261-09b748868102.jpg', 218, '幸福美好', '通用', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 15:32:22', '2021-03-16 15:32:22', 0);
-INSERT INTO `tb_flower` VALUES (5, 3, '一往情深', '/profile/upload/2021/03/16/5601f330-1006-4bfb-a748-6212b95705b8.jpg', '/profile/upload/2021/03/18/81fbf2b0-2bce-44f5-8daf-b9cef307aa28.jpg,/profile/upload/2021/03/18/82937213-4767-4746-b418-1ea8a90f7882.jpg,/profile/upload/2021/03/18/1fb65fb2-9f68-47e1-af09-0e6eba018a9e.jpg,/profile/upload/2021/03/18/0c742913-c9c9-4175-9a06-099216a32fda.jpg,', 328, '你的轻柔像阵微风，让我从容不迫，想让你知道，我对你始终一往情深。', '情侣，爱人', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 15:36:00', '2021-03-18 17:10:54', 0);
-INSERT INTO `tb_flower` VALUES (6, 1, '恋恋情深 [经典款式 简约设计] 11枝香槟玫瑰，白色多头百合2枝', '/profile/upload/2021/03/16/4ac113d3-3db0-47bc-8d41-ea72bb86fd50.jpg', '/profile/upload/2021/03/18/70f8274e-4e12-4ebb-b263-c566116b9815.jpg,/profile/upload/2021/03/18/d8572165-e2d9-412d-9e2d-74823b78ed16.jpg,/profile/upload/2021/03/18/86728f42-0ac1-4c3f-a113-5ec62b183888.jpg,', 265, ' 喜欢像是一阵风，而爱你是细水长流', '情侣', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-16 15:52:20', '2021-03-18 17:09:57', 0);
-INSERT INTO `tb_flower` VALUES (7, 1, '狗尾巴花', '/profile/upload/2021/03/18/d01aec61-8c8e-4a38-9a5b-be17ff784873.jpg', '/profile/upload/2021/03/18/bcb852dc-57c7-4ee4-abaf-4310d2f63e92.jpg,/profile/upload/2021/03/18/b6caa864-f12f-4a1d-8297-45699d71f91a.jpg,', 168, '偷偷的暗恋着你，就是对喜欢的人始终无法找到合适的机会表达自己的情感，就这样悄无声息的进行陪伴着那个人。这样坚忍的毅力很多人是无法做到的，所以也代表着一种默默奉献之情。', '通用', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-18 10:12:37', '2021-03-18 16:42:05', 0);
-INSERT INTO `tb_flower` VALUES (8, 2, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '/profile/upload/2021/03/18/5e45d3f3-4e3c-416c-96af-0c2f71e0da29.jpg', '/profile/upload/2021/03/18/58d61881-07bc-40ae-b9b1-8d205069e8fc.jpg,/profile/upload/2021/03/18/d40d357c-494a-4ae2-a870-d916c49ffaa8.jpg,/profile/upload/2021/03/18/c905aaef-c322-4217-8108-0b53a6136328.jpg,', 66.5, ' 让每点阳光，洒于你脸庞；令你的微笑，比花更盛放！', '长辈', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-03-18 16:45:56', '2021-03-18 16:59:11', 0);
+INSERT INTO `tb_flower` VALUES (1, 2, '一路上有你 [泰国进口] 真空玫瑰花，红玫瑰系列', '/profile/upload/2021/03/16/3ac4761a-619b-44d1-9889-dac25275185c.jpg', '/profile/upload/2021/03/18/06cdf7be-b59f-4125-a159-e665cb2c66ba.jpg,/profile/upload/2021/03/18/0a3bb2c4-5d82-468f-a343-56834ffa060f.jpg,', 368, '情感美丽永恒', '情侣', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 14:25:27', '2021-03-18 17:09:32', 0);
+INSERT INTO `tb_flower` VALUES (2, 2, '你是唯一 [11枝新品 一心一意的爱] 卡罗拉红玫瑰11枝', '/profile/upload/2021/03/16/2e691a23-9678-4bd4-bdbd-23bfeff3f5b8.jpg', '/profile/upload/2021/03/18/0e27ece2-49ec-407f-b7ca-3dc1b4ecfbf1.jpg,/profile/upload/2021/03/18/b4e22182-bb97-4379-b598-d1d9523363cd.jpg,/profile/upload/2021/03/18/5d377f93-df0a-4f6c-b0a7-b1edde1a5099.jpg,/profile/upload/2021/03/18/e8d7c402-4877-49a9-9c18-a012526b7b0e.jpg,', 168, '情感美丽永恒', '情侣', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 15:21:00', '2021-03-18 17:12:10', 0);
+INSERT INTO `tb_flower` VALUES (3, 4, '蝴蝶兰4株', '/profile/upload/2021/03/16/aefb92ae-6dd4-4510-baa3-a09144f794be.jpg', '/profile/upload/2021/03/16/aefb92ae-6dd4-4510-baa3-a09144f794be.jpg', 388, '4种被称为“卡特莱女王”的蝴蝶兰越来越受到花迷的青睐', '通用', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 15:29:58', '2021-03-16 15:29:58', 0);
+INSERT INTO `tb_flower` VALUES (4, 4, '吉祥如意', '/profile/upload/2021/03/16/d4832824-a70e-4704-8261-09b748868102.jpg', '/profile/upload/2021/03/16/d4832824-a70e-4704-8261-09b748868102.jpg', 218, '幸福美好', '通用', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 15:32:22', '2021-03-16 15:32:22', 0);
+INSERT INTO `tb_flower` VALUES (5, 3, '一往情深', '/profile/upload/2021/03/16/5601f330-1006-4bfb-a748-6212b95705b8.jpg', '/profile/upload/2021/03/18/81fbf2b0-2bce-44f5-8daf-b9cef307aa28.jpg,/profile/upload/2021/03/18/82937213-4767-4746-b418-1ea8a90f7882.jpg,/profile/upload/2021/03/18/1fb65fb2-9f68-47e1-af09-0e6eba018a9e.jpg,/profile/upload/2021/03/18/0c742913-c9c9-4175-9a06-099216a32fda.jpg,', 328, '你的轻柔像阵微风，让我从容不迫，想让你知道，我对你始终一往情深。', '情侣，爱人', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 15:36:00', '2021-03-18 17:10:54', 0);
+INSERT INTO `tb_flower` VALUES (6, 1, '恋恋情深 [经典款式 简约设计] 11枝香槟玫瑰，白色多头百合2枝', '/profile/upload/2021/03/16/4ac113d3-3db0-47bc-8d41-ea72bb86fd50.jpg', '/profile/upload/2021/03/18/70f8274e-4e12-4ebb-b263-c566116b9815.jpg,/profile/upload/2021/03/18/d8572165-e2d9-412d-9e2d-74823b78ed16.jpg,/profile/upload/2021/03/18/86728f42-0ac1-4c3f-a113-5ec62b183888.jpg,', 265, ' 喜欢像是一阵风，而爱你是细水长流', '情侣', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-16 15:52:20', '2021-03-18 17:09:57', 0);
+INSERT INTO `tb_flower` VALUES (7, 1, '狗尾巴花', '/profile/upload/2021/03/18/d01aec61-8c8e-4a38-9a5b-be17ff784873.jpg', '/profile/upload/2021/03/18/bcb852dc-57c7-4ee4-abaf-4310d2f63e92.jpg,/profile/upload/2021/03/18/b6caa864-f12f-4a1d-8297-45699d71f91a.jpg,', 168, '偷偷的暗恋着你，就是对喜欢的人始终无法找到合适的机会表达自己的情感，就这样悄无声息的进行陪伴着那个人。这样坚忍的毅力很多人是无法做到的，所以也代表着一种默默奉献之情。', '通用', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-18 10:12:37', '2021-03-18 16:42:05', 0);
+INSERT INTO `tb_flower` VALUES (8, 2, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '/profile/upload/2021/03/18/5e45d3f3-4e3c-416c-96af-0c2f71e0da29.jpg', '/profile/upload/2021/03/18/58d61881-07bc-40ae-b9b1-8d205069e8fc.jpg,/profile/upload/2021/03/18/d40d357c-494a-4ae2-a870-d916c49ffaa8.jpg,/profile/upload/2021/03/18/c905aaef-c322-4217-8108-0b53a6136328.jpg,', 66.5, ' 让每点阳光，洒于你脸庞；令你的微笑，比花更盛放！', '长辈', NULL, 0, NULL, NULL, '0', NULL, 1, '2021-03-18 16:45:56', '2021-03-18 16:59:11', 0);
 
 -- ----------------------------
 -- Table structure for tb_flower_favorite
@@ -283,7 +283,7 @@ CREATE TABLE `tb_user`  (
 -- ----------------------------
 -- Records of tb_user
 -- ----------------------------
-INSERT INTO `tb_user` VALUES (1, 'maple', '876876546376', '大一', '123456', '19976618156', 'student', '/profile/upload/2021/03/10/dbced90a-9594-4aa7-b228-05a482c26937.png', '2021-03-10 15:51:21');
+INSERT INTO `tb_user` VALUES (1, 'maple', '876876546379', '大四', '123456', '18976618156', 'student', '/profile/upload/2021/03/10/dbced90a-9594-4aa7-b228-05a482c26937.png', '2021-03-10 15:51:21');
 INSERT INTO `tb_user` VALUES (2, 'maple', '654786547687', '大二', '123456', '13976618156', 'student', '/profile/upload/2021/03/10/dbced90a-9594-4aa7-b228-05a482c26937.png', '2021-03-10 16:06:24');
 INSERT INTO `tb_user` VALUES (3, 'maple16', '987654327865', '大三', '123456', '16976618156', 'student', '/profile/upload/2021/04/01/f0865468-d19a-4eae-b6ec-18985d14be25.png', '2021-03-18 18:34:11');
 

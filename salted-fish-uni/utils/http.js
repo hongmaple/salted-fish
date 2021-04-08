@@ -20,18 +20,20 @@ function request(params, isGetTonken) {
 	}
 	var needToken = false
 	if (params.needToken) {
+		if (!uni.getStorageSync('token')||typeof(uni.getStorageSync('token')) == "undefined") {
+			return;
+		}
 		needToken = params.needToken;
 	}
-
   wx.request({
     // url: config.domain + params.url,
-		url: (params.domain ? params.domain : config.domain) + params.url,
+	url: (params.domain ? params.domain : config.domain) + params.url,
     //接口请求地址
     data: params.data,
     header: {
       // 'content-type': params.method == "GET" ? 'application/x-www-form-urlencoded' : 'application/json;charset=utf-8',
       // 'Authorization': params.login ? undefined : uni.getStorageSync('token')
-			'token': !needToken ? undefined : uni.getStorageSync('token') || uni.getStorageSync('tempToken'),
+			'token': !needToken ? undefined : encodeURIComponent(uni.getStorageSync('token'))
     },
     method: params.method == undefined ? "POST" : params.method,
     dataType: 'json',
@@ -48,14 +50,6 @@ function request(params, isGetTonken) {
           icon: "none"
         });
       } else if (res.statusCode == 401) {
-        // 添加到请求队列
-        // globalData.requestQueue.push(params); // 是否正在登陆
-
-        // if (!globalData.isLanding) {
-        //   globalData.isLanding = true; //重新获取token,再次请求接口
-
-        //   getToken();
-        // }
 				uni.removeStorageSync('loginResult');
 				uni.removeStorageSync('token');
 				// #ifdef H5
@@ -232,7 +226,7 @@ function loginSuccess (result, fn) {
 	wx.setStorageSync('token', JSON.stringify(result.data)); //把token存入缓存，请求接口数据时要用
 	if (result.data.id) {
 		wx.setStorageSync('hadBindUser', true);
-		getCartCount()
+		this.getCartCount();
 	} else {
 		wx.setStorageSync('hadBindUser', false);
 	}
@@ -307,7 +301,7 @@ function mpAuthLogin (page, needCode) {
  * 获取购物车商品数量
  */
 function getCartCount () {
-	if (!uni.getStorageSync('token')) {
+	if (!uni.getStorageSync('token')||typeof(uni.getStorageSync('token')) == "undefined") {
 		// wx.removeTabBarBadge({
 		// 	index: 2
 		// });
@@ -323,7 +317,7 @@ function getCartCount () {
 		callBack: function (res) {
 			if (res > 0) {
 				wx.setTabBarBadge({
-					index: 4,
+					index: 2,
 					text: res + ""
 				});
 				var app = getApp().globalData;
@@ -331,7 +325,7 @@ function getCartCount () {
 				return res;
 			} else {
 				wx.removeTabBarBadge({
-					index: 4
+					index: 2
 				});
 				var app = getApp().globalData;
 				getApp().globalData.totalCartCount = 0;

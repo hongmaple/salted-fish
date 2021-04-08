@@ -18,7 +18,20 @@
 		    <text>密码</text>
 		   <input placeholder="请输入密码" type="password" maxlength="10" :value="userInfo.password" @input="onPasswordInput"></input>
 		  </view>
+		  <view class="section">
+		    <text>学号</text>
+		   <input placeholder="请输入学号" type="number" maxlength="12" :value="userInfo.studentNumber" @input="onStudentNumberInput"></input>
+		  </view>
+		  <view class="section" @tap="changeVisible">
+		    <text>年级</text>
+			<view class="uni-title">{{userInfo.grade}}</view>
+		  </view>
 		</view>
+		<picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="onGradeInput" class="picker-view">
+		           <picker-view-column>
+		               <view class="item" v-for="(item,index) in grades" :key="index">{{item}}</view>
+		           </picker-view-column>
+		</picker-view>
 		<!-- end input列表 -->
 		<!-- 功能按钮 -->
 		<view class="btn-box">
@@ -43,7 +56,16 @@
 				userInfo: {
 					
 				},
-				serverUrl: config.domain
+				serverUrl: config.domain,
+				grades: [
+			      '大一',
+				  '大二',
+				  '大三',
+				  '大四'
+				],
+				value: [0],
+				visible: false,
+				indicatorStyle: `height: 50px;`
 			}
 		},
 		/**
@@ -106,6 +128,24 @@
 				  'userInfo.password': e.detail.value
 				});
 			},
+			onStudentNumberInput: function(e) {
+				this.setData({
+				  'userInfo.studentNumber': e.detail.value
+				});
+			},
+			onGradeInput: function(e) {
+				const val = e.detail.value
+				console.log(val);
+				console.log(this.grades[val[0]]);
+				this.setData({
+				  'userInfo.grade': this.grades[val[0]]
+				});
+			},
+			changeVisible: function() {
+				this.setData({
+				  visible: !this.visible
+				});
+			},
 			onSubmiti: function () {
 				var params = {
 				  url: "/user",
@@ -116,7 +156,9 @@
 				    username: this.userInfo.username,
 				    password: this.userInfo.password,
 				    phone: this.userInfo.phone,
-				    avatarImage: this.userInfo.avatarImage
+				    avatarImage: this.userInfo.avatarImage,
+					studentNumber: this.userInfo.studentNumber,
+					grade: this.userInfo.grade
 				  },
 				  callBack: function (res) {
 				    uni.hideLoading();
@@ -149,4 +191,15 @@
 
 <style>
 @import "./userInfo.css";
+ .picker-view {
+        width: 750rpx;
+        height: 600rpx;
+        margin-top: 20rpx;
+}
+.item {
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+}
 </style>

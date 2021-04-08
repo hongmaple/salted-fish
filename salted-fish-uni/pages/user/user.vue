@@ -1,21 +1,6 @@
 <template>
 	<!--pages/user/user.wxml-->
 	<view class="container">
-		<!-- 用户信息 -->
-		<!-- # indef MP-wei -->
-		<!-- <view class="userinfo">
-    <view class="userinfo-avatar">
-      <open-data type="userAvatarUrl"></open-data>
-    </view>
-    <view class="userinfo-name">
-      <open-data type="userNickName"></open-data>
-    </view>
-  </view>
-  <view class="binding-phone">
-    <text class="show-tip">绑定手机号后可查看订单和领取优惠券，</text>
-    <text class="gotobinding" @tap="toBindingPhone">去绑定</text>
-  </view> -->
-
 		<view class="userinfo" v-if="isAuthInfo" @tap="toUserInfoPage">
 			<view class="userinfo-con">
 				<view class="userinfo-avatar">
@@ -137,7 +122,7 @@
 	export default {
 		data() {
 			return {
-				orderAmount: '',
+				orderAmount: 0,
 				sts: '',
 				collectionCount: 0,
 				isAuthInfo: false,

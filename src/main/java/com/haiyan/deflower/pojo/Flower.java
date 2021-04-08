@@ -44,7 +44,7 @@ public class Flower {
     /**
      * 新旧程度
      */
-    private String degree;
+    private String oldNewLevel;
 
     /**
      * 简介

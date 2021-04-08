@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 
 import javax.net.ssl.SSLSession;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 /**
@@ -32,7 +33,12 @@ public class UserUtils {
         if (!StringUtils.hasText(token)) {
             throw new ExceptionResult("user","403",null,"请先登陆");
         }
-        User user = JSON.parseObject(token, User.class);
+        User user = null;
+        try {
+            user = JSON.parseObject(java.net.URLDecoder.decode(token,"UTF-8"), User.class);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return user;
     }
 }

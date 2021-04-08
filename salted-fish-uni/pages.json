@@ -41,38 +41,11 @@
 			}
 		},
 		{
-			"path": "pages/saysCommentary/saysCommentary",
-			"style": {
-				"backgroundTextStyle": "light",
-				"navigationBarBackgroundColor": "#fff",
-				"navigationBarTitleText": "花语解说",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/VideoTeaching/VideoTeaching",
-			"style": {
-				"backgroundTextStyle": "light",
-				"navigationBarBackgroundColor": "#fff",
-				"navigationBarTitleText": "视频教学",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
 			"path": "pages/CustomerServiceChat/CustomerServiceChat",
 			"style": {
 				"backgroundTextStyle": "light",
 				"navigationBarBackgroundColor": "#fff",
 				"navigationBarTitleText": "客服聊天",
-				"navigationBarTextStyle": "black"
-			}
-		},
-		{
-			"path": "pages/VideoTeachingDetails/VideoTeachingDetails",
-			"style": {
-				"backgroundTextStyle": "light",
-				"navigationBarBackgroundColor": "#fff",
-				"navigationBarTitleText": "视频教学播放",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -206,15 +179,6 @@
 		{
 			"path": "pages/register/register"
 		}
-	    ,{
-            "path" : "pages/VideoTeachingDetails/VideoTeachingDetails",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "视频教学播放",
-                "enablePullDownRefresh": false
-            }
-            
-        }
         ,{
             "path" : "pages/CustomerServiceChat/CustomerServiceChat",
             "style" :                                                                                    
@@ -228,6 +192,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "个人资料",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/releaseCommodities/releaseCommodities",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "发布宝贝",
                 "enablePullDownRefresh": false
             }
             
@@ -250,16 +223,10 @@
 				"selectedIconPath": "/static/images/tabbar/category-sel.png"
 			},
 			{
-				"pagePath": "pages/saysCommentary/saysCommentary",
-				"text": "花语解说",
-				"iconPath": "/static/images/tabbar/huayu.png",
-				"selectedIconPath": "/static/images/tabbar/huayu-sel.png"
-			},
-			{
-				"pagePath": "pages/VideoTeaching/VideoTeaching",
-				"text": "视频教学",
-				"iconPath": "/static/images/tabbar/voide.png",
-				"selectedIconPath": "/static/images/tabbar/voide-sel.png"
+				"pagePath": "pages/releaseCommodities/releaseCommodities",
+				"text": "",
+				"iconPath": "/static/images/tabbar/plus.png",
+				"selectedIconPath": "/static/images/tabbar/plus-sel.png"
 			},
 			{
 				"pagePath": "pages/basket/basket",
