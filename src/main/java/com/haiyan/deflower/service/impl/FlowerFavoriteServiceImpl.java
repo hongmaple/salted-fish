@@ -46,6 +46,13 @@ public class FlowerFavoriteServiceImpl implements FlowerFavoriteService {
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
+        Integer count1 = flowerDao.lambdaQuery().eq(Flower::getId, flowerFavorite.getFavoriteId()).eq(Flower::getCreateId, user.getId()).count();
+        if (count1>0) {
+            throw new ExceptionResult("cart","false",null,"不能收藏自己发布的商品");
+        }
+        if (Objects.isNull(user)) {
+            throw new ExceptionResult("user","false",null,"请先登陆");
+        }
         flowerFavorite.setUid(user.getId());
         if (!flowerFavoriteDao.save(flowerFavorite)) {
             throw new ExceptionResult("flowerFavorite","false",null,"收藏失败");
@@ -60,7 +67,7 @@ public class FlowerFavoriteServiceImpl implements FlowerFavoriteService {
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
-        if (flowerFavoriteMapper.deleteById(id)==0) {
+        if (!flowerFavoriteDao.lambdaUpdate().eq(FlowerFavorite::getFavoriteId,id).remove()) {
             throw new ExceptionResult("flowerFavorite","false",null,"取消收藏失败");
         }
         return true;

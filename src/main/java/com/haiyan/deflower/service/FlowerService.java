@@ -27,7 +27,6 @@ public interface FlowerService {
      */
     Boolean updateFlower(Flower flower);
 
-
     /**
      * 分页查询
      * @param query 参数

@@ -5,11 +5,8 @@ import com.haiyan.deflower.pojo.AjaxResult;
 import com.haiyan.deflower.pojo.PageDomain;
 import com.haiyan.deflower.pojo.User;
 import com.haiyan.deflower.service.UserService;
-import com.haiyan.deflower.utils.ServletUtils;
-import com.haiyan.deflower.utils.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,8 +20,6 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    @Autowired
-    private UserUtils userUtils;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -93,6 +88,18 @@ public class UserController {
     @ApiOperation("删除用户")
     public AjaxResult deletedUser(@PathVariable Long id) {
         AjaxResult ajaxResult = AjaxResult.success(userService.deletedUser(id));
+        return ajaxResult;
+    }
+
+    /**
+     * 根据用户id获取用户信息
+     * @param id 用户id
+     * @return 用户信息
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据用户id获取用户信息")
+    public AjaxResult getUserById(@PathVariable Long id) {
+        AjaxResult ajaxResult = AjaxResult.success(userService.getUserById(id));
         return ajaxResult;
     }
 }

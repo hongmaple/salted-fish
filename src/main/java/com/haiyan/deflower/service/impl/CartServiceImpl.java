@@ -2,6 +2,7 @@ package com.haiyan.deflower.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.haiyan.deflower.dao.CartDao;
+import com.haiyan.deflower.dao.FlowerDao;
 import com.haiyan.deflower.exception.ExceptionResult;
 import com.haiyan.deflower.mapper.CartMapper;
 import com.haiyan.deflower.pojo.*;
@@ -22,13 +23,15 @@ public class CartServiceImpl implements CartService {
 
     private final CartDao cartDao;
     private final CartMapper cartMapper;
+    private final FlowerDao flowerDao;
 
     @Autowired
     private UserUtils userUtils;
 
-    public CartServiceImpl(CartDao cartDao, CartMapper cartMapper) {
+    public CartServiceImpl(CartDao cartDao, CartMapper cartMapper, FlowerDao flowerDao) {
         this.cartDao = cartDao;
         this.cartMapper = cartMapper;
+        this.flowerDao = flowerDao;
     }
 
     @Override
@@ -38,13 +41,17 @@ public class CartServiceImpl implements CartService {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
         cart.setUserId(user.getId());
-        Integer count = cartDao.lambdaQuery().eq(Cart::getSkuId, cart.getSkuId()).count();
+        Integer count1 = flowerDao.lambdaQuery().eq(Flower::getId, cart.getSkuId()).eq(Flower::getCreateId, user.getId()).count();
+        if (count1>0) {
+            throw new ExceptionResult("cart","false",null,"不能添加自己发布的商品");
+        }
+        Integer count = cartDao.lambdaQuery().eq(Cart::getSkuId, cart.getSkuId()).eq(Cart::getUserId,user.getId()).count();
         if (count==0) {
             if(!cartDao.save(cart)) {
                 throw new ExceptionResult("cart","false",null,"添加失败");
             }
         }else {
-            if(!cartDao.lambdaUpdate().eq(Cart::getSkuId,cart.getSkuId()).update(cart)) {
+            if(!cartDao.lambdaUpdate().eq(Cart::getSkuId,cart.getSkuId()).eq(Cart::getUserId,user.getId()).update(cart)) {
                 throw new ExceptionResult("cart","false",null,"添加失败");
             }
         }
@@ -57,7 +64,7 @@ public class CartServiceImpl implements CartService {
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
-        if (!cartDao.lambdaUpdate().eq(Cart::getId,cart.getId()).update(cart)) {
+        if (!cartDao.lambdaUpdate().eq(Cart::getId,cart.getId()).eq(Cart::getUserId,user.getId()).update(cart)) {
             throw new ExceptionResult("cart","false",null,"修改失败");
         }
         return true;
@@ -77,7 +84,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public PageList<Cart> listCart(PageDomain pageDomain) {
-        Page<Cart> page = cartDao.lambdaQuery().page(new Page<>(pageDomain.getPageNum(), pageDomain.getPageSize()));
+        User user = userUtils.getUser(ServletUtils.getRequest());
+        if (Objects.isNull(user)) {
+            throw new ExceptionResult("user","false",null,"请先登陆");
+        }
+        Page<Cart> page = cartDao.lambdaQuery().eq(Cart::getUserId,user.getId()).page(new Page<>(pageDomain.getPageNum(), pageDomain.getPageSize()));
         List<Cart> carts = page.getRecords();
         return PageList.of(carts, page);
     }

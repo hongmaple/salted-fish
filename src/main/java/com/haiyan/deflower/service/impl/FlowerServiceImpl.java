@@ -53,6 +53,9 @@ public class FlowerServiceImpl implements FlowerService {
         }
         flower.setCreateTime(new Date());
         flower.setUpdateTime(new Date());
+        flower.setAuditStatus("0");
+        flower.setInventoryStatus("0");
+        flower.setCreateId(user.getId());
         if(!flowerDao.save(flower)) {
             throw new ExceptionResult("flower","false",null,"新增花朵失败");
         }
@@ -83,6 +86,23 @@ public class FlowerServiceImpl implements FlowerService {
         if (StringUtils.hasText(query.getTitle())) {
             lambdaQuery.like(Flower::getTitle,query.getTitle());
         }
+
+        if (query.getCreateId()!=null) {
+            lambdaQuery.eq(Flower::getCreateId,query.getCreateId());
+        }
+
+        if (query.getAuditStatus()!=null) {
+            lambdaQuery.eq(Flower::getAuditStatus,query.getAuditStatus());
+        }
+
+        if (query.getInventoryStatus()!=null) {
+            lambdaQuery.eq(Flower::getInventoryStatus,query.getInventoryStatus());
+        }
+
+        if(query.getType()>0) {
+            lambdaQuery.eq(Flower::getType,query.getType());
+        }
+
         lambdaQuery.orderByDesc(Flower::getUpdateTime);
         Page<Flower> page = lambdaQuery.page(new Page<>(query.getPageNum(), query.getPageSize()));
         List<Flower> flowers = page.getRecords();
@@ -109,8 +129,8 @@ public class FlowerServiceImpl implements FlowerService {
 
         TagRowVo tagRowVo2 = new TagRowVo();
         tagRowVo2.setStyle(1);
-        tagRowVo2.setTitle("鲜花");
-        tagRowVo2.setId(1L);
+        tagRowVo2.setTitle("电子产品");
+        tagRowVo2.setId(2L);
         Page<Flower> flowerPage2 = flowerDao.lambdaQuery()
                 .in(Flower::getCid, 3, 4)
                 .page(new Page<>(1, 2));
@@ -118,8 +138,8 @@ public class FlowerServiceImpl implements FlowerService {
 
         TagRowVo tagRowVo3 = new TagRowVo();
         tagRowVo3.setStyle(2);
-        tagRowVo3.setTitle("永生花");
-        tagRowVo3.setId(2L);
+        tagRowVo3.setTitle("服饰/鞋子");
+        tagRowVo3.setId(3L);
         Page<Flower> flowerPage3 = flowerDao.lambdaQuery()
                 .in(Flower::getCid, 2)
                 .page(new Page<>(1, 2));

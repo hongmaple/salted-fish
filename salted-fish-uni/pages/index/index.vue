@@ -24,21 +24,21 @@
     <!-- end swiper -->
 
     <view class="cat-item">
-      <view class="item" @tap="toClassifyPage" data-sts="1">
+      <view class="item" @tap="toClassifyPage" data-sts="1" data-title="日用品">
         <image src="/static/images/icon/newProd.png"></image>
-        <text>优雅绿植</text>
+        <text>日用品</text>
       </view>
-      <view class="item" @tap="toClassifyPage" data-sts="2">
+      <view class="item" @tap="toClassifyPage" data-sts="2" data-title="电子产品">
         <image src="/static/images/icon/timePrice.png"></image>
-        <text>浪漫鲜花</text>
+        <text>电子产品</text>
       </view>
-      <view class="item" @tap="toClassifyPage" data-sts="3">
+      <view class="item" @tap="toClassifyPage" data-sts="3" data-title="服饰/鞋子">
         <image src="/static/images/icon/neweveryday.png"></image>
-        <text>一枝独秀</text>
+        <text>服饰/鞋子</text>
       </view>
-      <view class="item" @tap="toClassifyPage" data-sts="4">
+      <view class="item" @tap="toClassifyPage" data-sts="4" data-title="其他">
         <image src="/static/images/icon/newprods.png"></image>
-        <text>心动时刻</text>
+        <text>其他</text>
       </view>
     </view>
 
@@ -61,7 +61,6 @@
 	
 	<view class="updata" v-if="updata">
 		<block v-for="(item, index) in taglist" :key="index">
-		  <!-- 鲜花 -->
 		  <view class="up-to-date" v-if="item.style==2">
 		    <view class="title">
 		      <text>{{item.title}}</text>
@@ -254,10 +253,10 @@ export default {
     },
     //跳转商品活动页面
     toClassifyPage: function (e) {
-      var url = '/pages/prod-classify/prod-classify?sts=' + e.currentTarget.dataset.sts;
+	  var title = e.currentTarget.dataset.title;
+      var url = '/pages/prod-classify/prod-classify?sts=' + e.currentTarget.dataset.sts+"&title="+title;
       var id = e.currentTarget.dataset.id;
-      var title = e.currentTarget.dataset.title;
-
+      
       if (id) {
         url += "&tagid=" + id + "&title=" + title;
       }

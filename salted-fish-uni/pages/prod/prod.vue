@@ -1,6 +1,12 @@
 <template>
 <!-- 商品详情 -->
 <view class="container">
+  <view class="input-box">
+	  <view class="section">
+	    <image style="width: 130rpx;height: 130rpx;" :src="user.avatarImage?serverUrl+user.avatarImage:'../../static/images/icon/head04.png'"></image>
+		<text>{{user.username}}</text>
+	  </view>
+  </view>
   <!-- 轮播图 -->
   <swiper :indicator-dots="indicatorDots" :autoplay="autoplay" :indicator-color="indicatorColor" :interval="interval" :duration="duration" :indicator-active-color="indicatorActiveColor">
     <block v-for="(item, index) in imgs" :key="index">
@@ -21,11 +27,16 @@
         收藏
       </view>
     </view>
-    <view class="sales-p">{{brief}}</view>
+    <view class="sales-p">{{specification}}</view>
     <view class="prod-price">
       <text class="price">￥<text class="price-num">{{wxs.parsePrice(price)[0]}}</text>.{{wxs.parsePrice(price)[1]}}</text>
       <text class="sales"></text>
     </view>
+  </view>
+  <view class="sku" @tap="showSku">
+    <view class="sku-tit">成色</view>
+    <view class="sku-con">{{oldNewLevel}}</view>
+    <view class="more">...</view>
   </view>
   <!-- 已选规格 -->
   <view class="sku" @tap="showSku">
@@ -34,7 +45,7 @@
     <view class="more">...</view>
   </view>
   <!-- 评价 -->
-  <view class="cmt-wrap" style="display:none;">
+  <view class="cmt-wrap">
     <view class="cmt-tit" @tap="showComment">
       <view class="cmt-t">
         评价
@@ -77,7 +88,7 @@
   <!-- 商品详情 -->
   <view class="prod-detail">
     <view>
-      <rich-text :nodes="content"></rich-text>
+      <rich-text :nodes="brief"></rich-text>
       <!-- <image src="//img14.360buyimg.com/cms/jfs/t1/25195/1/9487/388554/5c7f80a5E8b8f8f0c/46818404849d6ec6.jpg!q70.dpg" mode="widthFix"></image> -->
     </view>
   </view>
@@ -209,16 +220,16 @@ export default {
       imgs: '',
       prodName: '',
       price: 0,
-      content: '',
-      prodId: 0,
       brief: '',
+      prodId: 0,
+      specification: '',
       skuId: 0,
+	  oldNewLevel: '',
       popupShow: false,
       // 是否获取过用户领取过的优惠券id
       loadCouponIds: false,
       skuShow: false,
       commentShow: false,
-      skuList: [],
       skuGroup: {},
       defaultSku: undefined,
       selectedProp: [],
@@ -234,7 +245,9 @@ export default {
       littleCommPage: [],
       evaluate: -1,
       isCollection: false,
-	  serverUrl: config.domain
+	  serverUrl: config.domain,
+	  user: {},
+	  sellerId: 0
     };
   },
 
@@ -316,22 +329,37 @@ export default {
     addOrCannelCollection() {
       uni.showLoading();
 	  var favoriteId =this.prodId;
-      var params = {
-        url: "/flower/favorite",
-		needToken: true,
-        method: "POST",
-        data: {
-         id: 0,
-         createTime: null,
-         favoriteId: favoriteId
-        },
-        callBack: res => {
-          this.setData({
-            isCollection: !this.isCollection
-          });
-          uni.hideLoading();
-        }
-      };
+	  var params;
+	  if(!this.isCollection) {
+		  params = {
+		    url: "/flower/favorite",
+		  	needToken: true,
+		    method: "POST",
+		    data: {
+		     id: 0,
+		     createTime: null,
+		     favoriteId: favoriteId
+		    },
+		    callBack: res => {
+		      this.setData({
+		        isCollection: !this.isCollection
+		      });
+		      uni.hideLoading();
+		    }
+		  };
+	  }else {
+		 params = {
+		   url: `/flower/favorite/${favoriteId}`,
+		   needToken: true,
+		   method: "delete",
+		   callBack: res => {
+		     this.setData({
+		       isCollection: !this.isCollection
+		     });
+		     uni.hideLoading();
+		   }
+		 }; 
+	  }
       http.request(params);
     },
     // 获取商品信息
@@ -345,25 +373,50 @@ export default {
           var imgStrs = res.imagesList;
 		  var imgs;
 		  if(imgStrs!=null) {
-			  imgs = imgStrs.split(",");
+			  var array = imgStrs.split(",");
+			  imgs = this.trimSpace(array);
 		  }
           //var content = util.formatHtml(res.content);
           this.setData({
             imgs: imgs,
-            content: "花语："+res.flowerLanguage,
+            brief: res.brief,
             price: res.price,
             prodName: res.title,
             prodId: res.id,
-            brief: "适宜人群："+res.appropriateCrowd,
-            // skuId: res.skuId
-            skuList: null,
-            pic: res.images
+            specification: "规格："+res.specification,
+            pic: res.images,
+			oldNewLevel: res.oldNewLevel,
+			sellerId: res.createId
           }); 
+		  var params = {
+		    url: `/user/${this.sellerId}`,
+		    method: "GET",
+		    callBack: res2 => {
+		      this.setData({
+		          user: res2.data
+		      }); 
+		  		  
+		      uni.hideLoading();
+		    }
+		  };
+		  http.request(params);
           uni.hideLoading();
         }
       };
       http.request(params);
     },
+	trimSpace(array) {  
+	     for(var i = 0 ;i<array.length;i++)  
+	     {  
+	         if(array[i] == "" || array[i] == null || typeof(array[i]) == "undefined")  
+	         {  
+	                  array.splice(i,1);  
+	                  i= i-1;  
+	
+	         }  
+	     }  
+	     return array;  
+	},
     getCartInfo() {
 		uni.showLoading();
 		var params = {

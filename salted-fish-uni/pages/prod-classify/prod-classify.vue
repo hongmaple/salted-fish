@@ -52,27 +52,7 @@ export default {
       });
     }
 
-    if (this.sts == 0) {
-      uni.setNavigationBarTitle({
-        title: '新品推荐'
-      });
-    } else if (this.sts == 1) {
-      uni.setNavigationBarTitle({
-        title: '优雅绿植'
-      });
-    } else if (this.sts == 2) {
-      uni.setNavigationBarTitle({
-        title: '浪漫鲜花'
-      });
-    } else if (this.sts == 3) {
-      uni.setNavigationBarTitle({
-        title: '一枝独秀'
-      });
-    } else if (this.sts == 4) {
-      uni.setNavigationBarTitle({
-        title: '心动时刻'
-      });
-    } else if (this.sts == 5) {
+    if (this.sts == 5) {
       uni.setNavigationBarTitle({
         title: '我的收藏商品'
       });

@@ -75,24 +75,24 @@
 				<view class="memu-item" @tap="toDistCenter">
 					<view class="i-name">
 						<image src="/static/images/icon/promotion.png"></image>
-						<text>分销中心</text>
+						<text>我发布的</text>
 					</view>
 					<view class="arrowhead"></view>
 				</view>
 				<view class="memu-item" @tap="toCouponCenter">
 					<view class="i-name">
 						<image src="/static/images/icon/getCoupon.png"></image>
-						<text>领券中心</text>
+						<text>我卖出的</text>
 					</view>
 					<view class="arrowhead"></view>
 				</view>
-				<view class="memu-item" @tap="toMyCouponPage">
+				<!-- <view class="memu-item" @tap="toMyCouponPage">
 					<view class="i-name">
 						<image src="/static/images/icon/myCoupon.png"></image>
 						<text>我的优惠券</text>
 					</view>
 					<view class="arrowhead"></view>
-				</view>
+				</view> -->
 				<view class="memu-item" @tap="toAddressList">
 					<view class="i-name">
 						<image src="/static/images/icon/myAddr.png"></image>
@@ -221,15 +221,13 @@
 		onShareAppMessage: function() {},
 		methods: {
 			toDistCenter: function() {
-				uni.showToast({
-					icon: "none",
-					title: '该功能未开发'
+				uni.navigateTo({
+					url: '/pages/MyReleased/MyReleased'
 				});
 			},
 			toCouponCenter: function() {
-				uni.showToast({
-					icon: "none",
-					title: '该功能未开发'
+				uni.navigateTo({
+					url: '/pages/MySell/MySell'
 				});
 			},
 			toMyCouponPage: function() {
@@ -307,15 +305,6 @@
 			 * 退出登录
 			 */
 			logout: function() {
-				// 请求退出登陆接口
-				// http.request({
-				// 	url: '/p/user/logout',
-				// 	method: 'GET',
-				// 	callBack: res => {
-						
-				// 	}
-				// })
-				
 				util.removeTabBadge()
 				uni.removeStorageSync('loginResult');
 				uni.removeStorageSync('token');

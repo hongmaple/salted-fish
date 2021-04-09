@@ -2,6 +2,7 @@ package com.haiyan.deflower.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.haiyan.deflower.dao.FlowerDao;
 import com.haiyan.deflower.dao.OrderDao;
 import com.haiyan.deflower.dao.OrderDetailDao;
 import com.haiyan.deflower.dto.request.OrderBody;
@@ -42,11 +43,12 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDetailDao orderDetailDao;
     private final IdWorker idWorker;
     private final ModelMapper modelMapper;
+    private final FlowerDao flowerDao;
 
     @Autowired
     private UserUtils userUtils;
 
-    public OrderServiceImpl(OrderMapper orderMapper, OrderDao orderDao, OrderStatusMapper orderStatusMapper, OrderDetailMapper orderDetailMapper, OrderDetailDao orderDetailDao, IdWorker idWorker, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderMapper orderMapper, OrderDao orderDao, OrderStatusMapper orderStatusMapper, OrderDetailMapper orderDetailMapper, OrderDetailDao orderDetailDao, IdWorker idWorker, ModelMapper modelMapper, FlowerDao flowerDao) {
         this.orderMapper = orderMapper;
         this.orderDao = orderDao;
         this.orderStatusMapper = orderStatusMapper;
@@ -54,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderDetailDao = orderDetailDao;
         this.idWorker = idWorker;
         this.modelMapper = modelMapper;
+        this.flowerDao = flowerDao;
     }
 
     @Override
@@ -86,6 +89,10 @@ public class OrderServiceImpl implements OrderService {
 
         // 订单详情中添加orderId
         orderBody.getOrderDetails().forEach(od -> {
+            Integer count1 = flowerDao.lambdaQuery().eq(Flower::getId, od.getSkuId()).eq(Flower::getCreateId, user.getId()).count();
+            if (count1>0) {
+                throw new ExceptionResult("cart","false",null,"不能购买自己发布的商品");
+            }
             od.setOrderId(String.valueOf(orderId));
             this.orderDetailMapper.insert(od);
         });

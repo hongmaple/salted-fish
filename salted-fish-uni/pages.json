@@ -205,6 +205,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/MySell/MySell",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的宝贝",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/MyReleased/MyReleased",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"selectedColor": "#3a86b9",

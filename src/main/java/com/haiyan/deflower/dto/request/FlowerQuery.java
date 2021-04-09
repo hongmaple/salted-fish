@@ -19,4 +19,16 @@ public class FlowerQuery extends PageDomain {
 
     @ApiModelProperty("标题")
     private String title;
+
+    @ApiModelProperty("发布人")
+    private Long createId;
+
+    @ApiModelProperty("审核状态")
+    private String auditStatus;
+
+    @ApiModelProperty("入库状态")
+    private String inventoryStatus;
+
+    @ApiModelProperty("类型")
+    private int type;
 }

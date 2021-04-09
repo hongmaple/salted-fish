@@ -5,6 +5,7 @@ import com.haiyan.deflower.dto.request.OrderQuery;
 import com.haiyan.deflower.dto.response.OrderDetailsVo;
 import com.haiyan.deflower.dto.response.OrderRowVo;
 import com.haiyan.deflower.pojo.PageList;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author haiyan
@@ -17,6 +18,7 @@ public interface OrderService {
      * @param order
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     Long createOrder(OrderBody order);
 
     /**

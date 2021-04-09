@@ -876,3 +876,20 @@ img {
   background: #eb2444;
   color: #fff;
 }
+
+.input-box {
+  background: #fff;
+  padding: 0 20rpx;
+}
+
+.input-box .section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 28rpx;
+  padding: 30rpx 0;
+  line-height: 48rpx;
+  height: 100%;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #e5e5e5;
+}
