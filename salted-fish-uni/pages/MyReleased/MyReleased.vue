@@ -6,7 +6,8 @@
     <text @tap="onStsTap" data-sts="0" data-tap="2" :class="tap==2?'on':''">待审核</text>
     <text @tap="onStsTap" data-sts="1" data-tap="3" :class="tap==3?'on':''">通过</text>
     <text @tap="onStsTap" data-sts="2" data-tap="4" :class="tap==4?'on':''">不通过</text>
-	<text @tap="onConsignTap" data-tap="5" :class="tap==5?'on':''">寄存</text>
+	<text @tap="onStsTap" data-sts="3" data-tap="5" :class="tap==5?'on':''">下架</text>
+	<text @tap="onConsignTap" data-tap="6" :class="tap==6?'on':''">寄存</text>
   </view>
   <!-- end 头部菜单 -->
   <view class="main">
@@ -19,9 +20,9 @@
         <view class="order-num">
           <text>宝贝编号：{{item.id}}</text>
           <view class="order-state">
-            <text :class="'order-sts  ' + (item.auditStatus==2?'gray':'') + '  ' + ((item.auditStatus==1||item.auditStatus==3)?'red':'')">{{item.status==0?'待审核':(item.status==1?'通过':(item.status==3?'不通过':''))}}</text>
-            <text v-if="item.type==1" :class="'order-sts  ' + (item.inventoryStatus==0?'red':'') + '  ' + ((item.status==1||item.status==3)?'gray':'')">{{item.status==0?'待入库':(item.status==1?'已入库':(item.status==2?'已售出':(item.status==3?'捐赠':(item.status==4?'回家':''))))}}</text>
-            <view class="clear-btn" v-if="item.status==3 || item.status==1">
+            <text :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待审核':(item.auditStatus==1?'通过':(item.auditStatus==3?'不通过':''))}}</text>
+            <text style="margin-left: 10rpx;" v-if="item.type==1" :class="'order-sts  ' + (item.inventoryStatus==0?'red':'') + '  ' + ((item.inventoryStatus==1||item.inventoryStatus==2||item.inventoryStatus==3||item.inventoryStatus==4)?'gray':'')">{{item.inventoryStatus==0?'待入库':(item.inventoryStatus==1?'已入库':(item.inventoryStatus==2?'已售出':(item.inventoryStatus==3?'捐赠':(item.inventoryStatus==4?'回家':''))))}}</text>
+            <view class="clear-btn" v-if="item.auditStatus==3 || item.auditStatus==2 || item.auditStatus==0">
               <image src="/static/images/icon/clear-his.png" class="clear-list-btn" @tap="delOrderList" :data-ordernum="item.id"></image>
             </view>
           </view>
@@ -51,10 +52,11 @@
         <!-- end 商品列表 -->
         <view class="prod-foot">
           <view class="btn">
-           <!-- <text v-if="item.status==1" class="button" @tap="cancelOrder" :data-ordernum="item.orderId" hover-class="none">取消订单</text>
-            <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text>
-            <text v-if="item.status==1" class="button warn" @tap="normalPay" :data-ordernum="item.orderId" hover-class="none">付款</text>
-            <text v-if="item.status==3" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">确认收货</text> -->
+           <text v-if="item.auditStatus==2" class="button" @tap="cancelOrder" :data-ordernum="item.orderId" hover-class="none">下架</text>
+            <!-- <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text> -->
+            <text v-if="item.auditStatus==3" class="button warn" @tap="normalPay" :data-ordernum="item.orderId" hover-class="none">上架</text>
+            <text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">捐赠</text>
+			<text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">邮寄回家</text>
           </view>
         </view>
       </view>
@@ -209,7 +211,7 @@ export default {
       var ths = this;
       uni.showModal({
         title: '',
-        content: '确定要删除此订单吗？',
+        content: '确定要删除此宝贝吗？',
         confirmColor: "#eb2444",
 
         success(res) {
@@ -225,7 +227,8 @@ export default {
                 uni.hideLoading();
               }
             };
-            http.request(params);
+			uni.hideLoading();
+            //http.request(params);
           } else if (res.cancel) {
             console.log('用户点击取消');
           }
