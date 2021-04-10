@@ -44,4 +44,4 @@ ruoyi:
   # 版权年份
   copyrightYear: 2021
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: E:/GitWarehouse/salted-fish/uploadPath
+  profile: D:/GitWarehouse/salted-fish/uploadPath

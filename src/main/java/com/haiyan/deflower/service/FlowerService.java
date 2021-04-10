@@ -35,6 +35,13 @@ public interface FlowerService {
     PageList<FlowerRowVo> listFlower(FlowerQuery query);
 
     /**
+     * 加载后台商品列表
+     * @param query 参数
+     * @return 商品列表
+     */
+    PageList<FlowerRowVo> backstageListFlower(FlowerQuery query);
+
+    /**
      * 加载前台首页商品列表
      * @return 商品列表
      */
@@ -46,4 +53,12 @@ public interface FlowerService {
      * @return 详情
      */
     Flower getFlowerDetail(Long id);
+
+    /**
+     * 修改审核状态
+     * @param id id
+     * @param auditStatus 审核状态
+     * @return 结果
+     */
+    Boolean updateAuditStatus(Long id,String auditStatus);
 }

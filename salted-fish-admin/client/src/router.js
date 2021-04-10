@@ -105,13 +105,7 @@ const router = new Router({
           path: '/flowerList',
           name: 'flowerList',
           component: () => import('./views/flower/flowerList'),
-          meta: { title: '鲜花列表' }
-        },
-        {
-          path: '/SaysCommentaryList',
-          name: 'SaysCommentaryList',
-          component: () => import('./views/flower/SaysCommentaryList'),
-          meta: { title: '花语解说' }
+          meta: { title: '商品审核列表' }
         },
         {
           path: '/orderList',
@@ -119,12 +113,6 @@ const router = new Router({
           component: () => import('./views/fundmanagement/orderList'),
           meta: { title: '订单管理' }
         },
-        {
-          path: '/VideoTeaching',
-          name: 'VideoTeaching',
-          component: () => import('./views/flower/VideoTeaching'),
-          meta: { title: '视频教学' }
-        }
       ]
     },
     {

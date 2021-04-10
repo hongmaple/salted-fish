@@ -20,7 +20,7 @@
         <view class="order-num">
           <text>宝贝编号：{{item.id}}</text>
           <view class="order-state">
-            <text :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待审核':(item.auditStatus==1?'通过':(item.auditStatus==3?'不通过':''))}}</text>
+            <text :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待审核':(item.auditStatus==1?'通过':(item.auditStatus==2?'不通过':'下架'))}}</text>
             <text style="margin-left: 10rpx;" v-if="item.type==1" :class="'order-sts  ' + (item.inventoryStatus==0?'red':'') + '  ' + ((item.inventoryStatus==1||item.inventoryStatus==2||item.inventoryStatus==3||item.inventoryStatus==4)?'gray':'')">{{item.inventoryStatus==0?'待入库':(item.inventoryStatus==1?'已入库':(item.inventoryStatus==2?'已售出':(item.inventoryStatus==3?'捐赠':(item.inventoryStatus==4?'回家':''))))}}</text>
             <view class="clear-btn" v-if="item.auditStatus==3 || item.auditStatus==2 || item.auditStatus==0">
               <image src="/static/images/icon/clear-his.png" class="clear-list-btn" @tap="delOrderList" :data-ordernum="item.id"></image>
@@ -52,11 +52,11 @@
         <!-- end 商品列表 -->
         <view class="prod-foot">
           <view class="btn">
-           <text v-if="item.auditStatus==2" class="button" @tap="cancelOrder" :data-ordernum="item.orderId" hover-class="none">下架</text>
+           <text v-if="item.auditStatus==1" class="button" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="3" hover-class="none">下架</text>
             <!-- <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text> -->
-            <text v-if="item.auditStatus==3" class="button warn" @tap="normalPay" :data-ordernum="item.orderId" hover-class="none">上架</text>
-            <text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">捐赠</text>
-			<text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">邮寄回家</text>
+            <text v-if="item.auditStatus==3" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="1" hover-class="none">上架</text>
+            <text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-id="item.id" hover-class="none">捐赠</text>
+			<text v-if="item.type==1&&item.auditStatus==2&&item.inventoryStatus==1" class="button warn" @tap="onConfirmReceive" :data-id="item.id" hover-class="none">邮寄回家</text>
           </view>
         </view>
       </view>
@@ -243,6 +243,22 @@ export default {
 	    url: '/pages/prod/prod?prodid=' + prodid
 	  });
 	},
+	updateAuditStatus: function (e) {
+		const id = e.currentTarget.dataset.id;
+		const auditStatus = e.currentTarget.dataset.auditStatus;
+		var ths = this;
+		var params = {
+		  url: `/flower/auditStatus/${id}/${auditStatus}`,
+		  method: "PUT",
+		  needToken: true,
+		  callBack: function (res) {
+		    ths.loadOrderData(ths.sts,ths.type, 1);
+		    uni.hideLoading();
+		  }
+		};
+		uni.hideLoading();
+		http.request(params);
+	}
   }
 };
 </script>

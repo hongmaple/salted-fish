@@ -51,14 +51,6 @@ export default {
           name: "账单管理",
           path: "fund",
           children: [
-            // {
-            //   path: "/fundList",
-            //   name: "资金流水"
-            // },
-            // {
-            //   path: "/payList",
-            //   name: "支付单据"
-            // }
             {
               path: "/orderList",
               name: "订单管理"
@@ -102,7 +94,7 @@ export default {
         },
         {
           icon: "el-icon-bell",
-          name: "鲜花管理",
+          name: "商品管理",
           path: "/list",
           children: [
             {
@@ -111,29 +103,10 @@ export default {
             },
             {
               path: "/flowerList",
-              name: "鲜花列表"
-            },
-            {
-              path: "/SaysCommentaryList",
-              name: "花语解说"
-            },
-            {
-              path: "/VideoTeaching",
-              name: "视频教学"
+              name: "商品审核列表"
             }
           ]
         },
-        // {
-        //   icon: "el-icon-tickets",
-        //   name: "资金数据",
-        //   path: "/position",
-        //   children: [
-        //     {
-        //       path: "/fundPosition",
-        //       name: "投资分布"
-        //     }
-        //   ]
-        // },
         {
           icon: "el-icon-location-outline",
           name: "地图展示",

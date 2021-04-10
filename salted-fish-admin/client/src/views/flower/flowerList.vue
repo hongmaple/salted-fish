@@ -16,11 +16,6 @@
             </el-form-item>
           </el-form>
         </div>
-        <el-form :inline="true">
-            <el-form-item class="btnRight">
-                <el-button type="primary" size ="small" icon="el-icon-edit-outline" @click='onAddMoney()'>添加</el-button>
-            </el-form-item>
-        </el-form>
     </div>
       <div class="tables">
            <el-table
@@ -68,22 +63,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                label="花语"
-                align="center"
-                width="180">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.flowerLanguage }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                label="适宜人群"
-                align="center"
-                width="180">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.appropriateCrowd }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
                 label="更新时间"
                 align="center"
                 width="180">
@@ -103,7 +82,7 @@
                 <template slot-scope="scope">
                     <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -146,23 +125,9 @@ export default {
         option: "edit"
       },
       form: {   //添加和删除需要传递的字段名
-        id: 0,
-        cid: 0,
-        title: 0,
-        images: '',
-        imagesList: '',
-        price: '',
-        flowerLanguage: '',
-        appropriateCrowd: '',
-        isDeleted: 0,
-        createTime: '',
-        updateTime: '',
+     
       },
       parameter: {
-        options: [{
-                id: null,
-                name: null
-        }],
         id: 0,
         dialogImageUrls: []
       },
@@ -174,15 +139,9 @@ export default {
   methods: {
     flowerList(formData) {
       this.$axios
-        .post("/api/flower/list",formData,{headers: {"token": localStorage.getItem("eleToken")}})
+        .post("/api/flower/backstage/list",formData,{headers: {"token": localStorage.getItem("eleToken")}})
         .then(res => {
           this.flowerData = res.data.data;
-        }).catch(err => console.log(err));
-    },categoryList() {
-      this.$axios
-        .get("/api/category",{headers: {"token": localStorage.getItem("eleToken")}})
-        .then(res => {
-          this.parameter.options = res.data.data;
         }).catch(err => console.log(err));
     },
      loadCurrentPageflowerList() {
@@ -201,7 +160,7 @@ export default {
       this.parameter.dialogImageUrls = [];
       //编辑
       this.dialong = {
-        title: "编辑信息",
+        title: "详细信息",
         show: true,
         option:"edit"
       }
@@ -219,32 +178,7 @@ export default {
             this.parameter.dialogImageUrls.push({name:value,url:'api'+item})
         });
       }
-      this.form = {
-         id: row.id,
-         cid: row.cid,
-         title: row.title,
-         images: row.images,
-         imagesList: row.imagesList,
-         price: row.price,
-         flowerLanguage: row.flowerLanguage,
-         appropriateCrowd: row.appropriateCrowd
-      };
-      this.categoryList();
-    },
-    onAddMoney() {
-      this.parameter.dialogImageUrls = [];
-      //添加内容
-      this.dialong = {
-        title: "添加信息",
-        show: true,
-        option:"add"
-      }
-       this.form = {
-         cid: '',
-         title: "",
-         images: null
-      };
-      this.categoryList();
+      this.form = row;
     },
     handleSizeChange(page_size) {
 				this.flowerData.pageNum = 1; //第一页
@@ -265,12 +199,6 @@ export default {
         this.flowerList(formData);
 		},
     onScreeoutMoney(){
-			// if(this.search_data.title === '') {
-			// 	 this.$message({
-			// 		message: '关键词不能为空',
-			// 		type: 'warning'
-			// 	});
-			// }
       const formData = {
                 "isAsc": null,
                 "orderBy": null,

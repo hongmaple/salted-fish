@@ -1,10 +1,12 @@
 package com.haiyan.deflower.controller;
 
 import com.haiyan.deflower.dto.request.FlowerQuery;
+import com.haiyan.deflower.dto.response.FlowerRowVo;
 import com.haiyan.deflower.dto.response.TagRowVo;
 import com.haiyan.deflower.exception.ExceptionResult;
 import com.haiyan.deflower.pojo.AjaxResult;
 import com.haiyan.deflower.pojo.Flower;
+import com.haiyan.deflower.pojo.PageList;
 import com.haiyan.deflower.pojo.User;
 import com.haiyan.deflower.service.FlowerService;
 import com.haiyan.deflower.utils.ServletUtils;
@@ -75,6 +77,18 @@ public class FlowerController {
     }
 
     /**
+     * 加载后台商品列表
+     * @param query 参数
+     * @return 商品列表
+     */
+    @ApiOperation("加载后台商品列表")
+    @PostMapping("/backstage/list")
+    public AjaxResult backstageListFlower(@RequestBody FlowerQuery query) {
+        AjaxResult ajaxResult = AjaxResult.success(flowerService.listFlower(query));
+        return ajaxResult;
+    }
+
+    /**
      * 我的宝贝
      * @param query 参数
      * @return 分页数据
@@ -111,5 +125,17 @@ public class FlowerController {
     @GetMapping("/prodInfo/{id}")
     public Flower getFlowerDetail(@PathVariable Long id) {
         return flowerService.getFlowerDetail(id);
+    }
+
+    /**
+     * 修改审核状态
+     * @param id id
+     * @param auditStatus 审核状态
+     * @return 结果
+     */
+    @ApiOperation("修改审核状态")
+    @PutMapping("/auditStatus/{id}/{auditStatus}")
+    public Boolean updateAuditStatus(@PathVariable Long id,@PathVariable String auditStatus) {
+        return  flowerService.updateAuditStatus(id,auditStatus);
     }
 }

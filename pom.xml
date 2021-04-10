@@ -9,10 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.haiyan</groupId>
-    <artifactId>haiyanflowers</artifactId>
+    <artifactId>salted-fish</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>haiyanflowers</name>
-    <description>花店交易系统后端api</description>
+    <name>salted-fish</name>
     <properties>
         <java.version>1.8</java.version>
         <commons.io.version>2.5</commons.io.version>

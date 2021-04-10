@@ -117,6 +117,11 @@ public class FlowerServiceImpl implements FlowerService {
     }
 
     @Override
+    public PageList<FlowerRowVo> backstageListFlower(FlowerQuery query) {
+        return this.listFlower(query);
+    }
+
+    @Override
     public List<TagRowVo> listTagRowVo() {
         TagRowVo tagRowVo = new TagRowVo();
         tagRowVo.setStyle(0);
@@ -124,6 +129,7 @@ public class FlowerServiceImpl implements FlowerService {
         tagRowVo.setId(null);
         Page<Flower> flowerPage = flowerDao.lambdaQuery()
                 .in(Flower::getCid, 3, 4)
+                .eq(Flower::getAuditStatus,"1")
                 .page(new Page<>(1, 3));
         tagRowVo.setProds(flowerPage.getRecords());
 
@@ -133,6 +139,7 @@ public class FlowerServiceImpl implements FlowerService {
         tagRowVo2.setId(2L);
         Page<Flower> flowerPage2 = flowerDao.lambdaQuery()
                 .in(Flower::getCid, 3, 4)
+                .eq(Flower::getAuditStatus,"1")
                 .page(new Page<>(1, 2));
         tagRowVo2.setProds(flowerPage2.getRecords());
 
@@ -142,6 +149,7 @@ public class FlowerServiceImpl implements FlowerService {
         tagRowVo3.setId(3L);
         Page<Flower> flowerPage3 = flowerDao.lambdaQuery()
                 .in(Flower::getCid, 2)
+                .eq(Flower::getAuditStatus,"1")
                 .page(new Page<>(1, 2));
         tagRowVo3.setProds(flowerPage3.getRecords());
         List<TagRowVo> tagRowVos = new ArrayList<>();
@@ -154,5 +162,10 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public Flower getFlowerDetail(Long id) {
         return flowerDao.getById(id);
+    }
+
+    @Override
+    public Boolean updateAuditStatus(Long id, String auditStatus) {
+        return flowerDao.lambdaUpdate().set(Flower::getAuditStatus,auditStatus).eq(Flower::getId,id).update();
     }
 }
