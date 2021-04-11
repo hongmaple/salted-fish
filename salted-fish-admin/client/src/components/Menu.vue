@@ -1,14 +1,14 @@
 <template>
   <div class="sidebar">
-    <template v-for="item in items">
-      <router-link :to="item.path" v-if="item.path">
+    <template v-for="(item,index) in items">
+      <router-link :to="item.path" v-if="item.path" :key="index">
         <el-menu-item v-if="item.children ==null || item.children.length == 0" :index="item.path">
           <i :class="item.icon"></i>
           <span>{{item.name}}</span>
         </el-menu-item>
       </router-link>
       <!-- 判断是否有二级路由 -->
-      <el-submenu v-if="item.children" :index="item.path">
+      <el-submenu v-if="item.children" :index="item.path" :key="index">
         <template slot="title">
           <i :class="item.icon"></i>
           <span>{{item.name}}</span>

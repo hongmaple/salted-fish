@@ -104,7 +104,11 @@ export default {
             {
               path: "/flowerList",
               name: "商品审核列表"
-            }
+            },
+            {
+              path: "/theAgency",
+              name: "代理中心"
+            },
           ]
         },
         {

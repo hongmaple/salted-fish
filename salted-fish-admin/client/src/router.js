@@ -108,6 +108,12 @@ const router = new Router({
           meta: { title: '商品审核列表' }
         },
         {
+          path: '/theAgency',
+          name: 'theAgency',
+          component: () => import('./views/flower/theAgency'),
+          meta: { title: '代理中心' }
+        },
+        {
           path: '/orderList',
           name: 'orderList',
           component: () => import('./views/fundmanagement/orderList'),

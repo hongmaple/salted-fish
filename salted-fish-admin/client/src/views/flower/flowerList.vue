@@ -51,7 +51,7 @@
                 align="center"
                 width="180">
                 <template slot-scope="scope">
-                    <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.images"/>
+                    <img style="width:50px;height=50px;" alt="图片" :src="'api/'+scope.row.images"/>
                 </template>
             </el-table-column>
             <el-table-column
@@ -152,7 +152,9 @@ export default {
                 "orderBy": null,
                 "orderByColumn": null,
                 "pageNum": page,
-                "pageSize": pageSize
+                "pageSize": pageSize,
+                "title": this.search_data.title,
+                "type": 0
         }
         this.flowerList(formData);
     },
@@ -194,7 +196,8 @@ export default {
                 "orderByColumn": null,
                 "pageNum": page,
                 "pageSize": pageSize,
-                "title": this.search_data.title
+                "title": this.search_data.title,
+                "type": 0
         }
         this.flowerList(formData);
 		},
@@ -205,7 +208,8 @@ export default {
                 "orderByColumn": null,
                 "pageNum": 1,
                 "pageSize": this.flowerData.pageSize,
-                "title": this.search_data.title
+                "title": this.search_data.title,
+                "type": 0
       }
       this.flowerList(formData);
 		}
@@ -216,7 +220,8 @@ export default {
                 "orderBy": null,
                 "orderByColumn": null,
                 "pageNum": 1,
-                "pageSize": this.flowerData.pageSize
+                "pageSize": this.flowerData.pageSize,
+                "type": 0
     }
     this.flowerList(formData);
   },
