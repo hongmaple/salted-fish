@@ -90,6 +90,7 @@
 		  </view>
 		</view>
     </block>	
+	<view style="height: 120rpx;"></view>
   </view>
 
 
@@ -199,6 +200,9 @@ export default {
       uni.showLoading({
         mask: true
       });
+	  var total = 0;
+	  var totalCount = 0;
+	  var orderItems = [];
 	  if(this.orderEntry === "1") {
 		  var item =  JSON.parse(uni.getStorageSync("orderItem"));
 		  var params = {
@@ -206,31 +210,32 @@ export default {
 		  		  method: "GET",
 		  		  callBack:  res => {
 		  			var user = res.data;
-					var orderItems = [];
 					var prods = [];
 					prods[0] = item;
 					orderItems[0] = {
 						prods: prods,
 						user: user
 					};
+					total += item.num*item.price;
+					totalCount += item.num;
 					this.setData({
-					  orderItems: orderItems
+					  orderItems: orderItems,
+					  "totalCount": totalCount,
+					  "total": total,
+					  "actualTotal": total+this.transfee
 					});
 		  		  }
 		  };
 		  http.request(params);
 	  }else {
 		  var basketList = uni.getStorageSync("basketIds");
-		  var orderItems = [];
 		  var orderItemMaps = {};
 		  for(var i=0;i<basketList.length;i++) {
 			  for(var j=i+1;j<basketList.length;j++) {
 				  if(basketList[i].sellerId===basketList[j].sellerId) {
-					  var items = [];
-					  items.push(basketList[i]);
-					  items.push(basketList[j]);
 					  var key  =  basketList[i].sellerId;
-					  orderItemMaps[key]=items;
+					  orderItemMaps[key].push(basketList[i]);
+					  orderItemMaps[key].push(basketList[j]);
 				  }else {
 					  var items1 = [];
 					  var items2 = [];
@@ -243,15 +248,28 @@ export default {
 				  }
 			  }
 		  }
+		  var totalPay = 0;
+		  var actualPay = 0;
 		  for(var key in orderItemMaps) {
+			  orderItemMaps[key].forEach(function(item,index) {
+			  				  total += item.num*item.price;
+			  				  totalCount += item.num;
+			  				  totalPay += item.num*item.price;
+			  				  actualPay += item.num;
+			  });
+			  var orderItem = orderItemMaps[key];
+			  console.log(orderItem)
 			  var params = {
 			  		  url: `/user/${key}`,
 			  		  method: "GET",
 			  		  callBack:  res => {
 			  			var user = res.data;
+						console.log(orderItem)
 						var item = {
-							prods: orderItemMaps[key],
-							user: user
+							prods: orderItem,
+							user: user,
+							totalPay: totalPay,
+							actualPay: actualPay
 						};
 						orderItems.push(item);
 			  		  }
@@ -259,21 +277,13 @@ export default {
 			  http.request(params);
 		  }
 		   this.setData({
-		    	orderItems: orderItems
+		    	orderItems: orderItems,
+				"totalCount": totalCount,
+				"total": total,
+				"actualTotal": total+this.transfee
 		   });
 		   console.log(this.orderItems);
 	  }
-	  var total = 0;
-	  var totalCount = 0;
-	  this.orderItems.forEach(item=> {
-		  total += item.prodCount*item.price;
-		  totalCount += item.prodCount;
-		  this.setData({
-		    "totalCount": totalCount,
-			"total": total,
-			"actualTotal": total+this.transfee
-		  });
-	  });
 	  uni.hideLoading();
     },
     /**
