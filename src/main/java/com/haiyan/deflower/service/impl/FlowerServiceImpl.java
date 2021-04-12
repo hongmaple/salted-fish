@@ -54,7 +54,6 @@ public class FlowerServiceImpl implements FlowerService {
         flower.setCreateTime(new Date());
         flower.setUpdateTime(new Date());
         flower.setAuditStatus("0");
-        flower.setInventoryStatus("0");
         flower.setCreateId(user.getId());
         if(!flowerDao.save(flower)) {
             throw new ExceptionResult("flower","false",null,"新增花朵失败");
@@ -95,11 +94,7 @@ public class FlowerServiceImpl implements FlowerService {
             lambdaQuery.eq(Flower::getAuditStatus,query.getAuditStatus());
         }
 
-        if (query.getInventoryStatus()!=null) {
-            lambdaQuery.eq(Flower::getInventoryStatus,query.getInventoryStatus());
-        }
-
-        if(query.getType()>0) {
+        if(query.getType()!=null) {
             lambdaQuery.eq(Flower::getType,query.getType());
         }
 
@@ -167,5 +162,54 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public Boolean updateAuditStatus(Long id, String auditStatus) {
         return flowerDao.lambdaUpdate().set(Flower::getAuditStatus,auditStatus).eq(Flower::getId,id).update();
+    }
+
+    @Override
+    public Boolean updateSaleable(Long id, Boolean saleable) {
+        return flowerDao.lambdaUpdate().set(Flower::getSaleable,saleable).eq(Flower::getId,id).update();
+    }
+
+    @Override
+    public Boolean agency(Long id, String auditStatus) {
+        // 获取登录用户
+        User user = userUtils.getUser(ServletUtils.getRequest());
+        if (Objects.isNull(user)) {
+            throw new ExceptionResult("user","false",null,"请先登陆");
+        }
+        Flower flower = flowerDao.getById(id);
+        if (Objects.isNull(flower)) {
+            throw new ExceptionResult("flower","false",null,"商品不存在");
+        }
+        if (flower.getType()==0) {
+            throw new ExceptionResult("flower","false",null,"非寄送产品不可代理");
+        }
+        if (flower.getBackgroundAgentId()==null) {
+            return flowerDao.lambdaUpdate().set(Flower::getAuditStatus,auditStatus).set(Flower::getBackgroundAgentId,user.getId()).eq(Flower::getId,id).update();
+        }else if (flower.getBackgroundAgentId()>0&&!flower.getBackgroundAgentId().equals(user.getId())) {
+            throw new ExceptionResult("flower","false",null,"该产品已被代理");
+        }
+        return flowerDao.lambdaUpdate().set(Flower::getAuditStatus,auditStatus).set(Flower::getBackgroundAgentId,user.getId()).eq(Flower::getId,id).update();
+    }
+
+    @Override
+    public Boolean agencyUpdateSaleable(Long id, Boolean saleable) {
+        // 获取登录用户
+        User user = userUtils.getUser(ServletUtils.getRequest());
+        if (Objects.isNull(user)) {
+            throw new ExceptionResult("user","false",null,"请先登陆");
+        }
+        Flower flower = flowerDao.getById(id);
+        if (Objects.isNull(flower)) {
+            throw new ExceptionResult("flower","false",null,"商品不存在");
+        }
+        if (flower.getType()==0) {
+            throw new ExceptionResult("flower","false",null,"非寄送产品不可代理");
+        }
+        if (flower.getBackgroundAgentId()==null) {
+            flowerDao.lambdaUpdate().set(Flower::getSaleable,saleable).eq(Flower::getId,id).update();
+        }else if (flower.getBackgroundAgentId()>0&&!flower.getBackgroundAgentId().equals(user.getId())) {
+            throw new ExceptionResult("flower","false",null,"该产品已被代理");
+        }
+        return flowerDao.lambdaUpdate().set(Flower::getSaleable,saleable).eq(Flower::getId,id).update();
     }
 }

@@ -61,4 +61,29 @@ public interface FlowerService {
      * @return 结果
      */
     Boolean updateAuditStatus(Long id,String auditStatus);
+
+
+    /**
+     * 修改上架下架
+     * @param id id
+     * @param saleable 上架下架
+     * @return 结果
+     */
+    Boolean updateSaleable(Long id,Boolean saleable);
+
+    /**
+     * 代理商品
+     * @param id
+     * @param auditStatus
+     * @return
+     */
+    Boolean agency(Long id,String auditStatus);
+
+    /**
+     * 修改上架下架
+     * @param id id
+     * @param saleable 上架下架
+     * @return 结果
+     */
+    Boolean agencyUpdateSaleable(Long id,Boolean saleable);
 }

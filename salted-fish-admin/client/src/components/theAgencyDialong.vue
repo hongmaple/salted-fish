@@ -36,11 +36,17 @@
         <el-form-item label="简介" prop="oldNewLevel">
           <h6 v-text="form.brief"></h6>
         </el-form-item>
+        <el-form-item label="联系方式" prop="oldNewLevel">
+          <h6 v-text="form.contactWay"></h6>
+        </el-form-item>
+        <el-form-item label="寄放日期" prop="oldNewLevel">
+           <span style="margin-left: 10px">{{ form.depositingTime | moment }}</span>
+        </el-form-item>
         <el-form-item label="发布时间" prop="oldNewLevel">
            <span style="margin-left: 10px">{{ form.createTime | moment }}</span>
         </el-form-item>
-        <el-form-item label="审核状态" prop="auditStatus">
-           <span style="margin-left: 10px" v-text="form.auditStatus==0?'待审核':(form.auditStatus==1?'通过':'不通过')"></span>
+        <el-form-item label="代理状态" prop="auditStatus">
+           <span style="margin-left: 10px" v-text="form.auditStatus==0?'待入库':(form.auditStatus==1?'已入库':(form.auditStatus==2?'不通过':(form.auditStatus==3?'已售出':(form.auditStatus==4?'捐赠':'邮寄回家'))))"></span>
         </el-form-item>
         <el-form-item label="状态" prop="saleable">
            <span style="margin-left: 10px" v-text="form.saleable?'上架':'下架'"></span>
@@ -50,6 +56,8 @@
         <el-button @click="dialong.show = false">关闭</el-button>
         <el-button v-if="form.auditStatus==0||form.auditStatus==2" type="primary" @click="addHandle('1')">通过</el-button>
         <el-button v-if="form.auditStatus==0||form.auditStatus==1" type="primary" @click="addHandle('2')">不通过</el-button>
+        <el-button v-if="form.auditStatus==1&&form.saleable" type="primary" @click="saleableHandle('false')">下架</el-button>
+        <el-button v-if="form.auditStatus==1&&!form.saleable" type="primary" @click="saleableHandle('true')">上架</el-button>
       </div>
     </el-dialog>
   </div>
@@ -58,7 +66,7 @@
 <script>
 // @ is an alias to /src
 export default {
-  name: "FlowerDialong",
+  name: "theAgencyDialong",
   data() {
     return {
       dialogImageUrl: '',
@@ -77,7 +85,20 @@ export default {
   },
   methods: {
     addHandle(auditStatus) {
-             this.$axios.put(`api/flower/auditStatus/${this.form.id}/${auditStatus}`, null,{headers: {"token": localStorage.getItem("eleToken")}}).then(res => {
+             this.$axios.put(`api/flower/agency/${this.form.id}/${auditStatus}`, null,{headers: {"token": localStorage.getItem("eleToken")}}).then(res => {
+                this.$message({
+                  type: "success",
+                  message: "数据修改成功"
+                });
+                (this.dialong.show = false);
+                this.$emit("flowerData");
+                //清空内容
+                this.form = null;
+                this.parameter.dialogImageUrls = [];
+            });
+    },
+    saleableHandle(saleable) {
+             this.$axios.put(`api/flower/agency/saleable/${this.form.id}/${saleable}`, null,{headers: {"token": localStorage.getItem("eleToken")}}).then(res => {
                 this.$message({
                   type: "success",
                   message: "数据修改成功"

@@ -69,19 +69,24 @@ public class Flower {
     private Date depositingTime;
 
     /**
-     * 审核状态
+     * 状态
      */
     private String auditStatus;
 
     /**
-     * 入库状态
+     * 是否上架
      */
-    private String inventoryStatus;
+    private Boolean saleable;
 
     /**
      * 发布人
      */
     private Long createId;
+
+    /**
+     * 代理人
+     */
+    private Long backgroundAgentId;
 
     /**
      * 是否有效，逻辑删除用

@@ -6,8 +6,7 @@
     <text @tap="onStsTap" data-sts="0" data-tap="2" :class="tap==2?'on':''">待审核</text>
     <text @tap="onStsTap" data-sts="1" data-tap="3" :class="tap==3?'on':''">通过</text>
     <text @tap="onStsTap" data-sts="2" data-tap="4" :class="tap==4?'on':''">不通过</text>
-	<text @tap="onStsTap" data-sts="3" data-tap="5" :class="tap==5?'on':''">下架</text>
-	<text @tap="onConsignTap" data-tap="6" :class="tap==6?'on':''">寄存</text>
+	<text @tap="onConsignTap" data-tap="5" :class="tap==5?'on':''">寄存</text>
   </view>
   <!-- end 头部菜单 -->
   <view class="main">
@@ -20,8 +19,8 @@
         <view class="order-num">
           <text>宝贝编号：{{item.id}}</text>
           <view class="order-state">
-            <text :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待审核':(item.auditStatus==1?'通过':(item.auditStatus==2?'不通过':'下架'))}}</text>
-            <text style="margin-left: 10rpx;" v-if="item.type==1" :class="'order-sts  ' + (item.inventoryStatus==0 || item.inventoryStatus==1?'red':'') + '  ' + ((item.inventoryStatus==2||item.inventoryStatus==3||item.inventoryStatus==4||item.inventoryStatus==4)?'gray':'')">{{item.inventoryStatus==0?'待处理':(item.inventoryStatus==1?'待入库':(item.inventoryStatus==2?'已入库':(item.inventoryStatus==3?'已售出':(item.inventoryStatus==4?'捐赠':'回家'))))}}</text>
+            <text v-if="item.type==0" :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待审核':(item.auditStatus==1?'通过':(item.auditStatus==2?'不通过':''))}}</text>
+			<text v-if="item.type==1" :class="'order-sts  ' + (item.auditStatus==1?'gray':'') + '  ' + ((item.auditStatus==0||item.auditStatus==2||item.auditStatus==3)?'red':'')">{{item.auditStatus==0?'待入库':(item.auditStatus==1?'已入库':(item.auditStatus==2?'不通过':(item.auditStatus==3?'已售出':(item.auditStatus==4?'捐赠':'寄送回家'))))}}</text>
             <view class="clear-btn" v-if="item.auditStatus==3 || item.auditStatus==2 || item.auditStatus==0">
               <image src="/static/images/icon/clear-his.png" class="clear-list-btn" @tap="delOrderList" :data-ordernum="item.id"></image>
             </view>
@@ -52,11 +51,11 @@
         <!-- end 商品列表 -->
         <view class="prod-foot">
           <view class="btn">
-           <text v-if="item.auditStatus==1" class="button" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="3" hover-class="none">下架</text>
+           <text v-if="item.auditStatus==1&&item.saleable" class="button" @tap="updateSaleable" :data-id="item.id" data-saleable="false" hover-class="none">下架</text>
             <!-- <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text> -->
-            <text v-if="item.auditStatus==3" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="1" hover-class="none">上架</text>
-            <text v-if="item.type==1&&item.auditStatus==1&&item.inventoryStatus==2" class="button warn" @tap="onConfirmReceive" :data-id="item.id" hover-class="none">捐赠</text>
-			<text v-if="item.type==1&&item.auditStatus==1&&item.inventoryStatus==2" class="button warn" @tap="onConfirmReceive" :data-id="item.id" hover-class="none">邮寄回家</text>
+            <text v-if="item.auditStatus==1&&!item.saleable" class="button warn" @tap="updateSaleable" :data-id="item.id" data-saleable="true" hover-class="none">上架</text>
+            <text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="4" hover-class="none">捐赠</text>
+			<text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="5" hover-class="none">邮寄回家</text>
           </view>
         </view>
       </view>
@@ -243,12 +242,28 @@ export default {
 	    url: '/pages/prod/prod?prodid=' + prodid
 	  });
 	},
+	updateSaleable: function (e) {
+		const id = e.currentTarget.dataset.id;
+		const saleable = e.currentTarget.dataset.saleable;
+		var ths = this;
+		var params = {
+		  url: `/flower/saleable/${id}/${saleable}`,
+		  method: "PUT",
+		  needToken: true,
+		  callBack: function (res) {
+		    ths.loadOrderData(ths.sts,ths.type, 1);
+		    uni.hideLoading();
+		  }
+		};
+		uni.hideLoading();
+		http.request(params);
+	},
 	updateAuditStatus: function (e) {
 		const id = e.currentTarget.dataset.id;
 		const auditStatus = e.currentTarget.dataset.auditStatus;
 		var ths = this;
 		var params = {
-		  url: `/flower/auditStatus/${id}/${auditStatus}`,
+		  url: `/flower/auditStatus/${id}/${saleable}`,
 		  method: "PUT",
 		  needToken: true,
 		  callBack: function (res) {

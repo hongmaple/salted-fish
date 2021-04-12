@@ -1,12 +1,10 @@
 package com.haiyan.deflower.controller;
 
 import com.haiyan.deflower.dto.request.FlowerQuery;
-import com.haiyan.deflower.dto.response.FlowerRowVo;
 import com.haiyan.deflower.dto.response.TagRowVo;
 import com.haiyan.deflower.exception.ExceptionResult;
 import com.haiyan.deflower.pojo.AjaxResult;
 import com.haiyan.deflower.pojo.Flower;
-import com.haiyan.deflower.pojo.PageList;
 import com.haiyan.deflower.pojo.User;
 import com.haiyan.deflower.service.FlowerService;
 import com.haiyan.deflower.utils.ServletUtils;
@@ -84,7 +82,7 @@ public class FlowerController {
     @ApiOperation("加载后台商品列表")
     @PostMapping("/backstage/list")
     public AjaxResult backstageListFlower(@RequestBody FlowerQuery query) {
-        AjaxResult ajaxResult = AjaxResult.success(flowerService.listFlower(query));
+        AjaxResult ajaxResult = AjaxResult.success(flowerService.backstageListFlower(query));
         return ajaxResult;
     }
 
@@ -137,5 +135,41 @@ public class FlowerController {
     @PutMapping("/auditStatus/{id}/{auditStatus}")
     public Boolean updateAuditStatus(@PathVariable Long id,@PathVariable String auditStatus) {
         return  flowerService.updateAuditStatus(id,auditStatus);
+    }
+
+    /**
+     * 修改上架下架
+     * @param id id
+     * @param saleable 上架下架
+     * @return 结果
+     */
+    @ApiOperation("修改上架下架 ")
+    @PutMapping("/saleable/{id}/{saleable}")
+    public Boolean updateSaleable(@PathVariable Long id,@PathVariable Boolean saleable) {
+        return  flowerService.updateSaleable(id,saleable);
+    }
+
+    /**
+     * 代理商品
+     * @param id id
+     * @param auditStatus 审核状态
+     * @return 结果
+     */
+    @ApiOperation("代理商品 ")
+    @PutMapping("/agency/{id}/{auditStatus}")
+    public Boolean agency(@PathVariable Long id,@PathVariable String auditStatus) {
+        return  flowerService.agency(id,auditStatus);
+    }
+
+    /**
+     * 修改上架下架
+     * @param id id
+     * @param saleable 上架下架
+     * @return 结果
+     */
+    @ApiOperation("修改上架下架 ")
+    @PutMapping("/agency/saleable/{id}/{saleable}")
+    public Boolean agencyUpdateSaleable(@PathVariable Long id,@PathVariable Boolean saleable) {
+        return  flowerService.agencyUpdateSaleable(id,saleable);
     }
 }

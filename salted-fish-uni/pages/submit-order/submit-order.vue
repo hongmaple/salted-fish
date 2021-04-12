@@ -28,83 +28,68 @@
     </view>
 
     <!-- 商品详情 -->
-    <view class="prod-item">
-      <block v-for="(item, index) in orderItems" :key="index">
-        <view class="item-cont" @tap="toOrderDetailPage" :data-ordernum="item.prodCount">
-          <view class="prod-pic">
-            <image :src="serverUrl+item.pic"></image>
-          </view>
-          <view class="prod-info">
-            <view class="prodname">
-              {{item.title}}
-            </view>
-            <view class="price-nums">
-              <text class="prodprice"><text class="symbol">￥</text>
-              <text class="big-num">{{wxs.parsePrice(item.price)[0]}}</text>
-              <text class="small-num">.{{wxs.parsePrice(item.price)[1]}}</text></text>
-              <text class="prodcount">x{{item.prodCount}}</text>
-            </view>
-          </view>
-        </view>
-      </block>
-      <!-- <view class='item-cont' bindtap='toOrderDetailPage' data-ordernum="{{item.primaryOrderNo}}">
-        <view class='prod-pic'>
-          <image src='../../images/prod/pic09.jpg'></image>
-        </view>
-        <view class='prod-info'>
-          <view class='prodname'>
-            THE BEAST/野兽派 易烊千玺同款
-          </view>
-          <view class='prod-info-cont'>经典杯型升级，杯型更细长优雅</view>
-          <view class='price-nums'>
-            <text class='prodprice'><text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(40.00)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(40.00)[1]}}</text></text>
-            <text class="prodcount">x1</text>
-          </view>
-        </view>
-      </view> -->
-
-      <view class="total-num">
-        <text class="prodcount">共{{totalCount}}件商品</text>
-        <view class="prodprice">合计：
-          <text class="symbol">￥</text>
-          <text class="big-num">{{wxs.parsePrice(total)[0]}}</text>
-          <text class="small-num">.{{wxs.parsePrice(total)[1]}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 订单详情 -->
-    <view class="order-msg">
-      <view class="msg-item">
-        <view class="item">
-          <text>买家留言：</text>
-          <input placeholder="给卖家留言" @input="onDistrictInput"></input>
-        </view>
-      </view>
-    </view>
-
-    <view class="order-msg">
-      <view class="msg-item">
-        <view class="item">
-          <view class="item-tit">运费：</view>
-          <view class="item-txt price">
-            <text class="symbol">￥</text>
-            <text class="big-num">{{wxs.parsePrice(transfee)[0]}}</text>
-            <text class="small-num">.{{wxs.parsePrice(transfee)[1]}}</text>
-          </view>
-        </view>
-        <view class="item payment">
-          <view class="item-txt price">
-            小计：
-            <text class="symbol">￥</text>
-            <text class="big-num">{{wxs.parsePrice(actualTotal)[0]}}</text>
-            <text class="small-num">.{{wxs.parsePrice(actualTotal)[1]}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
+	<block v-for="(orderItem, index0) in orderItems" :key="index0">
+	 <h3>{{orderItem.user.username}}</h3>
+		<view class="prod-item">
+		  <block v-for="(item, index) in orderItem.prods" :key="index">
+			<view class="item-cont" @tap="toOrderDetailPage" :data-ordernum="item.num">
+			  <view class="prod-pic">
+				<image :src="serverUrl+item.image"></image>
+			  </view>
+			  <view class="prod-info">
+				<view class="prodname">
+				  {{item.title}}
+				</view>
+				<view class="price-nums">
+				  <text class="prodprice"><text class="symbol">￥</text>
+				  <text class="big-num">{{wxs.parsePrice(item.price)[0]}}</text>
+				  <text class="small-num">.{{wxs.parsePrice(item.price)[1]}}</text></text>
+				  <text class="prodcount">x{{item.num}}</text>
+				</view>
+			  </view>
+			</view>
+		  </block>
+		  <view class="total-num">
+			<text class="prodcount">共{{totalCount}}件商品</text>
+			<view class="prodprice">合计：
+			  <text class="symbol">￥</text>
+			  <text class="big-num">{{wxs.parsePrice(total)[0]}}</text>
+			  <text class="small-num">.{{wxs.parsePrice(total)[1]}}</text>
+			</view>
+		  </view>
+		</view>
+		
+		<!-- 订单详情 -->
+		<view class="order-msg">
+		  <view class="msg-item">
+		    <view class="item">
+		      <text>买家留言：</text>
+		      <input placeholder="给卖家留言" @input="onDistrictInput"></input>
+		    </view>
+		  </view>
+		</view>
+		
+		<view class="order-msg">
+		  <view class="msg-item">
+		    <view class="item">
+		      <view class="item-tit">运费：</view>
+		      <view class="item-txt price">
+		        <text class="symbol">￥</text>
+		        <text class="big-num">{{wxs.parsePrice(transfee)[0]}}</text>
+		        <text class="small-num">.{{wxs.parsePrice(transfee)[1]}}</text>
+		      </view>
+		    </view>
+		    <view class="item payment">
+		      <view class="item-txt price">
+		        小计：
+		        <text class="symbol">￥</text>
+		        <text class="big-num">{{wxs.parsePrice(actualTotal)[0]}}</text>
+		        <text class="small-num">.{{wxs.parsePrice(actualTotal)[1]}}</text>
+		      </view>
+		    </view>
+		  </view>
+		</view>
+    </block>	
   </view>
 
 
@@ -142,13 +127,7 @@ export default {
       orderEntry: "0",
       userAddr: null,
       orderItems: [
-		  {
-			  skuId: 0,
-			  title: '',
-			  price: 0,
-			  prodCount: 0,
-			  pic: ''
-		  }
+		
 	  ],
 	  total: 0,
       actualTotal: 0,
@@ -222,27 +201,67 @@ export default {
       });
 	  if(this.orderEntry === "1") {
 		  var item =  JSON.parse(uni.getStorageSync("orderItem"));
-		  var orderItems = [];
-		  orderItems[0] = item;
-		  this.setData({
-		    "orderItems": orderItems
-		  });
+		  var params = {
+		  		  url: `/user/${item.sellerId}`,
+		  		  method: "GET",
+		  		  callBack:  res => {
+		  			var user = res.data;
+					var orderItems = [];
+					var prods = [];
+					prods[0] = item;
+					orderItems[0] = {
+						prods: prods,
+						user: user
+					};
+					this.setData({
+					  orderItems: orderItems
+					});
+		  		  }
+		  };
+		  http.request(params);
 	  }else {
 		  var basketList = uni.getStorageSync("basketIds");
 		  var orderItems = [];
-		  basketList.forEach(item => {
-			  var orderItem = {
-				  skuId: item.skuId,
-				  title: item.title,
-				  price: item.price,
-				  prodCount: item.num,
-				  pic: item.image
+		  var orderItemMaps = {};
+		  for(var i=0;i<basketList.length;i++) {
+			  for(var j=i+1;j<basketList.length;j++) {
+				  if(basketList[i].sellerId===basketList[j].sellerId) {
+					  var items = [];
+					  items.push(basketList[i]);
+					  items.push(basketList[j]);
+					  var key  =  basketList[i].sellerId;
+					  orderItemMaps[key]=items;
+				  }else {
+					  var items1 = [];
+					  var items2 = [];
+					  items1.push(basketList[i]);
+					  items2.push(basketList[j]);
+					  var key1  =  basketList[i].sellerId;
+					  var key2  =  basketList[j].sellerId;
+					  orderItemMaps[key1]=items1;
+					  orderItemMaps[key2]=items2;
+				  }
 			  }
-			  orderItems.push(orderItem);
-		  });
+		  }
+		  for(var key in orderItemMaps) {
+			  var params = {
+			  		  url: `/user/${key}`,
+			  		  method: "GET",
+			  		  callBack:  res => {
+			  			var user = res.data;
+						var item = {
+							prods: orderItemMaps[key],
+							user: user
+						};
+						orderItems.push(item);
+			  		  }
+			  };
+			  http.request(params);
+		  }
 		   this.setData({
-		    	"orderItems": orderItems
+		    	orderItems: orderItems
 		   });
+		   console.log(this.orderItems);
 	  }
 	  var total = 0;
 	  var totalCount = 0;
@@ -308,7 +327,6 @@ export default {
         data: data,
 		callBack: function(res) {
 			uni.hideLoading();
-			console.log(res.data);
 			ths.simulationPay(res.data);
 		}
       };
@@ -359,7 +377,7 @@ export default {
 		this.setData({
 		  remark: e.detail.value
 		});
-	},
+	}
   }
 };
 </script>

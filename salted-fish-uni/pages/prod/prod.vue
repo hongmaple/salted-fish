@@ -247,7 +247,8 @@ export default {
       isCollection: false,
 	  serverUrl: config.domain,
 	  user: {},
-	  sellerId: 0
+	  sellerId: 0,
+	  backgroundAgentId: 0
     };
   },
 
@@ -386,7 +387,8 @@ export default {
             specification: "规格："+res.specification,
             pic: res.images,
 			oldNewLevel: res.oldNewLevel,
-			sellerId: res.createId
+			sellerId: res.createId,
+			backgroundAgentId: res.backgroundAgentId
           }); 
 		  var params = {
 		    url: `/user/${this.sellerId}`,
@@ -557,6 +559,13 @@ export default {
 		uni.showLoading({
 		  mask: true
 		});
+		if(this.prodNum==0) {
+			uni.showToast({
+			  title: "至少选择一件",
+			  icon: "none"
+			});
+			return;
+		}
 		var params = {
 		  url: "/cart",
 		  method: "POST",
@@ -566,7 +575,9 @@ export default {
 		    title: this.prodName,
 		    image: this.pic,
 		    price: this.price,
-			num: this.prodNum
+			num: this.prodNum,
+	        sellerId: this.sellerId,
+		    backgroundAgentId: this.backgroundAgentId
 		  },
 		  callBack: res => {
 			var totalCartNum = http.getCartCount();
@@ -595,7 +606,9 @@ export default {
 			title: this.prodName,
 			price: this.price,
 			prodCount: 1,
-			pic: this.pic
+			pic: this.pic,
+			sellerId: res.createId,
+			backgroundAgentId: res.backgroundAgentId
       };
       uni.setStorageSync("orderItem", JSON.stringify(item));
       uni.navigateTo({

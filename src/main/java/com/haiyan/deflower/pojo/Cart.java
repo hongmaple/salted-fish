@@ -21,6 +21,17 @@ public class Cart {
      * 用户id
      */
     private Long userId;
+
+    /**
+     * 卖家id
+     */
+    private Long sellerId;
+
+    /**
+     * 后台代理用户id
+     */
+    private Long backgroundAgentId;
+
     /**
      * 商品id
      */

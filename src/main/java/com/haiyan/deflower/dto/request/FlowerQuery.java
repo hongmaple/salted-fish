@@ -26,9 +26,9 @@ public class FlowerQuery extends PageDomain {
     @ApiModelProperty("审核状态")
     private String auditStatus;
 
-    @ApiModelProperty("入库状态")
-    private String inventoryStatus;
+    @ApiModelProperty("是否上架")
+    private Boolean saleable;
 
     @ApiModelProperty("类型")
-    private int type;
+    private Integer type;
 }

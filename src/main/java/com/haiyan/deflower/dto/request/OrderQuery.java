@@ -17,4 +17,6 @@ public class OrderQuery extends PageDomain {
     private String orderId;
     @ApiModelProperty("订单状态")
     private Integer status;
+    @ApiModelProperty("商品类型")
+    private Integer type;
 }

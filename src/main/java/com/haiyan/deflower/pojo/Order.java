@@ -35,6 +35,16 @@ public class Order {
     private Date createTime;
 
     /**
+     * 卖家id
+     */
+    private Long sellerId;
+
+    /**
+     * 后台代理用户id
+     */
+    private Long backgroundAgentId;
+
+    /**
      * 用户id
      */
     private Long userId;

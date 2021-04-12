@@ -168,9 +168,17 @@ public class OrderServiceImpl implements OrderService {
         if (StringUtils.hasText(query.getOrderId())) {
             lambdaQuery.like(Order::getOrderId,query.getOrderId());
         }
-        if (query.getStatus()>0) {
+        if (query.getStatus()!=null) {
             lambdaQuery.eq(Order::getStatus,query.getStatus());
         }
+        if (query.getType()!=null) {
+            if (query.getType()==0) {
+                lambdaQuery.eq(Order::getSellerId,user.getId());
+            }else {
+                lambdaQuery.eq(Order::getBackgroundAgentId,user.getId());
+            }
+        }
+
         Page<Order> orderPage = lambdaQuery
                 .orderByDesc(Order::getCreateTime)
                 .page(new Page<>(query.getPageNum(), query.getPageSize()));

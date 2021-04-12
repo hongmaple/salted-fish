@@ -135,6 +135,7 @@ export default {
 		  var params = {
 		    url: "/cart/list",
 		    method: "POST",
+			needToken: true,
 		    data: {
 		  	  "pageNum": 1,
 		  	  "pageSize": 10

@@ -103,12 +103,14 @@
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" align="center" label="图片">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" property="title" align="center" label="商品名"></el-table-column>
+                                    <el-table-column width="100" property="num" align="center" label="数量"></el-table-column>
+                                    <el-table-column width="300" property="price" align="center" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
@@ -232,12 +234,14 @@
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" align="center" label="图片">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" align="center" property="title" label="商品名"></el-table-column>
+                                    <el-table-column width="100" align="center" property="num" label="数量"></el-table-column>
+                                    <el-table-column width="300" align="center" property="price" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
@@ -366,12 +370,14 @@
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" align="center" label="图片">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" align="center" property="title" label="商品名"></el-table-column>
+                                    <el-table-column width="100" align="center" property="num" label="数量"></el-table-column>
+                                    <el-table-column width="300" align="center" property="price" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
@@ -495,12 +501,14 @@
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" align="center" label="图片">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" align="center" property="title" label="商品名"></el-table-column>
+                                    <el-table-column width="100" align="center" property="num" label="数量"></el-table-column>
+                                    <el-table-column width="300" align="center" property="price" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
@@ -619,24 +627,19 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button
-                            size="mini"
-                            @click="shipments(scope.row.orderId)">发货</el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" fixed="right">
-                        <template slot-scope="scope">
                             <el-popover
                                 placement="right"
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" align="center" label="图片">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" align="center" property="title" label="商品名"></el-table-column>
+                                    <el-table-column width="100" align="center" property="num" label="数量"></el-table-column>
+                                    <el-table-column width="300" align="center" property="price" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
@@ -754,25 +757,20 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button
-                            size="mini"
-                            @click="shipments(scope.row.orderId)">发货</el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" fixed="right">
                        <template slot-scope="scope">
                             <el-popover
                                 placement="right"
                                 width="800"
                                 trigger="click">
                                 <el-table :data="scope.row.orderDetails">
-                                    <el-table-column width="150" label="图片" property="image">
-                                        <img style="width:100px;height=80px;" alt="图片" :src="'api/'+scope.row.orderDetails[scope.$index].image"/>
+                                    <el-table-column width="150" label="图片" align="center">
+                                        <template slot-scope="setails">
+                                            <img style="width:100px;height=80px;" alt="图片" :src="'api'+setails.row.image"/>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column width="300" property="title" label="商品名"></el-table-column>
-                                    <el-table-column width="100" property="num" label="数量"></el-table-column>
-                                    <el-table-column width="300" property="price" label="单价"></el-table-column>
+                                    <el-table-column width="300" align="center" property="title" label="商品名"></el-table-column>
+                                    <el-table-column width="100" align="center" property="num" label="数量"></el-table-column>
+                                    <el-table-column width="300" align="center" property="price" label="单价"></el-table-column>
                                 </el-table>
                                 <el-button slot="reference">查看</el-button>
                             </el-popover>
