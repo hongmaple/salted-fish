@@ -15,6 +15,5 @@ import java.util.List;
 @ApiModel("新增订单")
 public class OrderBody extends Order {
     private List<OrderDetail> orderDetails;
-    private Long total;
-    private Long actualTotal;
+
 }

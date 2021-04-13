@@ -68,7 +68,7 @@ public class CartController {
     @ApiOperation("分页查询购物车")
     @PostMapping("/list")
     public AjaxResult listCart(@RequestBody PageDomain pageDomain) {
-        AjaxResult ajaxResult = AjaxResult.success("修改购物车成功",cartService.listCart(pageDomain));
+        AjaxResult ajaxResult = AjaxResult.success("加载购物车成功",cartService.listCart(pageDomain));
         return ajaxResult;
     }
 

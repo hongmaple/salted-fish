@@ -28,7 +28,7 @@
     </view>
 
     <!-- 商品详情 -->
-	<block v-for="(orderItem, index0) in orderItems" :key="index0">
+	<block v-for="(orderItem, orderItemIndex) in orderItems" :key="orderItemIndex">
 		<view class="prod-item">
 		  <view class="section">
 		    <image style="width: 130rpx;height: 130rpx;" :src="orderItem.user.avatarImage?serverUrl+orderItem.user.avatarImage:'../../static/images/icon/head04.png'"></image>
@@ -59,7 +59,7 @@
 		  <view class="msg-item">
 		    <view class="item">
 		      <text>买家留言：</text>
-		      <input placeholder="给卖家留言" @input="onDistrictInput"></input>
+		      <input placeholder="给卖家留言" :value="orderItem.remark" :data-orderItemIndex="orderItemIndex" @input="onDistrictInput"></input>
 		    </view>
 		  </view>
 		</view>
@@ -138,7 +138,6 @@ export default {
       totalCount: 0,
       transfee: 10,
       reduceAmount: 0,
-      remark: "",
 	  serverUrl: config.domain
     };
   },
@@ -215,14 +214,18 @@ export default {
 		  			var user = res.data;
 					var prods = [];
 					prods[0] = item;
+					total += item.num*item.price;
+					totalCount += item.num;
 					orderItems[0] = {
 						prods: prods,
 						user: user,
-						totalPay: totalPay,
-						actualPay: actualPay
+						totalPay: total,
+						actualPay: total+ths.transfee,
+						subtotalCount: totalCount,
+						remark: '',
+						backgroundAgentId: item.backgroundAgentId
 					};
-					total += item.num*item.price;
-					totalCount += item.num;
+					console.log(orderItems);
 					ths.setData({
 					  orderItems: orderItems,
 					  "totalCount": totalCount,
@@ -234,6 +237,7 @@ export default {
 		  http.request(params);
 	  }else {
 		  var basketList = uni.getStorageSync("basketIds");
+		  console.log(basketList);
 		  // var orderItemMaps = {};
 		  // for(var i=0;i<basketList.length;i++) {
 			 //  for(var j=i+1;j<basketList.length;j++) {
@@ -311,7 +315,7 @@ export default {
 			    basket.basketProds.forEach(function(item,index) {
 			    				  totalCount += item.num;
 			    				  totalPay += item.num*item.price;
-			  				  subtotalCount +=item.num;
+			  				      subtotalCount +=item.num;
 			    });
 			    actualPay += totalPay+ths.transfee;
 			    total += actualPay;
@@ -321,7 +325,9 @@ export default {
 			    	totalPay: totalPay,
 			    	actualPay: actualPay,
 			    	subtotalCount: subtotalCount,
-			  	    user: basket.user
+			  	    user: basket.user,
+					remark: '',
+					backgroundAgentId: basket.backgroundAgentId
 			    };
 			  orderItems.push(item);
 		  });
@@ -331,7 +337,6 @@ export default {
 				"total": total,
 				"actualTotal": total
 		   });
-		   console.log(ths.orderItems);
 	  }
 	  uni.hideLoading();
     },
@@ -364,32 +369,45 @@ export default {
       uni.showLoading({
         mask: true
       });
-	  var orderDetails = [];
-	  this.orderItems.forEach(item=> {
-			   var orderDetail = {
-				   id: 0,
-				   orderId: 0,
-				   skuId: item.skuId,
-				   num: item.prodCount,
-				   title: item.title,
-				   price: item.price,
-				   image: item.pic
-			   }
-			   orderDetails.push(orderDetail);
+	  var orderItems = this.orderItems;
+	  var orderBodys = [];
+	  orderItems.forEach(orderItem => {
+		  var orderDetails = [];
+		  orderItem.prods.forEach(item => {
+			  var orderDetail = {
+			  				   id: 0,
+			  				   orderId: 0,
+			  				   skuId: item.skuId,
+			  				   num: item.prodCount,
+			  				   title: item.title,
+			  				   price: item.price,
+			  				   image: item.pic
+			  }
+			  orderDetails.push(orderDetail);
+		  });
+		 var orderBody = {
+		  		  totalPay: orderItem.totalPay,
+		  		  actualPay: orderItem.actualPay,
+		  		  receiver: this.userAddr.consignee,
+		  		  receiverMobile: this.userAddr.consigneePhone,
+		  		  receiverState: this.userAddr.province,
+		  		  receiverCity: this.userAddr.city,
+		  		  receiverDistrict: this.userAddr.district,
+		  		  receiverAddress: this.userAddr.detail,
+		  		  remark: orderItem.remark,
+		  		  orderDetails: orderDetails,
+				  sellerId: orderItem.user.id,
+				  backgroundAgentId: orderItem.backgroundAgentId
+		  }
+		  orderBodys.push(orderBody)
 	  });
-	  var data = {
-		  totalPay: this.actualTotal,
-		  actualPay: this.actualTotal,
-		  receiver: this.userAddr.consignee,
-		  receiverMobile: this.userAddr.consigneePhone,
-		  receiverState: this.userAddr.province,
-		  receiverCity: this.userAddr.city,
-		  receiverDistrict: this.userAddr.district,
-		  receiverAddress: this.userAddr.detail,
-		  remark: this.remark,
-		  orderDetails: orderDetails
-	  }
 	  var ths = this;
+	  var data = {
+		  orderBodies: orderBodys,
+		  total: this.total,
+		  actualTotal: this.actualTotal
+	  }
+	  console.log(data);
       var params = {
         url: "/order",
         method: "POST",
@@ -397,10 +415,21 @@ export default {
         data: data,
 		callBack: function(res) {
 			uni.hideLoading();
-			ths.simulationPay(res.data);
+			res.data.forEach(orderNumbers => {
+				ths.simulationPay(orderNumbers);
+				uni.showToast({
+					title: "模拟支付成功",
+					icon:"none"
+				})
+				setTimeout(() => {
+					uni.navigateTo({
+					  url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers
+					});
+				},1200)
+			});
 		}
       };
-      http.request(params);
+      //http.request(params);
     },	
 	//模拟支付，直接提交成功
 	simulationPay: function(orderNumbers){
@@ -416,20 +445,13 @@ export default {
 					console.log("res",res)
 					uni.hideLoading();
 					if(res){
-						uni.showToast({
-							title: "模拟支付成功",
-							icon:"none"
-						})
-						setTimeout(() => {
-							uni.navigateTo({
-							  url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers
-							});
-						},1200)
+
 					}else{
 						uni.showToast({
 							title: "支付失败！",
 							icon:"none"
 						})
+						return;
 					}
 			  }
 			};
@@ -444,8 +466,11 @@ export default {
       });
     },
 	onDistrictInput: function(e) {
+		var orderItemIndex = e.currentTarget.dataset.prodid
+		var orderItems = this.orderItems;
+		orderItems.remark=e.detail.value;
 		this.setData({
-		  remark: e.detail.value
+		  orderItems: orderItems
 		});
 	},
 	//跳转商品详情页

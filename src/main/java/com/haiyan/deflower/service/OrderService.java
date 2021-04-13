@@ -1,6 +1,7 @@
 package com.haiyan.deflower.service;
 
 import com.haiyan.deflower.dto.request.OrderBody;
+import com.haiyan.deflower.dto.request.OrderListBody;
 import com.haiyan.deflower.dto.request.OrderQuery;
 import com.haiyan.deflower.dto.response.OrderDetailsVo;
 import com.haiyan.deflower.dto.response.OrderRowVo;
@@ -17,11 +18,11 @@ public interface OrderService {
     /**
      * 创建订单
      *
-     * @param orders
+     * @param orderListBody
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    List<Long> createOrder(List<OrderBody> orders);
+    List<Long> createOrder(OrderListBody orderListBody);
 
     /**
      * 根据订单id查询订单

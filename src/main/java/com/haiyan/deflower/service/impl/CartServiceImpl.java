@@ -99,18 +99,29 @@ public class CartServiceImpl implements CartService {
         Iterator<Map.Entry<Long, List<Cart>>> entries = collect.entrySet().iterator();
         while(entries.hasNext()){
             Map.Entry<Long, List<Cart>> entry = entries.next();
-            User user1 = userDao.getById(entry.getKey());
-            User user2 = new User();
-            CartRowVo cartRowVo = new CartRowVo();
-            if (Objects.isNull(user1)) {
-                user2.setUsername("该卖家已注销");
+            Map<Long, List<Cart>> collect2 = entry.getValue().parallelStream().collect(Collectors.groupingBy(Cart::getBackgroundAgentId));
+            Iterator<Map.Entry<Long, List<Cart>>> entries2 = collect2.entrySet().iterator();
+            while(entries2.hasNext()){
+                Map.Entry<Long, List<Cart>> entry2 = entries2.next();
+                User user1 = userDao.getById(entry.getKey());
+                User user2 = new User();
+                CartRowVo cartRowVo = new CartRowVo();
+                if (Objects.isNull(user1)) {
+                    user2.setUsername("该卖家已注销");
+                }
+                if (entry2.getKey()>0) {
+                    cartRowVo.setIsAgent(true);
+                    cartRowVo.setBackgroundAgentId(entry2.getKey());
+                }else {
+                    cartRowVo.setIsAgent(false);
+                }
+                user2.setUsername(user1.getUsername());
+                user2.setId(user1.getId());
+                user2.setAvatarImage(user1.getAvatarImage());
+                cartRowVo.setUser(user2);
+                cartRowVo.setCarts(entry2.getValue());
+                cartRowVos.add(cartRowVo);
             }
-            user2.setUsername(user1.getUsername());
-            user2.setId(user1.getId());
-            user2.setAvatarImage(user1.getAvatarImage());
-            cartRowVo.setUser(user2);
-            cartRowVo.setCarts(entry.getValue());
-            cartRowVos.add(cartRowVo);
         }
 
         return PageList.of(cartRowVos, page);

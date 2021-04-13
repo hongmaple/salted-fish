@@ -15,4 +15,9 @@ import java.util.List;
 public class CartRowVo {
     private User user;
     private List<Cart> carts;
+    private Boolean isAgent;
+    /**
+     * 后台代理用户id
+     */
+    private Long backgroundAgentId;
 }

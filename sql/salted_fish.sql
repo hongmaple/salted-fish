@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 13/04/2021 15:13:37
+ Date: 13/04/2021 18:07:53
 */
 
 SET NAMES utf8mb4;
@@ -93,7 +93,7 @@ CREATE TABLE `tb_cart`  (
   `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` bigint(0) NULL DEFAULT NULL COMMENT '用户id',
   `seller_id` bigint(0) NULL DEFAULT NULL COMMENT '卖家id',
-  `background_agent_id` bigint(0) NULL DEFAULT NULL COMMENT '后台代理用户id',
+  `background_agent_id` bigint(0) NULL DEFAULT 0 COMMENT '后台代理用户id',
   `sku_id` bigint(0) NULL DEFAULT NULL COMMENT '商品id',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品标题',
   `image` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片',
@@ -105,11 +105,12 @@ CREATE TABLE `tb_cart`  (
 -- ----------------------------
 -- Records of tb_cart
 -- ----------------------------
-INSERT INTO `tb_cart` VALUES (10, 1, 1, NULL, 1, '一路上有你 [泰国进口] 真空玫瑰花，红玫瑰系列', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 368, 3);
-INSERT INTO `tb_cart` VALUES (11, 1, 2, NULL, 3, '蝴蝶兰4株', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 388, 3);
-INSERT INTO `tb_cart` VALUES (12, 1, 3, NULL, 8, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 66, 3);
-INSERT INTO `tb_cart` VALUES (13, 1, 2, NULL, 4, '吉祥如意', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 218, 3);
-INSERT INTO `tb_cart` VALUES (14, 1, 2, NULL, 2, '你是唯一 [11枝新品 一心一意的爱] 卡罗拉红玫瑰11枝', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 168, 3);
+INSERT INTO `tb_cart` VALUES (10, 1, 1, 0, 1, '一路上有你 [泰国进口] 真空玫瑰花，红玫瑰系列', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 368, 3);
+INSERT INTO `tb_cart` VALUES (11, 1, 2, 0, 3, '蝴蝶兰4株', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 388, 3);
+INSERT INTO `tb_cart` VALUES (12, 1, 3, 0, 8, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 66, 3);
+INSERT INTO `tb_cart` VALUES (13, 1, 2, 0, 4, '吉祥如意', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 218, 3);
+INSERT INTO `tb_cart` VALUES (14, 1, 2, 0, 2, '你是唯一 [11枝新品 一心一意的爱] 卡罗拉红玫瑰11枝', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 168, 3);
+INSERT INTO `tb_cart` VALUES (15, 1, 1, 1, 11, '啊实打实打算', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 900, 1);
 
 -- ----------------------------
 -- Table structure for tb_category
@@ -169,7 +170,7 @@ INSERT INTO `tb_flower` VALUES (7, 1, '狗尾巴花', '/profile/upload/2021/04/0
 INSERT INTO `tb_flower` VALUES (8, 2, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 66.5, ' 让每点阳光，洒于你脸庞；令你的微笑，比花更盛放！', '全新', NULL, 0, NULL, NULL, '1', 1, 3, NULL, '2021-03-18 16:45:56', '2021-03-18 16:59:11', 0);
 INSERT INTO `tb_flower` VALUES (9, 1, 'dfd时代的', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 10, '三种方法阿斯顿撒旦', '全新', 'asd三国杀根深蒂固士大夫大师傅', 0, NULL, '2021-04-09 08:00:00', '1', 1, 1, NULL, '2021-04-09 13:55:49', '2021-04-09 13:55:49', 0);
 INSERT INTO `tb_flower` VALUES (10, 1, '阿萨大大', '/profile/upload/2021/04/09/68d97cc8-d86a-4e38-bcb2-2eb67ac32343.png', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 100, '阿斯顿撒', '全新', 'sfasf税控盘看过是东方扣税的奋斗史\n的身份美女撒旦发射点发射点是电脑辐射的\n士大夫士大夫矛盾双方手动阀手动阀\n', 0, NULL, '2021-04-09 08:00:00', '2', 0, 1, NULL, '2021-04-09 14:04:44', '2021-04-09 14:04:44', 0);
-INSERT INTO `tb_flower` VALUES (11, 1, '啊实打实打算', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 900, '阿萨的倒十分', '全新', 'asdasfsdfsd我去额前问问微软微软我fdsfdsf俺认为人情味w\'qwq\n\n士大夫士大夫士大夫撒旦发射点发\nsdfsdfsdfsdf\n\n\n适当方式付款', 1, '18975678999', '2021-08-06 08:00:00', '1', 1, 1, 1, '2021-04-09 14:06:49', '2021-04-09 14:06:49', 0);
+INSERT INTO `tb_flower` VALUES (11, 1, '啊实打实打算', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 900, '阿萨的倒十分', '全新', 'asdasfsdfsd我去额前问问微软微软我fdsfdsf俺认为人情味w\'qwq\n\n士大夫士大夫士大夫撒旦发射点发\nsdfsdfsdfsdf\n\n\n适当方式付款', 1, '18975678999', '2021-08-06 08:00:00', '1', 1, 2, 1, '2021-04-09 14:06:49', '2021-04-09 14:06:49', 0);
 
 -- ----------------------------
 -- Table structure for tb_flower_favorite
@@ -281,7 +282,7 @@ CREATE TABLE `tb_user`  (
 -- Records of tb_user
 -- ----------------------------
 INSERT INTO `tb_user` VALUES (1, 'maple', '876876546379', '大四', '123456', '18976618156', 'student', '/profile/upload/2021/04/12/aeb30bc8-adec-4cb9-b738-1b3f3427c007.jpg', '2021-03-10 15:51:21');
-INSERT INTO `tb_user` VALUES (2, 'maple', '654786547687', '大二', '123456', '13976618156', 'student', '/profile/upload/2021/04/12/aeb30bc8-adec-4cb9-b738-1b3f3427c007.jpg', '2021-03-10 16:06:24');
+INSERT INTO `tb_user` VALUES (2, 'maple2', '654786547687', '大二', '123456', '13976618156', 'student', '/profile/upload/2021/04/12/aeb30bc8-adec-4cb9-b738-1b3f3427c007.jpg', '2021-03-10 16:06:24');
 INSERT INTO `tb_user` VALUES (3, 'maple16', '987654327865', '大三', '123456', '16976618156', 'student', '/profile/upload/2021/04/12/aeb30bc8-adec-4cb9-b738-1b3f3427c007.jpg', '2021-03-18 18:34:11');
 
 SET FOREIGN_KEY_CHECKS = 1;

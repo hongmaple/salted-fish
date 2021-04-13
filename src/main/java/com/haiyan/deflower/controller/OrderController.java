@@ -1,6 +1,7 @@
 package com.haiyan.deflower.controller;
 
 import com.haiyan.deflower.dto.request.OrderBody;
+import com.haiyan.deflower.dto.request.OrderListBody;
 import com.haiyan.deflower.dto.request.OrderQuery;
 import com.haiyan.deflower.dto.response.OrderRowVo;
 import com.haiyan.deflower.pojo.AjaxResult;
@@ -30,14 +31,14 @@ public class OrderController {
     /**
      * 创建订单
      *
-     * @param orders 订单对象
+     * @param orderListBody 订单对象
      * @return 订单编号
      */
     @PostMapping
     @ApiOperation(value = "创建订单接口，返回订单编号", notes = "创建订单")
     @ApiImplicitParam(name = "order", required = true, value = "订单的json对象,包含订单条目和物流信息")
-    public AjaxResult createOrder(@RequestBody @Valid List<OrderBody> orders) {
-        List<Long> ids = this.orderService.createOrder(orders);
+    public AjaxResult createOrder(@RequestBody @Valid OrderListBody orderListBody) {
+        List<Long> ids = this.orderService.createOrder(orderListBody);
         AjaxResult ajaxResult = AjaxResult.success("创建订单成功",ids);
         return ajaxResult;
     }

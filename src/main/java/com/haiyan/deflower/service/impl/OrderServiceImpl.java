@@ -6,6 +6,7 @@ import com.haiyan.deflower.dao.FlowerDao;
 import com.haiyan.deflower.dao.OrderDao;
 import com.haiyan.deflower.dao.OrderDetailDao;
 import com.haiyan.deflower.dto.request.OrderBody;
+import com.haiyan.deflower.dto.request.OrderListBody;
 import com.haiyan.deflower.dto.request.OrderQuery;
 import com.haiyan.deflower.dto.response.OrderDetailsVo;
 import com.haiyan.deflower.dto.response.OrderRowVo;
@@ -60,14 +61,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Long> createOrder(List<OrderBody> orderBodes) {
+    public List<Long> createOrder(OrderListBody orderListBody) {
         // 获取登录用户
         User user = userUtils.getUser(ServletUtils.getRequest());
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
         List<Long> orderIds = new ArrayList<>();
-        orderBodes.forEach(orderBody -> {
+        orderListBody.getOrderBodies().forEach(orderBody -> {
             // 生成orderId
             long orderId = idWorker.nextId();
             // 初始化数据
