@@ -7,6 +7,8 @@ import com.haiyan.deflower.dto.response.OrderRowVo;
 import com.haiyan.deflower.pojo.PageList;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author haiyan
  */
@@ -15,11 +17,11 @@ public interface OrderService {
     /**
      * 创建订单
      *
-     * @param order
+     * @param orders
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    Long createOrder(OrderBody order);
+    List<Long> createOrder(List<OrderBody> orders);
 
     /**
      * 根据订单id查询订单

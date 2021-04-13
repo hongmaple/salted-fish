@@ -29,10 +29,13 @@
 
     <!-- 商品详情 -->
 	<block v-for="(orderItem, index0) in orderItems" :key="index0">
-	 <h3>{{orderItem.user.username}}</h3>
 		<view class="prod-item">
+		  <view class="section">
+		    <image style="width: 130rpx;height: 130rpx;" :src="orderItem.user.avatarImage?serverUrl+orderItem.user.avatarImage:'../../static/images/icon/head04.png'"></image>
+		  		<text>{{orderItem.user.username}}</text>
+		  </view>
 		  <block v-for="(item, index) in orderItem.prods" :key="index">
-			<view class="item-cont" @tap="toOrderDetailPage" :data-ordernum="item.num">
+			<view class="item-cont" @tap="toProdPage" :data-prodid="item.skuId">
 			  <view class="prod-pic">
 				<image :src="serverUrl+item.image"></image>
 			  </view>
@@ -49,14 +52,6 @@
 			  </view>
 			</view>
 		  </block>
-		  <view class="total-num">
-			<text class="prodcount">共{{totalCount}}件商品</text>
-			<view class="prodprice">合计：
-			  <text class="symbol">￥</text>
-			  <text class="big-num">{{wxs.parsePrice(total)[0]}}</text>
-			  <text class="small-num">.{{wxs.parsePrice(total)[1]}}</text>
-			</view>
-		  </view>
 		</view>
 		
 		<!-- 订单详情 -->
@@ -80,20 +75,27 @@
 		      </view>
 		    </view>
 		    <view class="item payment">
+			  <text class="prodcount">共{{orderItem.subtotalCount}}件商品</text>
 		      <view class="item-txt price">
 		        小计：
 		        <text class="symbol">￥</text>
-		        <text class="big-num">{{wxs.parsePrice(actualTotal)[0]}}</text>
-		        <text class="small-num">.{{wxs.parsePrice(actualTotal)[1]}}</text>
+		        <text class="big-num">{{wxs.parsePrice(orderItem.actualPay)[0]}}</text>
+		        <text class="small-num">{{wxs.parsePrice(orderItem.actualPay)[1]}}</text>
 		      </view>
 		    </view>
 		  </view>
 		</view>
     </block>	
+<!-- 	<view class="total-num">
+				<text class="prodcount">共{{totalCount}}件商品</text>
+				<view class="prodprice">合计：
+				  <text class="symbol">￥</text>
+				  <text class="big-num">{{wxs.parsePrice(total)[0]}}</text>
+				  <text class="small-num">.{{wxs.parsePrice(total)[1]}}</text>
+				</view>
+	</view> -->
 	<view style="height: 120rpx;"></view>
   </view>
-
-
   <!-- 底部栏 -->
   <view class="submit-order-footer">
     <view class="sub-order">
@@ -194,8 +196,9 @@ export default {
     //加载订单数据
     loadOrderData: function () {
       var addrId = 0;
-      if (this.userAddr != null) {
-        addrId = this.userAddr.addrId;
+	  var ths = this;
+      if (ths.userAddr != null) {
+        addrId = ths.userAddr.addrId;
       }
       uni.showLoading({
         mask: true
@@ -203,7 +206,7 @@ export default {
 	  var total = 0;
 	  var totalCount = 0;
 	  var orderItems = [];
-	  if(this.orderEntry === "1") {
+	  if(ths.orderEntry === "1") {
 		  var item =  JSON.parse(uni.getStorageSync("orderItem"));
 		  var params = {
 		  		  url: `/user/${item.sellerId}`,
@@ -214,78 +217,135 @@ export default {
 					prods[0] = item;
 					orderItems[0] = {
 						prods: prods,
-						user: user
+						user: user,
+						totalPay: totalPay,
+						actualPay: actualPay
 					};
 					total += item.num*item.price;
 					totalCount += item.num;
-					this.setData({
+					ths.setData({
 					  orderItems: orderItems,
 					  "totalCount": totalCount,
 					  "total": total,
-					  "actualTotal": total+this.transfee
+					  "actualTotal": total+ths.transfee
 					});
 		  		  }
 		  };
 		  http.request(params);
 	  }else {
 		  var basketList = uni.getStorageSync("basketIds");
-		  var orderItemMaps = {};
-		  for(var i=0;i<basketList.length;i++) {
-			  for(var j=i+1;j<basketList.length;j++) {
-				  if(basketList[i].sellerId===basketList[j].sellerId) {
-					  var key  =  basketList[i].sellerId;
-					  orderItemMaps[key].push(basketList[i]);
-					  orderItemMaps[key].push(basketList[j]);
-				  }else {
-					  var items1 = [];
-					  var items2 = [];
-					  items1.push(basketList[i]);
-					  items2.push(basketList[j]);
-					  var key1  =  basketList[i].sellerId;
-					  var key2  =  basketList[j].sellerId;
-					  orderItemMaps[key1]=items1;
-					  orderItemMaps[key2]=items2;
-				  }
-			  }
-		  }
-		  var totalPay = 0;
-		  var actualPay = 0;
-		  for(var key in orderItemMaps) {
-			  orderItemMaps[key].forEach(function(item,index) {
-			  				  total += item.num*item.price;
-			  				  totalCount += item.num;
-			  				  totalPay += item.num*item.price;
-			  				  actualPay += item.num;
-			  });
-			  var orderItem = orderItemMaps[key];
-			  console.log(orderItem)
-			  var params = {
-			  		  url: `/user/${key}`,
-			  		  method: "GET",
-			  		  callBack:  res => {
-			  			var user = res.data;
-						console.log(orderItem)
-						var item = {
-							prods: orderItem,
-							user: user,
-							totalPay: totalPay,
-							actualPay: actualPay
-						};
-						orderItems.push(item);
-			  		  }
-			  };
-			  http.request(params);
-		  }
-		   this.setData({
+		  // var orderItemMaps = {};
+		  // for(var i=0;i<basketList.length;i++) {
+			 //  for(var j=i+1;j<basketList.length;j++) {
+				//   if(basketList[i].sellerId===basketList[j].sellerId) {
+				// 	  var key  =  basketList[i].sellerId;
+				// 	  var items = orderItemMaps[key];
+				// 	  items.push(basketList[i]);
+				// 	  items.push(basketList[j]);
+				// 	  orderItemMaps[key] = items;
+				// 	  break;
+				//   }else {
+				// 	  var key1  =  basketList[i].sellerId;
+				// 	  var key2  =  basketList[j].sellerId;
+				// 	  var items1 = orderItemMaps[key1];
+				// 	  var items2 = orderItemMaps[key2];
+				// 	  if(items1 instanceof Array) {
+				// 		  items1.push(basketList[i]);
+				// 	  }else {
+				// 		  items1=[];
+				// 		  items1.push(basketList[i]);
+				// 	  }
+				// 	  if(items2 instanceof Array) {
+				// 	  	  items2.push(basketList[j]);
+				// 	  }else {
+				// 	  	  items2=[];
+				// 		  items2.push(basketList[j]);
+				// 	  }
+				// 	  orderItemMaps[key1]=items1;
+				// 	  orderItemMaps[key2]=items2;
+				// 	  break;
+				//   }
+			 //  }
+		  // }
+		  // for(var key in orderItemMaps) {
+			 //  var totalPay = 0;
+			 //  var actualPay = 0;
+			 //  var subtotalCount = 0;
+			 //  var hash=[];
+			 //  for (var i = 0; i < orderItemMaps[key].length; i++) {
+			 //     if(hash.indexOf(orderItemMaps[key][i])==-1){
+			 //      hash.push(orderItemMaps[key][i]);
+			 //     }
+			 //  }
+			 //  hash.forEach(function(item,index) {
+			 //  				  totalCount += item.num;
+			 //  				  totalPay += item.num*item.price;
+				// 			  subtotalCount +=item.num;
+			 //  });
+			 //  actualPay += totalPay+ths.transfee;
+			 //  total += actualPay;
+			 //  var orderItem = hash;
+			 //  var item = {
+			 //  	prods: orderItem,
+			 //  	totalPay: totalPay,
+			 //  	actualPay: actualPay,
+			 //  	subtotalCount: subtotalCount
+			 //  };
+			 //  var params = {
+			 //  		  url: `/user/${key}`,
+			 //  		  method: "GET",
+			 //  		  callBack:  res => {
+			 //  			var user = res.data;
+				// 		item['user'] = user;
+			 //  		  }
+			 //  };
+			 //  http.request(params);
+			 //  setTimeout(function () {
+			 //     orderItems.push(item);
+			 //  }, 500);
+		  // }
+		  basketList.forEach(basket => {
+			    var totalPay = 0;
+			    var actualPay = 0;
+			    var subtotalCount = 0;
+			    basket.basketProds.forEach(function(item,index) {
+			    				  totalCount += item.num;
+			    				  totalPay += item.num*item.price;
+			  				  subtotalCount +=item.num;
+			    });
+			    actualPay += totalPay+ths.transfee;
+			    total += actualPay;
+			    var orderItem = basket.basketProds;
+			    var item = {
+			    	prods: orderItem,
+			    	totalPay: totalPay,
+			    	actualPay: actualPay,
+			    	subtotalCount: subtotalCount,
+			  	    user: basket.user
+			    };
+			  orderItems.push(item);
+		  });
+		   ths.setData({
 		    	orderItems: orderItems,
 				"totalCount": totalCount,
 				"total": total,
-				"actualTotal": total+this.transfee
+				"actualTotal": total
 		   });
-		   console.log(this.orderItems);
+		   console.log(ths.orderItems);
 	  }
 	  uni.hideLoading();
     },
+	unique1: function(arr){
+		console.log(arr)
+	  var hash=[];
+	  for (var i = 0; i < arr.length; i++) {
+	     if(hash.indexOf(arr[i])==-1){
+	      hash.push(arr[i]);
+	     }
+	  }
+	  console.log(hash)
+	  return hash;
+	},
     /**
      * 提交订单
      */
@@ -387,7 +447,14 @@ export default {
 		this.setData({
 		  remark: e.detail.value
 		});
-	}
+	},
+	//跳转商品详情页
+    toProdPage: function (e) {
+      var prodid = e.currentTarget.dataset.prodid;
+      uni.navigateTo({
+        url: '/pages/prod/prod?prodid=' + prodid
+      });
+    },
   }
 };
 </script>

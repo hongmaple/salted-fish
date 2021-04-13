@@ -1,5 +1,6 @@
 package com.haiyan.deflower.service;
 
+import com.haiyan.deflower.dto.response.CartRowVo;
 import com.haiyan.deflower.pojo.Cart;
 import com.haiyan.deflower.pojo.PageDomain;
 import com.haiyan.deflower.pojo.PageList;
@@ -35,7 +36,7 @@ public interface CartService {
      * @param pageDomain 分页数据
      * @return 购物车数据
      */
-    PageList<Cart> listCart(PageDomain pageDomain);
+    PageList<CartRowVo> listCart(PageDomain pageDomain);
 
     /**
      * 获取商品的购物详情

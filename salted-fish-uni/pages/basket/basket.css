@@ -384,4 +384,18 @@ line-height:102rpx;
   color: #fff;
 }
 
+.section {
+  background: #fff;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 28rpx;
+  padding: 30rpx 0;
+  line-height: 48rpx;
+  height: 100%;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #e5e5e5;
+}
+
 /** end 底部按钮 */

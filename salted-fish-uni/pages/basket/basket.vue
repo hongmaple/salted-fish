@@ -2,12 +2,17 @@
 <!--pages/basket/basket.wxml-->
 <view class="container">
   <view class="prod-list">
-    <block v-for="(item, index) in shopCartItemDiscounts" :key="index">
+   <block v-for="(shopCartItem, shopCartItemIndex) in shopCartItemDiscounts" :key="shopCartItemIndex">
+    <view class="section">
+    	<image style="width: 130rpx;height: 130rpx;" :src="shopCartItem.user.avatarImage?serverUrl+shopCartItem.user.avatarImage:'../../static/images/icon/head04.png'"></image>
+    	<text>{{shopCartItem.user.username}}</text>
+    </view>
+	<block v-for="(item, index) in shopCartItem.carts" :key="index">
       <view class="prod-block">
        <view class="item">
          <view class="btn">
            <label>
-             <checkbox @tap="onSelectedItem" :data-index="index" :value="''+item.id" :checked="item.checked" color="#105c3e"></checkbox>
+             <checkbox @tap="onSelectedItem" :data-shopCartItemIndex="shopCartItemIndex" :data-index="index" :value="''+item.id" :checked="item.checked" color="#105c3e"></checkbox>
            </label>
          </view>
          <view class="prodinfo">
@@ -23,9 +28,9 @@
                  <text class="small-num">.{{wxs.parsePrice(item.price)[1]}}</text>
                </view>
                <view class="m-numSelector">
-                 <view @tap="onCountMinus" class="minus"  :data-index="index"></view>
+                 <view @tap="onCountMinus" class="minus" :data-shopCartItemIndex="shopCartItemIndex"  :data-index="index"></view>
                  <input type="number" :value="item.num" disabled></input>
-                 <view @tap="onCountPlus" class="plus" :data-index="index"></view>
+                 <view @tap="onCountPlus" class="plus" :data-shopCartItemIndex="shopCartItemIndex" :data-index="index"></view>
                </view>
              </view>
            </view>
@@ -33,7 +38,8 @@
        </view>
       </view>
     </block>
-
+	<view style="height: 20rpx;"></view>
+   </block>
   </view>
 
   <view class="empty" v-if="shopCartItemDiscounts.length==0">
@@ -145,7 +151,9 @@ export default {
 		        // 默认全选
 		        var shopCartItemDiscounts = res.data.list;
 		        shopCartItemDiscounts.forEach(shopCartItemDiscount => {
-		               shopCartItemDiscount.checked = true;
+					shopCartItemDiscount.carts.forEach(cart => {
+						cart.checked = true;
+					});
 		        });
 		        this.setData({
 		          shopCartItemDiscounts: shopCartItemDiscounts,
@@ -170,10 +178,19 @@ export default {
     toFirmOrder: function () {
       var shopCartItemDiscounts = this.shopCartItemDiscounts;
       var basketIds = [];
-      shopCartItemDiscounts.forEach(shopCartItem => {
-		   if (shopCartItem.checked) {
-			 basketIds.push(shopCartItem);
-		   }
+      shopCartItemDiscounts.forEach(shopCartItems=> {
+		  var basketProds = [];
+		  var user = shopCartItems.user;
+		  shopCartItems.carts.forEach(cart => {
+			  if (cart.checked) {
+			  	basketProds.push(cart);
+			  }
+		  });
+		  var shopCartItem = {
+			  basketProds: basketProds,
+			  user: user
+		  }
+		  basketIds.push(shopCartItem);
       });
 
       if (!basketIds.length) {
@@ -200,8 +217,11 @@ export default {
       var shopCartItemDiscounts = this.shopCartItemDiscounts;
 
       for (var i = 0; i < shopCartItemDiscounts.length; i++) {
-        var cItems = shopCartItemDiscounts[i];
-        cItems.checked = allChecked;
+		  var carts = shopCartItemDiscounts[i].carts;
+		  for (var i = 0; i < carts.length; i++) {
+			  var cItems = carts[i];
+			  cItems.checked = allChecked;
+		  }
       }
 
       this.setData({
@@ -215,13 +235,14 @@ export default {
      * 每一项的选择事件
      */
     onSelectedItem: function (e) {
+	  var shopCartItemIndex = e.currentTarget.dataset.shopCartItemIndex;
       var index = e.currentTarget.dataset.index; // 获取data- 传进来的index
 
       var shopCartItemDiscounts = this.shopCartItemDiscounts; // 获取购物车列表
 
-      var checked = shopCartItemDiscounts[index].checked; // 获取当前商品的选中状态
+      var checked = shopCartItemDiscounts[shopCartItemIndex].carts[index].checked; // 获取当前商品的选中状态
 
-      shopCartItemDiscounts[index].checked = !checked; // 改变状态
+      shopCartItemDiscounts[shopCartItemIndex].carts[index].checked = !checked; // 改变状态
 
       this.setData({
         shopCartItemDiscounts: shopCartItemDiscounts
@@ -240,15 +261,18 @@ export default {
       var flag = false;
 
       for (var i = 0; i < shopCartItemDiscounts.length; i++) {
-        var cItems = shopCartItemDiscounts;
-       if (!cItems.checked) {
-         allChecked = !allChecked;
-         flag = true;
-         break;
-       }
-        if (flag) {
-          break;
-        }
+		  var carts = shopCartItemDiscounts[i].carts;
+		  for (var i = 0; i < carts.length; i++) {
+			  var cItems = carts[i];
+			  if (!cItems.checked) {
+			    allChecked = !allChecked;
+			    flag = true;
+			    break;
+			  }
+			   if (flag) {
+			     break;
+			   }
+		  }
       }
       this.setData({
         allChecked: allChecked
@@ -263,11 +287,14 @@ export default {
 	  var shopCartItem = [];
       var finalMoney = 0;
       for (var i = 0; i < shopCartItemDiscounts.length; i++) {
-        var cItems = shopCartItemDiscounts[i];
-          if (cItems.checked) {
-            shopCartItem.push(cItems);
-			finalMoney+= cItems.price*cItems.num;
-          }
+        var cItems = shopCartItemDiscounts[i].carts;
+		for (var j = 0; j < cItems.length; j++) {
+			var cart = cItems[j]
+			if (cart.checked) {
+			  shopCartItem.push(cart);
+			  finalMoney+= cart.price*cart.num;
+			}
+		}
        }
       this.setData({
             finalMoney: finalMoney,
@@ -281,11 +308,12 @@ export default {
      * 减少数量
      */
     onCountMinus: function (e) {
+	 var shopCartItemIndex = e.currentTarget.dataset.shopCartItemIndex;
      var index = e.currentTarget.dataset.index;
      var shopCartItemDiscounts = this.shopCartItemDiscounts;
-	 var prodCount = shopCartItemDiscounts[index].num;
+	 var prodCount = shopCartItemDiscounts[shopCartItemIndex].carts[index].num;
       if (prodCount > 1) {
-        this.updateCount(shopCartItemDiscounts,index, prodCount-1);
+        this.updateCount(shopCartItemDiscounts,shopCartItemIndex,index, prodCount-1);
 		return;
       }else {
 		  uni.showToast({
@@ -299,16 +327,16 @@ export default {
      * 增加数量
      */
     onCountPlus: function (e) {
+	  var shopCartItemIndex = e.currentTarget.dataset.shopCartItemIndex;
       var index = e.currentTarget.dataset.index;
       var shopCartItemDiscounts = this.shopCartItemDiscounts;
-	  console.log(shopCartItemDiscounts[index]);
-      this.updateCount(shopCartItemDiscounts, index, shopCartItemDiscounts[index].num+1);
+      this.updateCount(shopCartItemDiscounts,shopCartItemIndex, index, shopCartItemDiscounts[shopCartItemIndex].carts[index].num+1);
     },
 
     /**
      * 改变购物车数量接口
      */
-    updateCount: function (shopCartItemDiscounts, index, prodCount) {
+    updateCount: function (shopCartItemDiscounts,shopCartItemIndex, index, prodCount) {
       var ths = this;
       uni.showLoading({
         mask: true
@@ -319,10 +347,10 @@ export default {
 		needToken: true,
         data: {
           num: prodCount,
-          id: shopCartItemDiscounts[index].id
+          id: shopCartItemDiscounts[shopCartItemIndex].carts[index].id
         },
         callBack: function (res) {
-          shopCartItemDiscounts[index].num = prodCount;
+          shopCartItemDiscounts[shopCartItemIndex].carts[index].num = prodCount;
           ths.setData({
             shopCartItemDiscounts: shopCartItemDiscounts
           });
@@ -344,10 +372,13 @@ export default {
       var basketIds = [];
 
       for (var i = 0; i < shopCartItemDiscounts.length; i++) {
-        var cItems = shopCartItemDiscounts[i];
-		   if (cItems.checked) {
-			 basketIds.push(cItems.id);
-		   }
+        var cItems = shopCartItemDiscounts[i].carts;
+        for (var j = 0; j < cItems.length; j++) {
+        	var cart = cItems[j]
+        	if (cart.checked) {
+        	  basketIds.push(cart.id);
+        	}
+        }
       }
 
       if (basketIds.length == 0) {

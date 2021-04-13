@@ -500,3 +500,15 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
   transform: translate(-50%, -50%) scale(1);
   -webkit-transform: translate(-50%, -50%) scale(1);
 }
+
+.section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 28rpx;
+  padding: 30rpx 0;
+  line-height: 48rpx;
+  height: 100%;
+  box-sizing: border-box;
+  border-bottom: 2rpx solid #e5e5e5;
+}

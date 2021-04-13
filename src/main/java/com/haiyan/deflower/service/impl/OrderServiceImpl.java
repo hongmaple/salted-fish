@@ -60,47 +60,52 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Long createOrder(OrderBody orderBody) {
+    public List<Long> createOrder(List<OrderBody> orderBodes) {
         // 获取登录用户
         User user = userUtils.getUser(ServletUtils.getRequest());
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
-        // 生成orderId
-        long orderId = idWorker.nextId();
-        // 初始化数据
-        Order order = modelMapper.map(orderBody,Order.class);
-        order.setBuyerNick(user.getUsername());
-        order.setCreateTime(new Date());
-        order.setOrderId(String.valueOf(orderId));
-        order.setUserId(user.getId());
-        order.setStatus(1);
-        // 保存数据
-        this.orderMapper.insert(order);
+        List<Long> orderIds = new ArrayList<>();
+        orderBodes.forEach(orderBody -> {
+            // 生成orderId
+            long orderId = idWorker.nextId();
+            // 初始化数据
+            Order order = modelMapper.map(orderBody,Order.class);
+            order.setBuyerNick(user.getUsername());
+            order.setCreateTime(new Date());
+            order.setOrderId(String.valueOf(orderId));
+            order.setUserId(user.getId());
+            order.setStatus(1);
+            // 保存数据
+            this.orderMapper.insert(order);
 
-        // 保存订单状态
-        OrderStatus orderStatus = new OrderStatus();
-        orderStatus.setOrderId(String.valueOf(orderId));
-        orderStatus.setCreateTime(order.getCreateTime());
-        // 初始状态为未付款
-        orderStatus.setStatus(1);
+            // 保存订单状态
+            OrderStatus orderStatus = new OrderStatus();
+            orderStatus.setOrderId(String.valueOf(orderId));
+            orderStatus.setCreateTime(order.getCreateTime());
+            // 初始状态为未付款
+            orderStatus.setStatus(1);
 
-        this.orderStatusMapper.insert(orderStatus);
+            this.orderStatusMapper.insert(orderStatus);
 
-        // 订单详情中添加orderId
-        orderBody.getOrderDetails().forEach(od -> {
-            Integer count1 = flowerDao.lambdaQuery().eq(Flower::getId, od.getSkuId()).eq(Flower::getCreateId, user.getId()).count();
-            if (count1>0) {
-                throw new ExceptionResult("cart","false",null,"不能购买自己发布的商品");
-            }
-            od.setOrderId(String.valueOf(orderId));
-            this.orderDetailMapper.insert(od);
+            // 订单详情中添加orderId
+            orderBody.getOrderDetails().forEach(od -> {
+                Integer count1 = flowerDao.lambdaQuery().eq(Flower::getId, od.getSkuId()).eq(Flower::getCreateId, user.getId()).count();
+                if (count1>0) {
+                    throw new ExceptionResult("cart","false",null,"不能购买自己发布的商品");
+                }
+                od.setOrderId(String.valueOf(orderId));
+                this.orderDetailMapper.insert(od);
+            });
+            // 保存订单详情,使用批量插入功能
+
+            log.debug("生成订单，订单编号：{}，用户id：{}", orderId, user.getId());
+
+            orderIds.add(orderId);
         });
-        // 保存订单详情,使用批量插入功能
 
-        log.debug("生成订单，订单编号：{}，用户id：{}", orderId, user.getId());
-
-        return orderId;
+        return orderIds;
     }
 
     @Override

@@ -605,10 +605,10 @@ export default {
 			skuId: this.prodId,
 			title: this.prodName,
 			price: this.price,
-			prodCount: 1,
-			pic: this.pic,
-			sellerId: res.createId,
-			backgroundAgentId: res.backgroundAgentId
+			num: 1,
+			image: this.pic,
+			sellerId: this.sellerId,
+			backgroundAgentId: this.backgroundAgentId
       };
       uni.setStorageSync("orderItem", JSON.stringify(item));
       uni.navigateTo({

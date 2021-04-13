@@ -3,6 +3,8 @@ package com.haiyan.deflower.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.haiyan.deflower.dao.CartDao;
 import com.haiyan.deflower.dao.FlowerDao;
+import com.haiyan.deflower.dao.UserDao;
+import com.haiyan.deflower.dto.response.CartRowVo;
 import com.haiyan.deflower.exception.ExceptionResult;
 import com.haiyan.deflower.mapper.CartMapper;
 import com.haiyan.deflower.pojo.*;
@@ -12,8 +14,8 @@ import com.haiyan.deflower.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author haiyan
@@ -24,14 +26,16 @@ public class CartServiceImpl implements CartService {
     private final CartDao cartDao;
     private final CartMapper cartMapper;
     private final FlowerDao flowerDao;
+    private final UserDao userDao;
 
     @Autowired
     private UserUtils userUtils;
 
-    public CartServiceImpl(CartDao cartDao, CartMapper cartMapper, FlowerDao flowerDao) {
+    public CartServiceImpl(CartDao cartDao, CartMapper cartMapper, FlowerDao flowerDao, UserDao userDao) {
         this.cartDao = cartDao;
         this.cartMapper = cartMapper;
         this.flowerDao = flowerDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -83,14 +87,33 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public PageList<Cart> listCart(PageDomain pageDomain) {
+    public PageList<CartRowVo> listCart(PageDomain pageDomain) {
         User user = userUtils.getUser(ServletUtils.getRequest());
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
         Page<Cart> page = cartDao.lambdaQuery().eq(Cart::getUserId,user.getId()).page(new Page<>(pageDomain.getPageNum(), pageDomain.getPageSize()));
         List<Cart> carts = page.getRecords();
-        return PageList.of(carts, page);
+        List<CartRowVo> cartRowVos = new ArrayList<>();
+        Map<Long, List<Cart>> collect = carts.parallelStream().collect(Collectors.groupingBy(Cart::getSellerId));
+        Iterator<Map.Entry<Long, List<Cart>>> entries = collect.entrySet().iterator();
+        while(entries.hasNext()){
+            Map.Entry<Long, List<Cart>> entry = entries.next();
+            User user1 = userDao.getById(entry.getKey());
+            User user2 = new User();
+            CartRowVo cartRowVo = new CartRowVo();
+            if (Objects.isNull(user1)) {
+                user2.setUsername("该卖家已注销");
+            }
+            user2.setUsername(user1.getUsername());
+            user2.setId(user1.getId());
+            user2.setAvatarImage(user1.getAvatarImage());
+            cartRowVo.setUser(user2);
+            cartRowVo.setCarts(entry.getValue());
+            cartRowVos.add(cartRowVo);
+        }
+
+        return PageList.of(cartRowVos, page);
     }
 
     @Override

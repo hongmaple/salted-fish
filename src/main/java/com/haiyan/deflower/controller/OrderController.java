@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author haiyan
@@ -29,15 +30,15 @@ public class OrderController {
     /**
      * 创建订单
      *
-     * @param order 订单对象
+     * @param orders 订单对象
      * @return 订单编号
      */
     @PostMapping
     @ApiOperation(value = "创建订单接口，返回订单编号", notes = "创建订单")
     @ApiImplicitParam(name = "order", required = true, value = "订单的json对象,包含订单条目和物流信息")
-    public AjaxResult createOrder(@RequestBody @Valid OrderBody order) {
-        Long id = this.orderService.createOrder(order);
-        AjaxResult ajaxResult = AjaxResult.success("创建订单成功",id);
+    public AjaxResult createOrder(@RequestBody @Valid List<OrderBody> orders) {
+        List<Long> ids = this.orderService.createOrder(orders);
+        AjaxResult ajaxResult = AjaxResult.success("创建订单成功",ids);
         return ajaxResult;
     }
 
