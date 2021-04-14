@@ -66,7 +66,7 @@
     <view class="cmt-cont">
       <view class="cmt-items">
         <view v-for="(item, index) in littleCommPage" :key="index" class="cmt-item">
-          <view class="cmt-user">
+          <view class="cmt-user" @tap="openLeaveMessage" data-id="0" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">
             <text class="date">{{item.createdTime}}</text>
             <view class="cmt-user-info">
               <image class="user-img" :src="item.commentatorAvatarImage?serverUrl+item.commentatorAvatarImage:'../../static/images/icon/head04.png'"></image>
@@ -84,7 +84,7 @@
         <text @tap="showComment">查看全部留言</text>
       </view>
 	  <view class="cmt-more-v">
-	    <text @tap="openLeaveMessage" data-id="0">留言</text>
+	    <text @tap="openLeaveMessage" data-id="0" data-toUserType="0" data-toUserId="0">留言</text>
 	  </view>
     </view>
   </view>
@@ -190,7 +190,7 @@
 	    <text class="close" @tap="closeInputPopup"></text>
 	  </view>
 	  <view>
-		<textarea style="height: 260rpx;width: 100%;padding-top: 30rpx;" placeholder="评论千万条,友善第一条" type="text" maxlength="600" :value="evaluation.content" @input="onLeaveMessageInput"></textarea>
+		<textarea style="height: 260rpx;width: 100%;padding-top: 30rpx;" :placeholder="leavePla" type="text" maxlength="600" :value="evaluation.content" @input="onLeaveMessageInput"></textarea>
 		<!-- 功能按钮 -->
 		<view class="btn-box">
 		  <view class="keep btn" @tap="onSendLeave">
@@ -261,7 +261,8 @@ export default {
 	  backgroundAgentId: 0,
 	  showLeave: false,
 	  evaluation: {},
-	  LeaveNumber: 0
+	  LeaveNumber: 0,
+	  leavePla: '评论千万条,友善第一条'
     };
   },
 
@@ -657,10 +658,17 @@ export default {
 		this.setData({
 		  evaluation: {}
 		});
-		var id = e.currentTarget.dataset.id;
+		let id = e.currentTarget.dataset.id;
+		let toUserType = e.currentTarget.dataset.toUserType;
+		let toUserId = e.currentTarget.dataset.toUserId;
+		let commentator = e.currentTarget.dataset.commentator;
+		let leavePla = commentator?'回复 '+commentator:this.leavePla
 		this.setData({
 		  'evaluation.parentId': id,
-		  'evaluation.flowerId': this.prodId
+		  'evaluation.flowerId': this.prodId,
+		  'evaluation.toUserType': toUserType,
+		  'evaluation.toUserId': toUserId,
+		  leavePla: leavePla
 		});
 		this.showLeave=true;
 	},
