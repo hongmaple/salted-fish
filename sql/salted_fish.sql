@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 14/04/2021 14:07:30
+ Date: 14/04/2021 18:01:14
 */
 
 SET NAMES utf8mb4;
@@ -23,19 +23,25 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `evaluation`;
 CREATE TABLE `evaluation`  (
   `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `content` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '评价内容',
+  `content` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '评价内容',
   `flower_id` bigint(0) NULL DEFAULT NULL COMMENT '评价的商品id',
-  `order_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单id',
   `parent_id` bigint(0) NULL DEFAULT 0 COMMENT '父id',
-  `to_user_id` bigint(0) NOT NULL COMMENT '被评论人Id',
-  `to_user_type` int(0) NULL DEFAULT NULL COMMENT '被评论人类型(0:C端，1：B端）',
-  `creator_id` bigint(0) NULL DEFAULT NULL COMMENT '评论人',
-  `creator_type` int(0) NULL DEFAULT NULL COMMENT '创建者类型(0:C端，1：B端）',
+  `to_user_id` bigint(0) NULL DEFAULT 0 COMMENT '被评论人Id',
+  `to_user_type` int(0) NULL DEFAULT 0 COMMENT '被评论人类型(0:C端，1：B端）',
+  `creator_id` bigint(0) NOT NULL COMMENT '评论人',
+  `creator_type` int(0) NULL DEFAULT 0 COMMENT '创建者类型(0:C端，1：B端）',
   `created_time` datetime(0) NULL DEFAULT NULL,
   `updated_time` datetime(0) NULL DEFAULT NULL,
-  `is_deleted` tinyint(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `to_user_id`) USING BTREE
+  `is_deleted` tinyint(0) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '评价/评论' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of evaluation
+-- ----------------------------
+INSERT INTO `evaluation` VALUES (49, '非常nice', 3, 0, 0, 0, 1, 0, '2021-04-14 16:08:41', '2021-04-14 16:08:44', 0);
+INSERT INTO `evaluation` VALUES (50, '爱啥看到你发萨芬', 3, 0, 0, 0, 1, 0, '2021-04-14 16:10:12', '2021-04-14 16:10:12', 0);
+INSERT INTO `evaluation` VALUES (52, '啊实打实的啊实打实的阿萨的a\'s\'dasd啊大苏打啊实打实的阿萨大实打实大苏打实打实大大啊实打实大苏打撒旦啊实打实大苏打撒旦啊萨达萨达撒旦啊实打实的大萨芬士大夫', 3, 0, 0, 0, 1, 0, '2021-04-14 16:17:03', '2021-04-14 16:17:03', 0);
 
 -- ----------------------------
 -- Table structure for tb_address
@@ -171,6 +177,7 @@ INSERT INTO `tb_flower` VALUES (8, 2, '留住好时光  [精选昆明A级花材]
 INSERT INTO `tb_flower` VALUES (9, 1, 'dfd时代的', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 10, '三种方法阿斯顿撒旦', '全新', 'asd三国杀根深蒂固士大夫大师傅', 0, NULL, '2021-04-09 08:00:00', '1', 1, 1, NULL, '2021-04-09 13:55:49', '2021-04-09 13:55:49', 0);
 INSERT INTO `tb_flower` VALUES (10, 1, '阿萨大大', '/profile/upload/2021/04/09/68d97cc8-d86a-4e38-bcb2-2eb67ac32343.png', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 100, '阿斯顿撒', '全新', 'sfasf税控盘看过是东方扣税的奋斗史\n的身份美女撒旦发射点发射点是电脑辐射的\n士大夫士大夫矛盾双方手动阀手动阀\n', 0, NULL, '2021-04-09 08:00:00', '2', 0, 1, NULL, '2021-04-09 14:04:44', '2021-04-09 14:04:44', 0);
 INSERT INTO `tb_flower` VALUES (11, 1, '啊实打实打算', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg', 900, '阿萨的倒十分', '全新', 'asdasfsdfsd我去额前问问微软微软我fdsfdsf俺认为人情味w\'qwq\n\n士大夫士大夫士大夫撒旦发射点发\nsdfsdfsdfsdf\n\n\n适当方式付款', 1, '18975678999', '2021-08-06 08:00:00', '1', 1, 2, 1, '2021-04-09 14:06:49', '2021-04-09 14:06:49', 0);
+INSERT INTO `tb_flower` VALUES (12, 1, '摩西摩西呢', '/profile/upload/2021/04/14/78a2808f-08fb-4085-9c56-2b3c703b0f33.jpg', ',/profile/upload/2021/04/14/78a2808f-08fb-4085-9c56-2b3c703b0f33.jpg', 10, '你想那在哪', '全新', '那些那些毛线妈妈在吗在吗准考证摩西摩西妹子们摩西摩西奶香奶味妈妈在吗在吗在忙什么没怎么想没现金就是就是妹子们抓紧时间时间就是呢想你想你想你你说呢', 0, NULL, '2021-04-14 08:00:00', '0', 1, 1, NULL, '2021-04-14 14:28:06', '2021-04-14 14:28:06', 0);
 
 -- ----------------------------
 -- Table structure for tb_flower_favorite
