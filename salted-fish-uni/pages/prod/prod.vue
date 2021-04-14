@@ -66,7 +66,7 @@
     <view class="cmt-cont">
       <view class="cmt-items">
         <view v-for="(item, index) in littleCommPage" :key="index" class="cmt-item">
-          <view class="cmt-user" @tap="openLeaveMessage" data-id="0" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">
+          <view class="cmt-user">
             <text class="date">{{item.createdTime}}</text>
             <view class="cmt-user-info">
               <image class="user-img" :src="item.commentatorAvatarImage?serverUrl+item.commentatorAvatarImage:'../../static/images/icon/head04.png'"></image>
@@ -74,7 +74,7 @@
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
-          <view class="cmt-cnt">{{item.content}}</view>
+          <view class="cmt-cnt" @tap="openLeaveMessage" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
 <!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
           </scroll-view> -->
@@ -167,19 +167,31 @@
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
-          <view class="cmt-cnt">{{item.content}}</view>
+          <view class="cmt-cnt" @tap="openLeaveMessage" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
 <!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
           </scroll-view> -->
         <!--  <view class="cmt-reply" v-if="item.replyContent">
             <text class="reply-tit">店铺回复：</text> {{item.replyContent}}
           </view> -->
-		  <view class="cmt-reply">
-		    <text class="reply-tit">店铺回复：</text> 的说法是是否的说法都是发
+		  <view v-for="(subItem, subIndex) in item.subEvaluationRowVos.list" :key="subIndex" class="cmt-reply">
+		    <!-- <text class="reply-tit">店铺回复：</text> 的说法是是否的说法都是发 -->
+			<view class="cmt-user" style="padding-left: 50rpx;">
+			  <text class="date">{{subItem.createdTime}}</text>
+			  <view class="cmt-user-info">
+			    <image class="user-img" :src="subItem.commentatorAvatarImage?serverUrl+subItem.commentatorAvatarImage:'../../static/images/icon/head04.png'"></image>
+			    <view class="nickname">{{subItem.commentator}}</view>
+			    <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
+			  </view>
+			</view>
+			<view class="cmt-cnt" @tap="openLeaveMessage" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
+		  </view>
+		  <view class="load-more" v-if="item.subEvaluationRowVos.pages > item.subEvaluationRowVos.pageNum">
+		    <text @tap="getMoreCommPage">点击加载更多</text>
 		  </view>
         </view>
       </view>
-      <view class="load-more" v-if="prodCommPage.pages > prodCommPage.current">
+      <view class="load-more" v-if="prodCommPage.pages > prodCommPage.pageNum">
         <text @tap="getMoreCommPage">点击加载更多</text>
       </view>
     </view>
@@ -662,7 +674,7 @@ export default {
 		let toUserType = e.currentTarget.dataset.toUserType;
 		let toUserId = e.currentTarget.dataset.toUserId;
 		let commentator = e.currentTarget.dataset.commentator;
-		let leavePla = commentator?'回复 '+commentator:this.leavePla
+		let leavePla = commentator?'回复 '+commentator:'评论千万条,友善第一条'
 		this.setData({
 		  'evaluation.parentId': id,
 		  'evaluation.flowerId': this.prodId,

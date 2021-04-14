@@ -6,7 +6,6 @@ import com.haiyan.deflower.dao.EvaluationDao;
 import com.haiyan.deflower.dao.UserDao;
 import com.haiyan.deflower.dto.request.EvaluationQuery;
 import com.haiyan.deflower.dto.response.EvaluationRowVo;
-import com.haiyan.deflower.dto.response.FlowerRowVo;
 import com.haiyan.deflower.exception.ExceptionResult;
 import com.haiyan.deflower.pojo.*;
 import com.haiyan.deflower.service.EvaluationService;
