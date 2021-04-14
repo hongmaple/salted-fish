@@ -61,13 +61,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Long> createOrder(OrderListBody orderListBody) {
+    public List<String> createOrder(OrderListBody orderListBody) {
         // 获取登录用户
         User user = userUtils.getUser(ServletUtils.getRequest());
         if (Objects.isNull(user)) {
             throw new ExceptionResult("user","false",null,"请先登陆");
         }
-        List<Long> orderIds = new ArrayList<>();
+        List<String> orderIds = new ArrayList<>();
         orderListBody.getOrderBodies().forEach(orderBody -> {
             // 生成orderId
             long orderId = idWorker.nextId();
@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
 
             log.debug("生成订单，订单编号：{}，用户id：{}", orderId, user.getId());
 
-            orderIds.add(orderId);
+            orderIds.add(String.valueOf(orderId));
         });
 
         return orderIds;
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
         if (StringUtils.hasText(query.getOrderId())) {
             lambdaQuery.like(Order::getOrderId,query.getOrderId());
         }
-        if (query.getStatus()!=null) {
+        if (query.getStatus()>0) {
             lambdaQuery.eq(Order::getStatus,query.getStatus());
         }
         if (query.getType()!=null) {

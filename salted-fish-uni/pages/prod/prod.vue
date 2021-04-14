@@ -44,12 +44,19 @@
     <view class="sku-con">{{prodNum}}件</view>
     <view class="more">...</view>
   </view>
-  <!-- 评价 -->
+  <!-- 商品详情 -->
+  <view class="prod-detail">
+    <view>
+      <rich-text :nodes="brief"></rich-text>
+      <!-- <image src="//img14.360buyimg.com/cms/jfs/t1/25195/1/9487/388554/5c7f80a5E8b8f8f0c/46818404849d6ec6.jpg!q70.dpg" mode="widthFix"></image> -->
+    </view>
+  </view>
+  <!-- end 商品详情 -->
+  <!-- 留言 -->
   <view class="cmt-wrap">
     <view class="cmt-tit" @tap="showComment">
       <view class="cmt-t">
-        评价
-        <text class="cmt-good">好评{{prodCommData.positiveRating}}%</text>
+        留言
       </view>
       <view class="cmt-count">
         共{{prodCommData.number}}条
@@ -57,13 +64,6 @@
       </view>
     </view>
     <view class="cmt-cont">
-      <view class="cmt-tag" @tap="showComment">
-        <text>全部({{prodCommData.number}})</text>
-        <text>好评({{prodCommData.praiseNumber}})</text>
-        <text>中评({{prodCommData.secondaryNumber}})</text>
-        <text>差评({{prodCommData.negativeNumber}})</text>
-        <text>有图({{prodCommData.picNumber}})</text>
-      </view>
       <view class="cmt-items">
         <view v-for="(item, index) in littleCommPage" :key="index" class="cmt-item">
           <view class="cmt-user">
@@ -83,16 +83,11 @@
       <view class="cmt-more-v" v-if="prodCommPage.records.length > 2">
         <text @tap="showComment">查看全部评价</text>
       </view>
+	  <view class="cmt-more-v">
+	    <text @tap="leaveMessage" data-id="0">留言</text>
+	  </view>
     </view>
   </view>
-  <!-- 商品详情 -->
-  <view class="prod-detail">
-    <view>
-      <rich-text :nodes="brief"></rich-text>
-      <!-- <image src="//img14.360buyimg.com/cms/jfs/t1/25195/1/9487/388554/5c7f80a5E8b8f8f0c/46818404849d6ec6.jpg!q70.dpg" mode="widthFix"></image> -->
-    </view>
-  </view>
-  <!-- end 商品详情 -->
   <!-- 底部按钮 -->
   <view class="cart-footer">
     <view class="btn icon" @tap="toHomePage">
@@ -155,18 +150,13 @@
     <view class="cmt-tit">
       <view class="cmt-t">
         商品评价
-        <text class="cmt-good">好评度{{prodCommData.positiveRating}}%</text>
       </view>
+	  <view class="cmt-count" style="margin-right: 100rpx;">
+	    共{{prodCommPage.number}}条
+	  </view>
       <text class="close" @tap="closePopup"></text>
     </view>
     <view class="cmt-cont">
-      <view class="cmt-tag">
-        <text @tap="getProdCommPage" data-evaluate="-1" :class="evaluate==-1?'selected':''">全部({{prodCommData.number}})</text>
-        <text @tap="getProdCommPage" data-evaluate="0" :class="evaluate==0?'selected':''">好评({{prodCommData.praiseNumber}})</text>
-        <text @tap="getProdCommPage" data-evaluate="1" :class="evaluate==1?'selected':''">中评({{prodCommData.secondaryNumber}})</text>
-        <text @tap="getProdCommPage" data-evaluate="2" :class="evaluate==2?'selected':''">差评({{prodCommData.negativeNumber}})</text>
-        <text @tap="getProdCommPage" data-evaluate="3" :class="evaluate==3?'selected':''">有图({{prodCommData.picNumber}})</text>
-      </view>
       <view class="cmt-items">
         <view v-for="(item, index) in prodCommPage.records" :key="index" class="cmt-item">
           <view class="cmt-user">
@@ -236,7 +226,9 @@ export default {
       selectedPropObj: {},
       propKeys: [],
       allProperties: [],
-      prodCommData: {},
+      prodCommData: {
+		  number: 0
+	  },
       prodCommPage: {
         current: 0,
         pages: 0,
@@ -248,7 +240,8 @@ export default {
 	  serverUrl: config.domain,
 	  user: {},
 	  sellerId: 0,
-	  backgroundAgentId: 0
+	  backgroundAgentId: 0,
+	  showLeave: false
     };
   },
 
@@ -652,7 +645,10 @@ export default {
         skuShow: false,
         commentShow: false
       });
-    }
+    },
+	leaveMessage: function (e) {
+		var id = e.currentTarget.dataset.id;
+	}
   }
 };
 </script>

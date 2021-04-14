@@ -188,7 +188,9 @@ export default {
 		  });
 		  var shopCartItem = {
 			  basketProds: basketProds,
-			  user: user
+			  user: user,
+			  isAgent: shopCartItems.isAgent,
+			  backgroundAgentId: shopCartItems.backgroundAgentId
 		  }
 		  basketIds.push(shopCartItem);
       });

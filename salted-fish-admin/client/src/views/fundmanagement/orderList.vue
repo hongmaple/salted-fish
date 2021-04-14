@@ -360,11 +360,9 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button
-                            size="mini"
+                             <el-button
+                            slot="reference"
                             @click="shipments(scope.row.orderId)">发货</el-button>
-                        </template>
-                        <template slot-scope="scope">
                             <el-popover
                                 placement="right"
                                 width="800"
@@ -845,7 +843,8 @@ export default {
                 "pageNum": page,
                 "pageSize": pageSize,
                 "status": this.search_data.status,
-                "orderId": this.search_data.title
+                "orderId": this.search_data.title,
+                "type": 1
         };
         this.flowerList(formData);
     },
@@ -878,7 +877,8 @@ export default {
                     "orderByColumn": null,
                     "pageNum": page,
                     "pageSize": pageSize,
-                    "title": this.search_data.title
+                    "title": this.search_data.title,
+                    "type": 1
                 }
         this.flowerList(formData);
 	},
@@ -903,7 +903,8 @@ export default {
                 "pageNum": page,
                 "pageSize": pageSize,
                 "status": tab.name,
-                "orderId": this.search_data.title
+                "orderId": this.search_data.title,
+                "type": 1
         };
         this.search_data.status=tab.name;
         this.flowerList(formData);
@@ -916,7 +917,8 @@ export default {
                 "orderByColumn": null,
                 "pageNum": 1,
                 "pageSize": this.flowerData.pageSize,
-                "status": this.search_data.status
+                "status": this.search_data.status,
+                "type": 1
     }
     this.flowerList(formData);
   },

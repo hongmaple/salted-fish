@@ -309,6 +309,7 @@ export default {
 			 //  }, 500);
 		  // }
 		  basketList.forEach(basket => {
+			  console.log(basket.backgroundAgentId)
 			    var totalPay = 0;
 			    var actualPay = 0;
 			    var subtotalCount = 0;
@@ -378,10 +379,10 @@ export default {
 			  				   id: 0,
 			  				   orderId: 0,
 			  				   skuId: item.skuId,
-			  				   num: item.prodCount,
+			  				   num: item.num,
 			  				   title: item.title,
 			  				   price: item.price,
-			  				   image: item.pic
+			  				   image: item.image
 			  }
 			  orderDetails.push(orderDetail);
 		  });
@@ -429,7 +430,7 @@ export default {
 			});
 		}
       };
-      //http.request(params);
+      http.request(params);
     },	
 	//模拟支付，直接提交成功
 	simulationPay: function(orderNumbers){

@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 13/04/2021 18:07:53
+ Date: 14/04/2021 14:07:30
 */
 
 SET NAMES utf8mb4;
@@ -51,7 +51,7 @@ CREATE TABLE `tb_address`  (
   `district` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '区',
   `detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详细地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '地址' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '地址' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_address
@@ -100,7 +100,7 @@ CREATE TABLE `tb_cart`  (
   `price` double NULL DEFAULT NULL COMMENT '价格 单位元',
   `num` int(0) NULL DEFAULT NULL COMMENT '数量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '购物车' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_cart
@@ -205,7 +205,7 @@ CREATE TABLE `tb_order`  (
   `actual_pay` bigint(0) NULL DEFAULT NULL COMMENT '实付金额 单位分',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `seller_id` bigint(0) NULL DEFAULT NULL COMMENT '卖家id',
-  `background_agent_id` bigint(0) NULL DEFAULT NULL COMMENT '后台代理者',
+  `background_agent_id` bigint(0) NULL DEFAULT 0 COMMENT '后台代理者',
   `user_id` bigint(0) NULL DEFAULT NULL COMMENT '用户id',
   `buyer_nick` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '买家昵称',
   `receiver` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '买家全称',
@@ -219,6 +219,15 @@ CREATE TABLE `tb_order`  (
   `is_deleted` tinyint(0) NULL DEFAULT 0,
   PRIMARY KEY (`order_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_order
+-- ----------------------------
+INSERT INTO `tb_order` VALUES ('1382156777302290432', 1104, 1114, '2021-04-14 10:20:30', 1, 0, 1, 'maple', 'maple', '18343743243', '四川省', '成都市', '阿萨区', '啊实打实的888', '', '3', 0);
+INSERT INTO `tb_order` VALUES ('1382156777394565120', 900, 910, '2021-04-14 10:20:30', 1, 1, 1, 'maple', 'maple', '18343743243', '四川省', '成都市', '阿萨区', '啊实打实的888', '', '3', 0);
+INSERT INTO `tb_order` VALUES ('1382156777432313856', 2322, 2332, '2021-04-14 10:20:30', 2, 0, 1, 'maple', 'maple', '18343743243', '四川省', '成都市', '阿萨区', '啊实打实的888', '', '1', 0);
+INSERT INTO `tb_order` VALUES ('1382156777503617024', 198, 208, '2021-04-14 10:20:30', 3, 0, 1, 'maple', 'maple', '18343743243', '四川省', '成都市', '阿萨区', '啊实打实的888', '', '1', 0);
+INSERT INTO `tb_order` VALUES ('1382158599303741440', 218, 228, '2021-04-14 10:27:44', 2, 0, 1, 'maple', 'maple', '18343743243', '四川省', '成都市', '阿萨区', '啊实打实的888', '', '2', 0);
 
 -- ----------------------------
 -- Table structure for tb_order_detail
@@ -235,7 +244,18 @@ CREATE TABLE `tb_order_detail`  (
   `image` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '商品图片',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `key_order_id`(`order_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 151 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单详情表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 159 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单详情表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_order_detail
+-- ----------------------------
+INSERT INTO `tb_order_detail` VALUES (152, '1382156777302290432', 1, 3, '一路上有你 [泰国进口] 真空玫瑰花，红玫瑰系列', '', 368, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (153, '1382156777394565120', 11, 1, '啊实打实打算', '', 900, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (154, '1382156777432313856', 3, 3, '蝴蝶兰4株', '', 388, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (155, '1382156777432313856', 4, 3, '吉祥如意', '', 218, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (156, '1382156777432313856', 2, 3, '你是唯一 [11枝新品 一心一意的爱] 卡罗拉红玫瑰11枝', '', 168, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (157, '1382156777503617024', 8, 3, '留住好时光  [精选昆明A级花材] 粉绣球1枝，粉雪山玫瑰6枝', '', 66, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
+INSERT INTO `tb_order_detail` VALUES (158, '1382158599303741440', 4, 1, '吉祥如意', '', 218, '/profile/upload/2021/04/09/1c646ee2-c978-4cff-a968-ce1f16ecf400.jpg');
 
 -- ----------------------------
 -- Table structure for tb_order_status
@@ -260,6 +280,11 @@ INSERT INTO `tb_order_status` VALUES ('1374292737267879936', 3, '2021-03-23 17:3
 INSERT INTO `tb_order_status` VALUES ('1374299887356727296', 5, '2021-03-23 18:00:01', '2021-03-24 15:07:44', NULL, NULL, NULL);
 INSERT INTO `tb_order_status` VALUES ('1374894696794546176', 4, '2021-03-25 09:23:35', '2021-03-25 10:01:15', '2021-03-25 14:56:09', '2021-03-26 16:21:46', '2021-03-25 09:54:04');
 INSERT INTO `tb_order_status` VALUES ('1375371868126601216', 1, '2021-03-26 16:59:41', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_order_status` VALUES ('1382156777302290432', 3, '2021-04-14 10:20:30', NULL, '2021-04-14 14:06:38', NULL, '2021-04-14 10:28:01');
+INSERT INTO `tb_order_status` VALUES ('1382156777394565120', 3, '2021-04-14 10:20:30', '2021-04-14 10:30:22', '2021-04-14 10:42:27', NULL, NULL);
+INSERT INTO `tb_order_status` VALUES ('1382156777432313856', 1, '2021-04-14 10:20:30', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_order_status` VALUES ('1382156777503617024', 1, '2021-04-14 10:20:30', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_order_status` VALUES ('1382158599303741440', 2, '2021-04-14 10:27:44', '2021-04-14 10:27:44', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tb_user

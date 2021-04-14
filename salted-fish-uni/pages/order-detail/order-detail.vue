@@ -107,7 +107,6 @@
 		 <text v-if="status==3 || status==5" class="buy-again" @tap="toDeliveryPage" hover-class="none">查看物流</text>
 		 <text v-if="status==3" class="buy-again" @tap="onConfirmReceive" hover-class="none">确认收货</text>
          <text class="apply-service" @tap="toCustomerServiceChat">联系客服</text>
-         <text class="buy-again">再次购买</text>
       </view>
     </view>
 

@@ -79,11 +79,8 @@
         <!-- end 商品列表 -->
         <view class="prod-foot">
           <view class="btn">
-            <text v-if="item.status==1" class="button" @tap="cancelOrder" :data-ordernum="item.orderId" hover-class="none">取消订单</text>
-            <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text>
-            <text v-if="item.status==1" class="button warn" @tap="normalPay" :data-ordernum="item.orderId" hover-class="none">付款</text>
             <text v-if="item.status==3 || item.status==4" class="button" @tap="toDeliveryPage" :data-ordernum="item.orderId" hover-class="none">查看物流</text>
-            <text v-if="item.status==3" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">确认收货</text>
+            <text v-if="item.status==2&&item.backgroundAgentId==0" class="button warn" @tap="onConfirmReceive" :data-ordernum="item.orderId" hover-class="none">发货</text>
           </view>
         </view>
       </view>
@@ -180,13 +177,14 @@ export default {
       uni.showLoading(); //加载订单列表
 
       var params = {
-        url: "/order/list",
-        method: "GET",
+        url: "/order/user/list",
+        method: "POST",
 		needToken: true,
         data: {
-          page: current,
-          rows: 10,
-          status: sts
+          pageNum: current,
+          pageSize: 10,
+          status: sts,
+		  type: 0
         },
         callBack: function (res) {
           //console.log(res);
@@ -225,43 +223,6 @@ export default {
     toDeliveryPage: function (e) {
       uni.navigateTo({
         url: '/pages/express-delivery/express-delivery?orderNum=' + e.currentTarget.dataset.ordernum
-      });
-    },
-
-    /**
-     * 取消订单
-     */
-    cancelOrder: function (e) {
-      var ordernum = e.currentTarget.dataset.ordernum;
-      var ths = this;
-      uni.showModal({
-        title: '',
-        content: '要取消此订单？',
-        confirmColor: "#3e62ad",
-        cancelColor: "#3e62ad",
-        cancelText: '否',
-        confirmText: '是',
-        success(res) {
-          if (res.confirm) {
-            uni.showLoading({
-              mask: true
-            });
-            var params = {
-              url: "/order/"+ordernum+"/5",
-              method: "PUT",
-			  needToken: true,
-              data: {},
-              callBack: function (res) {
-                //console.log(res);
-                ths.loadOrderData(ths.sts, 1);
-                uni.hideLoading();
-              }
-            };
-            http.request(params);
-          } else if (res.cancel) {//console.log('用户点击取消')
-          }
-        }
-
       });
     },
 		//模拟支付，直接提交成功
@@ -313,7 +274,7 @@ export default {
       var ths = this;
       uni.showModal({
         title: '',
-        content: '我已收到货？',
+        content: '确认发货？',
         confirmColor: "#eb2444",
 
         success(res) {
@@ -322,7 +283,7 @@ export default {
               mask: true
             });
             var params = {
-              url: "/order/"+e.currentTarget.dataset.ordernum+"/4",
+              url: "/order/"+e.currentTarget.dataset.ordernum+"/3",
               method: "PUT",
 			  needToken: true,
               data: {},

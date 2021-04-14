@@ -38,7 +38,7 @@ public class OrderController {
     @ApiOperation(value = "创建订单接口，返回订单编号", notes = "创建订单")
     @ApiImplicitParam(name = "order", required = true, value = "订单的json对象,包含订单条目和物流信息")
     public AjaxResult createOrder(@RequestBody @Valid OrderListBody orderListBody) {
-        List<Long> ids = this.orderService.createOrder(orderListBody);
+        List<String> ids = this.orderService.createOrder(orderListBody);
         AjaxResult ajaxResult = AjaxResult.success("创建订单成功",ids);
         return ajaxResult;
     }
