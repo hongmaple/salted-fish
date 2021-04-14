@@ -105,7 +105,7 @@
         "usingComponents" : true
     },
     "h5" : {
-        "title" : "采花网",
+        "title" : "闲鱼",
         "domain" : "www.hongmaple.xyz",
         "devServer" : {
             "disableHostCheck" : true,
@@ -117,13 +117,15 @@
                     }
                 }
             },
-            "port" : 8989
+            "port" : 8989,
+            "https" : true
         },
         "router" : {
-            "mode" : "history"
+            "mode" : "hash"
         },
         "sdkConfigs" : {
             "maps" : {}
-        }
+        },
+        "template" : "index.html"
     }
 }

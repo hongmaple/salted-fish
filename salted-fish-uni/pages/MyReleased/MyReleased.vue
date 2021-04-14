@@ -30,7 +30,7 @@
         <view>
               <view class="item-cont" @tap="toProdPage" :data-prodid="item.id">
                 <view class="prod-pic">
-                  <image :src="serverUrl+item.images"></image>
+				  <image :src="serverUrl+item.images"></image>
                 </view>
                 <view class="prod-info">
                   <view class="prodname">

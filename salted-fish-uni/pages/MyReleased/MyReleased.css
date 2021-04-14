@@ -52,6 +52,11 @@ page {
   height: 180rpx;
 }
 
+.prod-item .item-cont .prod-pic image {
+  width: 100%;
+  height: 100%;
+}
+
 .prod-item .order-num {
   padding: 20rpx 30rpx;
   display: flex;
@@ -115,11 +120,6 @@ page {
   overflow: hidden;
   background: #fff;
   margin-right: 16rpx;
-}
-
-.prod-item .item-cont .prod-pic image {
-  width: 100%;
-  height: 100%;
 }
 
 .prod-item .item-cont .prod-info {

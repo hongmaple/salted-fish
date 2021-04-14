@@ -59,7 +59,7 @@
         留言
       </view>
       <view class="cmt-count">
-        共{{prodCommData.number}}条
+        共{{LeaveNumber}}条
         <text class="cmt-more"></text>
       </view>
     </view>
@@ -67,24 +67,24 @@
       <view class="cmt-items">
         <view v-for="(item, index) in littleCommPage" :key="index" class="cmt-item">
           <view class="cmt-user">
-            <text class="date">{{item.recTime}}</text>
+            <text class="date">{{item.createdTime}}</text>
             <view class="cmt-user-info">
-              <image class="user-img" :src="item.pic"></image>
-              <view class="nickname">{{item.nickName}}</view>
+              <image class="user-img" :src="item.commentatorAvatarImage?serverUrl+item.commentatorAvatarImage:'../../static/images/icon/head04.png'"></image>
+              <view class="nickname">{{item.commentator}}</view>
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
           <view class="cmt-cnt">{{item.content}}</view>
-          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
+<!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
-          </scroll-view>
+          </scroll-view> -->
         </view>
       </view>
-      <view class="cmt-more-v" v-if="prodCommPage.records.length > 2">
-        <text @tap="showComment">查看全部评价</text>
+      <view class="cmt-more-v" v-if="LeaveNumber > 2">
+        <text @tap="showComment">查看全部留言</text>
       </view>
 	  <view class="cmt-more-v">
-	    <text @tap="leaveMessage" data-id="0">留言</text>
+	    <text @tap="openLeaveMessage" data-id="0">留言</text>
 	  </view>
     </view>
   </view>
@@ -145,14 +145,14 @@
       </view>
     </view>
   </view>
-  <!-- 评价弹窗 -->
+  <!-- 留言弹窗 -->
   <view class="cmt-popup" v-if="commentShow">
     <view class="cmt-tit">
       <view class="cmt-t">
-        商品评价
+        留言
       </view>
 	  <view class="cmt-count" style="margin-right: 100rpx;">
-	    共{{prodCommPage.number}}条
+	    共{{LeaveNumber}}条
 	  </view>
       <text class="close" @tap="closePopup"></text>
     </view>
@@ -160,26 +160,45 @@
       <view class="cmt-items">
         <view v-for="(item, index) in prodCommPage.records" :key="index" class="cmt-item">
           <view class="cmt-user">
-            <text class="date">{{item.recTime}}</text>
+            <text class="date">{{item.createdTime}}</text>
             <view class="cmt-user-info">
-              <image class="user-img" :src="item.pic"></image>
-              <view class="nickname">{{item.nickName}}</view>
+              <image class="user-img" :src="item.commentatorAvatarImage?serverUrl+item.commentatorAvatarImage:'../../static/images/icon/head04.png'"></image>
+              <view class="nickname">{{item.commentator}}</view>
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
           <view class="cmt-cnt">{{item.content}}</view>
-          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
+<!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
-          </scroll-view>
-          <view class="cmt-reply" v-if="item.replyContent">
+          </scroll-view> -->
+        <!--  <view class="cmt-reply" v-if="item.replyContent">
             <text class="reply-tit">店铺回复：</text> {{item.replyContent}}
-          </view>
+          </view> -->
+		  <view class="cmt-reply">
+		    <text class="reply-tit">店铺回复：</text> 的说法是是否的说法都是发
+		  </view>
         </view>
       </view>
       <view class="load-more" v-if="prodCommPage.pages > prodCommPage.current">
         <text @tap="getMoreCommPage">点击加载更多</text>
       </view>
     </view>
+  </view>
+  <!-- 评价输入框-->
+  <view class="cmt-input-popup" v-if="showLeave">
+	  <view class="cmt-input-tit">
+	    <text class="close" @tap="closeInputPopup"></text>
+	  </view>
+	  <view>
+		<textarea style="height: 260rpx;width: 100%;padding-top: 30rpx;" placeholder="评论千万条,友善第一条" type="text" maxlength="600" :value="evaluation.content" @input="onLeaveMessageInput"></textarea>
+		<!-- 功能按钮 -->
+		<view class="btn-box">
+		  <view class="keep btn" @tap="onSendLeave">
+		    <text>发送</text>
+		  </view>
+		</view>
+		<!-- end 功能按钮 -->
+	  </view>
   </view>
 </view>
 </template>
@@ -235,13 +254,14 @@ export default {
         records: []
       },
       littleCommPage: [],
-      evaluate: -1,
       isCollection: false,
 	  serverUrl: config.domain,
 	  user: {},
 	  sellerId: 0,
 	  backgroundAgentId: 0,
-	  showLeave: false
+	  showLeave: false,
+	  evaluation: {},
+	  LeaveNumber: 0
     };
   },
 
@@ -263,7 +283,8 @@ export default {
 	this.getCartInfo();
 	// 加载评论数据
 
-    //this.getProdCommData(); // 加载评论项
+    this.getProdCommData(); // 加载评论项
+	this.getLittleProdComm();
 
     this.getCollection();
   },
@@ -359,7 +380,6 @@ export default {
     // 获取商品信息
     getProdInfo() {
       uni.showLoading();
-	  console.log(this.prodId);
       var params = {
         url: `/flower/prodInfo/${this.prodId}`,
         method: "GET",
@@ -446,14 +466,13 @@ export default {
 	},
     getProdCommData() {
       http.request({
-        url: "/prodComm/prodCommData",
+        url: `/evaluation/count/${this.prodId}`,
         method: "GET",
         data: {
-          prodId: this.prodId
         },
         callBack: res => {
           this.setData({
-            prodCommData: res
+            LeaveNumber: res
           });
         }
       });
@@ -461,54 +480,37 @@ export default {
 
     // 获取部分评论
     getLittleProdComm() {
-      if (this.prodCommPage.records.length) {
-        return;
+      var query = {
+      	pageNum: 1,
+      	pageSize: 5,
+      	flowerId: this.prodId
       }
-
-      //this.getProdCommPage();
+      this.getProdCommPage(query);
     },
 
     getMoreCommPage(e) {
-      //this.getProdCommPage();
+		var pageNum = this.prodCommPage.current+1;
+		var query = {
+			pageNum: pageNum,
+			pageSize: 5,
+			flowerId: this.prodId
+		}
+		this.getProdCommPage(query);
     },
 
-    // 获取分页获取评论
-    getProdCommPage(e) {
-      if (e) {
-        if (e.currentTarget.dataset.evaluate === this.evaluate) {
-          return;
-        }
-
-        this.setData({
-          prodCommPage: {
-            current: 0,
-            pages: 0,
-            records: []
-          },
-          evaluate: e.currentTarget.dataset.evaluate
-        });
-      }
-
+    // 获取分页获取一级评论
+    getProdCommPage(query) {
       http.request({
-        url: "/prodComm/prodCommPageByProd",
-        method: "GET",
-        data: {
-          prodId: this.prodId,
-          size: 10,
-          current: this.prodCommPage.current + 1,
-          evaluate: this.evaluate
-        },
+        url: "/evaluation/list",
+        method: "POST",
+        data: query,
         callBack: res => {
-          res.records.forEach(item => {
-            if (item.pics) {
-              item.pics = item.pics.split(',');
-            }
-          });
+          console.log(res)
           let records = this.prodCommPage.records;
-          records = records.concat(res.records);
+          records = records.concat(res.list);
           this.setData({
             prodCommPage: {
-              current: res.current,
+              current: res.pageNum,
               pages: res.pages,
               records: records
             }
@@ -646,8 +648,47 @@ export default {
         commentShow: false
       });
     },
-	leaveMessage: function (e) {
+	closeInputPopup: function () {
+      this.setData({
+        showLeave: false,
+      });
+    },
+	openLeaveMessage: function (e) {
+		this.setData({
+		  evaluation: {}
+		});
 		var id = e.currentTarget.dataset.id;
+		this.setData({
+		  'evaluation.parentId': id,
+		  'evaluation.flowerId': this.prodId
+		});
+		this.showLeave=true;
+	},
+	onLeaveMessageInput: function(e) {
+		this.setData({
+		  'evaluation.content': e.detail.value
+		});
+	},
+	onSendLeave: function(e) {
+		console.log(this.evaluation)
+		var evaluation = this.evaluation;
+		var params = {
+		  url: "/evaluation",
+		  method: "POST",
+		  needToken: true,
+		  data: evaluation,
+		  callBack: res => {
+		    uni.hideLoading();
+		    uni.showToast({
+		      title: "发送成功",
+		      icon: "none"
+		    });
+			this.setData({
+			  showLeave: false
+			});
+		  }
+		};
+		http.request(params);
 	}
   }
 };

@@ -25,16 +25,14 @@ import java.util.Objects;
 public class FlowerFavoriteServiceImpl implements FlowerFavoriteService {
 
     private final FlowerFavoriteDao flowerFavoriteDao;
-    private final FlowerFavoriteMapper flowerFavoriteMapper;
     private final FlowerDao flowerDao;
     private final ModelMapper modelMapper;
 
     @Autowired
     private UserUtils userUtils;
 
-    public FlowerFavoriteServiceImpl(FlowerFavoriteDao flowerFavoriteDao, FlowerFavoriteMapper flowerFavoriteMapper, FlowerDao flowerDao, ModelMapper modelMapper) {
+    public FlowerFavoriteServiceImpl(FlowerFavoriteDao flowerFavoriteDao, FlowerDao flowerDao, ModelMapper modelMapper) {
         this.flowerFavoriteDao = flowerFavoriteDao;
-        this.flowerFavoriteMapper = flowerFavoriteMapper;
         this.flowerDao = flowerDao;
         this.modelMapper = modelMapper;
     }
