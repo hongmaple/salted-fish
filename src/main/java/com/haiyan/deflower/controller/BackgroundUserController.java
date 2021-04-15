@@ -54,6 +54,19 @@ public class BackgroundUserController {
     }
 
 
+    /**
+     * 修改用户信息，密码，手机号，头像
+     * @param user 用户
+     * @return 结果
+     */
+    @PutMapping("/admin")
+    @ApiOperation("修改用户信息")
+    public AjaxResult adminUpdateUser(@Valid @RequestBody BackgroundUser user) {
+        AjaxResult ajaxResult = AjaxResult.success(backgroundUserService.adminUpdateUser(user));
+        return ajaxResult;
+    }
+
+
 
     /**
      * 加载后台用户

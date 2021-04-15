@@ -69,7 +69,7 @@ export default {
           }else {
             const formData = this.form;
             formData.id = this.id;
-            this.$axios.put(config.url+"/user", formData,{headers: {"token": localStorage.getItem("eleToken")}}).then(res => {
+            this.$axios.put(config.url+"/user/admin", formData,{headers: {"token": localStorage.getItem("eleToken")}}).then(res => {
                 this.$message({
                   type: "success",
                   message: "数据修改成功"

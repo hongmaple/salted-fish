@@ -87,6 +87,24 @@ public class BackgroundUserServiceImpl implements BackgroundUserService {
     }
 
     @Override
+    public Boolean adminUpdateUser(BackgroundUser user) {
+        User loginUser = userUtils.getUser(ServletUtils.getRequest());
+        if (!"admin".equals(loginUser.getRole())) {
+            throw new ExceptionResult("user","false",null,"你不够格");
+        }
+        if (userDao.lambdaQuery().eq(BackgroundUser::getId,loginUser.getId()).count()==0) {
+            throw new ExceptionResult("user","false",null,"当前用户不存在");
+        }
+        if(userDao.lambdaQuery().eq(BackgroundUser::getPhone,user.getPhone()).ne(BackgroundUser::getId,user.getId()).count()>0) {
+            throw new ExceptionResult("user","false",null,"修改失败，手机号码已存在");
+        }
+        if(!userDao.lambdaUpdate().eq(BackgroundUser::getId,user.getId()).update(user)) {
+            throw new ExceptionResult("user","false",null,"修改失败");
+        }
+        return true;
+    }
+
+    @Override
     public PageList<BackgroundUser> ListUser(PageDomain pageDomain) {
         Page<BackgroundUser> page = userDao.lambdaQuery().page(new Page<>(pageDomain.getPageNum(), pageDomain.getPageSize()));
         return PageList.of(page.getRecords(),page);
@@ -101,6 +119,9 @@ public class BackgroundUserServiceImpl implements BackgroundUserService {
     @Override
     public Boolean deletedUser(Long id) {
         User loginUser = userUtils.getUser(ServletUtils.getRequest());
+        if (!"admin".equals(loginUser.getRole())) {
+            throw new ExceptionResult("user","false",null,"你不够格");
+        }
         if (userDao.lambdaQuery().eq(BackgroundUser::getId,loginUser.getId()).count()==0) {
             throw new ExceptionResult("user","false",null,"当前用户不存在");
         }

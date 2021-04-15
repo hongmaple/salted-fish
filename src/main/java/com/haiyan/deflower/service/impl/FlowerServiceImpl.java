@@ -99,6 +99,7 @@ public class FlowerServiceImpl implements FlowerService {
         }
 
         lambdaQuery.orderByDesc(Flower::getUpdateTime);
+        lambdaQuery.eq(Flower::getSaleable,true);
         Page<Flower> page = lambdaQuery.page(new Page<>(query.getPageNum(), query.getPageSize()));
         List<Flower> flowers = page.getRecords();
         List<FlowerRowVo> flowerRowVos = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.haiyan.deflower.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.haiyan.deflower.pojo.AjaxResult;
+import com.haiyan.deflower.pojo.BackgroundUser;
 import com.haiyan.deflower.pojo.PageDomain;
 import com.haiyan.deflower.pojo.User;
 import com.haiyan.deflower.service.UserService;
@@ -65,6 +66,18 @@ public class UserController {
     @ApiOperation("修改用户信息")
     public AjaxResult updateUser(@Valid @RequestBody User user) {
         AjaxResult ajaxResult = AjaxResult.success(userService.updateUser(user));
+        return ajaxResult;
+    }
+
+    /**
+     * 修改用户信息，密码，手机号，头像
+     * @param user 用户
+     * @return 结果
+     */
+    @PutMapping("/admin")
+    @ApiOperation("修改用户信息")
+    public AjaxResult adminUpdateUser(@Valid @RequestBody User user) {
+        AjaxResult ajaxResult = AjaxResult.success(userService.adminUpdateUser(user));
         return ajaxResult;
     }
 

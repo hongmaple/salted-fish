@@ -31,6 +31,13 @@ public interface UserService {
     Boolean updateUser(User user);
 
     /**
+     * 修改用户信息，密码，手机号，头像
+     * @param user 用户
+     * @return 结果
+     */
+    Boolean adminUpdateUser(User user);
+
+    /**
      * 加载后台用户
      * @param pageDomain 参数
      * @return 结果

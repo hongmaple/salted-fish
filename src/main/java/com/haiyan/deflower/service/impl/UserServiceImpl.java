@@ -86,6 +86,29 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * 修改用户信息，密码，手机号，头像
+     * @param user 用户
+     * @return 结果
+     */
+    @Override
+    public Boolean adminUpdateUser(User user) {
+        User loginUser = userUtils.getUser(ServletUtils.getRequest());
+        if (!"admin".equals(loginUser.getRole())) {
+            throw new ExceptionResult("user","false",null,"你不够格");
+        }
+        if (userDao.lambdaQuery().eq(User::getId,loginUser.getId()).count()==0) {
+            throw new ExceptionResult("user","false",null,"该用户不存在");
+        }
+        if(userDao.lambdaQuery().eq(User::getPhone,user.getPhone()).ne(User::getId,user.getId()).count()>0) {
+            throw new ExceptionResult("user","false",null,"修改失败，手机号码已存在");
+        }
+        if(!userDao.lambdaUpdate().eq(User::getId,user.getId()).update(user)) {
+            throw new ExceptionResult("user","false",null,"修改失败");
+        }
+        return true;
+    }
+
     @Override
     public PageList<User> ListUser(PageDomain pageDomain) {
         Page<User> page = userDao.lambdaQuery().page(new Page<>(pageDomain.getPageNum(), pageDomain.getPageSize()));
@@ -95,6 +118,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean deletedUser(Long id) {
         User loginUser = userUtils.getUser(ServletUtils.getRequest());
+        if (!"admin".equals(loginUser.getRole())) {
+            throw new ExceptionResult("user","false",null,"你不够格");
+        }
         if (userDao.lambdaQuery().eq(User::getId,loginUser.getId()).count()==0) {
             throw new ExceptionResult("user","false",null,"当前用户不存在");
         }
