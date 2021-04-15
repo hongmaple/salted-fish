@@ -39,6 +39,14 @@ public class Order {
     private Date createTime;
 
     /**
+     * 修改时间
+     */
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss"
+    )
+    private Date updateTime;
+
+    /**
      * 卖家id
      */
     private Long sellerId;

@@ -145,6 +145,7 @@ public class OrderServiceImpl implements OrderService {
         if (status>0) {
             lambdaQuery.eq(Order::getStatus,status);
         }
+        lambdaQuery.orderByDesc(Order::getUpdateTime);
         Page<Order> orderPage = lambdaQuery
                 .eq(Order::getUserId, userUtils.getUser(ServletUtils.getRequest()).getId())
                 .orderByDesc(Order::getCreateTime)
@@ -184,7 +185,7 @@ public class OrderServiceImpl implements OrderService {
                 lambdaQuery.eq(Order::getBackgroundAgentId,user.getId());
             }
         }
-
+        lambdaQuery.orderByDesc(Order::getUpdateTime);
         Page<Order> orderPage = lambdaQuery
                 .orderByDesc(Order::getCreateTime)
                 .page(new Page<>(query.getPageNum(), query.getPageSize()));
@@ -237,6 +238,7 @@ public class OrderServiceImpl implements OrderService {
         Order Order = new Order();
         Order.setOrderId(id);
         Order.setStatus(status);
+        Order.setUpdateTime(new Date());
         orderMapper.updateById(Order);
         return count == 1;
     }

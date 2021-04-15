@@ -187,7 +187,7 @@
 			<view class="cmt-cnt" @tap="openLeaveMessage" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
 		  </view>
 		  <view class="load-more" v-if="item.subEvaluationRowVos.pages > item.subEvaluationRowVos.pageNum">
-		    <text @tap="getMoreCommPage">点击加载更多</text>
+		    <text @tap="getSubMoreCommPage" :data-pageNum="item.subEvaluationRowVos.pageNum" :data-parentId="item.id" :data-index="index">点击加载更多</text>
 		  </view>
         </view>
       </view>
@@ -500,7 +500,46 @@ export default {
       }
       this.getProdCommPage(query);
     },
-
+	getSubMoreCommPage(e) {
+		var index = e.currentTarget.dataset.index;
+		var parentId = e.currentTarget.dataset.parentId;
+		var pageNum = e.currentTarget.dataset.pageNum+1;
+		console.log(pageNum)
+		var query = {
+			pageNum: pageNum,
+			pageSize: 3,
+			flowerId: this.prodId,
+			parentId: parentId
+		}
+		http.request({
+		  url: "/evaluation/sub/list",
+		  method: "POST",
+		  data: query,
+		  callBack: res => {
+			  console.log(res);
+		    let records = this.prodCommPage.records;
+			let subEvaluationRowVos =  records[index].subEvaluationRowVos;
+			let subList = subEvaluationRowVos.list
+			subList = subList.concat(res.list);
+			subEvaluationRowVos.list = subList;
+			subEvaluationRowVos.pages = res.pages;
+			subEvaluationRowVos.pageNum = res.pageNum;
+			records[index].subEvaluationRowVos = subEvaluationRowVos;
+			console.log(records[index]);
+		    this.setData({
+		      prodCommPage: {
+		        records: records
+		      }
+		    }); // 如果商品详情中没有评论的数据，截取两条到商品详情页商品详情
+		
+		    if (!this.littleCommPage.length) {
+		      this.setData({
+		        littleCommPage: records.slice(0, 2)
+		      });
+		    }
+		  }
+		});
+	},
     getMoreCommPage(e) {
 		var pageNum = this.prodCommPage.current+1;
 		var query = {
@@ -518,7 +557,6 @@ export default {
         method: "POST",
         data: query,
         callBack: res => {
-          console.log(res)
           let records = this.prodCommPage.records;
           records = records.concat(res.list);
           this.setData({
@@ -703,6 +741,12 @@ export default {
 		      title: "发送成功",
 		      icon: "none"
 		    });
+			var query = {
+				pageNum: 1,
+				pageSize: 5,
+				flowerId: this.prodId
+			}
+			this.getProdCommPage(query);
 			this.setData({
 			  showLeave: false
 			});

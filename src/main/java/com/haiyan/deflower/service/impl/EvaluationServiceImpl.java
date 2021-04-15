@@ -89,7 +89,7 @@ public class EvaluationServiceImpl implements EvaluationService {
             }
             EvaluationQuery query2 = new EvaluationQuery();
             query2.setPageNum(1);
-            query2.setPageSize(1);
+            query2.setPageSize(3);
             query2.setParentId(evaluation.getId());
             PageList<EvaluationRowVo> subQueryEvaluationList = subQueryEvaluationList(query2);
             evaluationRowVo.setSubEvaluationRowVos(subQueryEvaluationList);
