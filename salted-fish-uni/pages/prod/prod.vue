@@ -84,7 +84,7 @@
         <text @tap="showComment">查看全部留言</text>
       </view>
 	  <view class="cmt-more-v">
-	    <text @tap="openLeaveMessage" data-id="0" data-toUserType="0" data-toUserId="0">留言</text>
+	    <text @tap="openLeaveMessage" data-index="-1" data-id="0" data-toUserType="0" data-toUserId="0">留言</text>
 	  </view>
     </view>
   </view>
@@ -167,7 +167,7 @@
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
-          <view class="cmt-cnt" @tap="openLeaveMessage" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
+          <view class="cmt-cnt" @tap="openLeaveMessage" :data-index="index" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
 <!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
           </scroll-view> -->
@@ -184,7 +184,7 @@
 			    <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
 			  </view>
 			</view>
-			<view class="cmt-cnt" @tap="openLeaveMessage" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
+			<view class="cmt-cnt" @tap="openLeaveMessage" :data-index="index" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
 		  </view>
 		  <view class="load-more" v-if="item.subEvaluationRowVos.pages > item.subEvaluationRowVos.pageNum">
 		    <text @tap="getSubMoreCommPage" :data-pageNum="item.subEvaluationRowVos.pageNum" :data-parentId="item.id" :data-index="index">点击加载更多</text>
@@ -274,7 +274,8 @@ export default {
 	  showLeave: false,
 	  evaluation: {},
 	  LeaveNumber: 0,
-	  leavePla: '评论千万条,友善第一条'
+	  leavePla: '评论千万条,友善第一条',
+	  loginResult: {}
     };
   },
 
@@ -288,6 +289,7 @@ export default {
    */
   onLoad: function (options) {
     this.setData({
+	  loginResult: uni.getStorageSync("loginResult"),
       prodId: options.prodid
     }); 
 	// 加载商品信息
@@ -712,6 +714,7 @@ export default {
 		let toUserType = e.currentTarget.dataset.toUserType;
 		let toUserId = e.currentTarget.dataset.toUserId;
 		let commentator = e.currentTarget.dataset.commentator;
+		let index = e.currentTarget.dataset.index;
 		let leavePla = commentator?'回复 '+commentator:'评论千万条,友善第一条'
 		this.setData({
 		  'evaluation.parentId': id,
@@ -741,12 +744,6 @@ export default {
 		      title: "发送成功",
 		      icon: "none"
 		    });
-			var query = {
-				pageNum: 1,
-				pageSize: 5,
-				flowerId: this.prodId
-			}
-			this.getProdCommPage(query);
 			this.setData({
 			  showLeave: false
 			});
