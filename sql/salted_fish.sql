@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 15/04/2021 16:19:00
+ Date: 16/04/2021 10:28:27
 */
 
 SET NAMES utf8mb4;
@@ -52,6 +52,14 @@ INSERT INTO `evaluation` VALUES (60, '不错不错，测试测试', 3, 0, 0, 0, 
 INSERT INTO `evaluation` VALUES (61, '你好啊', 3, 50, 1, 0, 1, 0, '2021-04-15 13:49:23', '2021-04-15 13:49:23', 0);
 INSERT INTO `evaluation` VALUES (62, '这个产品也太好了', 3, 0, 0, 0, 1, 0, '2021-04-15 15:00:34', '2021-04-15 15:00:34', 0);
 INSERT INTO `evaluation` VALUES (63, '哈哈哈', 3, 52, 1, 0, 1, 0, '2021-04-15 15:34:39', '2021-04-15 15:34:39', 0);
+INSERT INTO `evaluation` VALUES (64, '我也觉得不错', 3, 0, 0, 0, 1, 0, '2021-04-15 17:25:14', '2021-04-15 17:25:14', 0);
+INSERT INTO `evaluation` VALUES (65, '帅啊', 3, 50, 1, 0, 1, 0, '2021-04-16 10:22:26', '2021-04-16 10:22:26', 0);
+INSERT INTO `evaluation` VALUES (66, '哈哈哈哈哈哈哈哈哈哈哈', 3, 50, 1, 0, 1, 0, '2021-04-16 10:23:40', '2021-04-16 10:23:40', 0);
+INSERT INTO `evaluation` VALUES (67, '但是ADASD', 3, 52, 1, 0, 1, 0, '2021-04-16 10:24:20', '2021-04-16 10:24:20', 0);
+INSERT INTO `evaluation` VALUES (68, '萨芬士大夫士大夫', 3, 52, 1, 0, 1, 0, '2021-04-16 10:24:47', '2021-04-16 10:24:47', 0);
+INSERT INTO `evaluation` VALUES (69, 'sdfdsfdfds', 3, 50, 1, 0, 1, 0, '2021-04-16 10:25:35', '2021-04-16 10:25:35', 0);
+INSERT INTO `evaluation` VALUES (70, '就啊打发撒旦', 3, 60, 1, 0, 1, 0, '2021-04-16 10:26:06', '2021-04-16 10:26:06', 0);
+INSERT INTO `evaluation` VALUES (71, '的非官方大概', 3, 60, 1, 0, 1, 0, '2021-04-16 10:26:14', '2021-04-16 10:26:14', 0);
 
 -- ----------------------------
 -- Table structure for tb_address
