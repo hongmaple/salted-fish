@@ -84,7 +84,7 @@
         <text @tap="showComment">查看全部留言</text>
       </view>
 	  <view class="cmt-more-v">
-	    <text @tap="openLeaveMessage" data-index="-1" data-id="0" data-toUserType="0" data-toUserId="0">留言</text>
+	    <text @tap="openLeaveMessage" data-toUserName="" data-index="-1" data-id="0" data-toUserType="0" data-toUserId="0">留言</text>
 	  </view>
     </view>
   </view>
@@ -167,7 +167,7 @@
               <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
             </view>
           </view>
-          <view class="cmt-cnt" @tap="openLeaveMessage" :data-index="index" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
+          <view class="cmt-cnt" @tap="openLeaveMessage" :data-toUserName="item.commentator" :data-index="index" :data-id="item.id" :data-commentator="item.commentator" :data-toUserType="item.creatorType" :data-toUserId="item.creatorId">{{item.content}}</view>
 <!--          <scroll-view class="cmt-attr" scroll-x="true" v-if="item.pics.length">
             <image v-for="(commPic, index2) in item.pics" :key="index2" :src="commPic"></image>
           </scroll-view> -->
@@ -184,7 +184,7 @@
 			    <!-- <van-rate readonly :value="item.score" @change="onChange" color="#f44"></van-rate> -->
 			  </view>
 			</view>
-			<view class="cmt-cnt" @tap="openLeaveMessage" :data-index="index" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
+			<view class="cmt-cnt" @tap="openLeaveMessage" :data-toUserName="subItem.commentator" :data-index="index" style="padding-left: 50rpx;" :data-id="item.id" :data-commentator="subItem.commentator" :data-toUserType="subItem.creatorType" :data-toUserId="subItem.creatorId">回复{{subItem.toUserName}}: {{subItem.content}}</view>
 		  </view>
 		  <view class="load-more" v-if="item.subEvaluationRowVos.pages > item.subEvaluationRowVos.pageNum">
 		    <text @tap="getSubMoreCommPage" :data-pageNum="item.subEvaluationRowVos.pageNum" :data-parentId="item.id" :data-index="index">点击加载更多</text>
@@ -275,7 +275,9 @@ export default {
 	  evaluation: {},
 	  LeaveNumber: 0,
 	  leavePla: '评论千万条,友善第一条',
-	  loginResult: {}
+	  leaveIndex: -1,
+	  loginResult: {},
+	  toUserName: ''
     };
   },
 
@@ -715,13 +717,16 @@ export default {
 		let toUserId = e.currentTarget.dataset.toUserId;
 		let commentator = e.currentTarget.dataset.commentator;
 		let index = e.currentTarget.dataset.index;
-		let leavePla = commentator?'回复 '+commentator:'评论千万条,友善第一条'
+		let leavePla = commentator?'回复 '+commentator:'评论千万条,友善第一条';
+		let toUserName = e.currentTarget.dataset.toUserName;
 		this.setData({
 		  'evaluation.parentId': id,
 		  'evaluation.flowerId': this.prodId,
 		  'evaluation.toUserType': toUserType,
 		  'evaluation.toUserId': toUserId,
-		  leavePla: leavePla
+		  leavePla: leavePla,
+		  leaveIndex: index,
+		  toUserName: toUserName
 		});
 		this.showLeave=true;
 	},
@@ -744,8 +749,33 @@ export default {
 		      title: "发送成功",
 		      icon: "none"
 		    });
+			let index = this.leaveIndex;
+			let records = this.prodCommPage.records;
+			let user = this.loginResult.data;
+			console.log(user);
+			let avatarImage = user.avatarImage;
+			let username = user.username;
+			let toUserName = this.toUserName;
+			var evaluationRowVo = evaluation;
+			evaluationRowVo.commentator = username;
+			evaluationRowVo.commentatorAvatarImage = avatarImage;
+			evaluationRowVo.toUserName = toUserName;
+			var evaluationRowVos = [];
+			evaluationRowVos[0] = evaluationRowVo;
+			if(index==-1) {
+				records = records.concat(evaluationRowVos);
+			}else{
+				let subEvaluationRowVos =  records[index].subEvaluationRowVos;
+				let subList = subEvaluationRowVos.list
+				subList = subList.concat(evaluationRowVos);
+				subEvaluationRowVos.list = subList;
+				records[index].subEvaluationRowVos = subEvaluationRowVos;
+			}
 			this.setData({
-			  showLeave: false
+			  showLeave: false,
+			  prodCommPage: {
+			    records: records
+			  }
 			});
 		  }
 		};
