@@ -38,6 +38,11 @@
     <view class="sku-con">{{oldNewLevel}}</view>
     <view class="more">...</view>
   </view>
+  <view class="sku" @tap="showSku">
+    <view class="sku-tit">运费</view>
+    <view class="sku-con">10元</view>
+    <view class="more">...</view>
+  </view>
   <!-- 已选规格 -->
   <view class="sku" @tap="showSku">
     <view class="sku-tit">已选</view>

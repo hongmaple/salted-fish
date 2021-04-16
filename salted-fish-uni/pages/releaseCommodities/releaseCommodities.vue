@@ -386,9 +386,11 @@
 				    	title: "发布成功",
 				    	icon: 'none',
 				    });
-					uni.navigateBack({
-						delta: 1
-					});
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 2
+						});
+					},1000)
 				  }
 				};
 				http.request(params);
