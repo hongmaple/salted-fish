@@ -39,7 +39,8 @@
 | Hibernator-Validator | 验证框架 | https://blog.csdn.net/hy_coming/article/details/93978555 |
 
 2. 数据库用的是mysql8.0，使用Navicat进行管理
-2.系统环境，windows ，jdk1.8
+
+3.系统环境，windows ，jdk1.8
 ### 前端项目
 #### mall4uni
 感谢[mall4uni ](https://gitee.com/gz-yami/mall4uni)
