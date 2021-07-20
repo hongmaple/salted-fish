@@ -263,7 +263,7 @@ export default {
 		const auditStatus = e.currentTarget.dataset.auditStatus;
 		var ths = this;
 		var params = {
-		  url: `/flower/auditStatus/${id}/${saleable}`,
+		  url: `/flower/auditStatus/${id}/${auditStatus}`,
 		  method: "PUT",
 		  needToken: true,
 		  callBack: function (res) {
