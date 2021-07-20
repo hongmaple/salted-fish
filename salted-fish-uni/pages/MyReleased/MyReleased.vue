@@ -54,8 +54,8 @@
            <text v-if="item.auditStatus==1&&item.saleable" class="button" @tap="updateSaleable" :data-id="item.id" data-saleable="false" hover-class="none">下架</text>
             <!-- <text class="button warn" @tap :data-ordernum="item.orderId" hover-class="none">再次购买</text> -->
             <text v-if="item.auditStatus==1&&!item.saleable" class="button warn" @tap="updateSaleable" :data-id="item.id" data-saleable="true" hover-class="none">上架</text>
-            <text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="4" hover-class="none">捐赠</text>
-			<text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="updateAuditStatus" :data-id="item.id" data-auditStatus="5" hover-class="none">邮寄回家</text>
+            <text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="donate" :data-id="item.id" hover-class="none">捐赠</text>
+			<text v-if="item.type==1&&item.auditStatus==1" class="button warn" @tap="Mailhome" :data-id="item.id" hover-class="none">邮寄回家</text>
           </view>
         </view>
       </view>
@@ -258,9 +258,17 @@ export default {
 		uni.hideLoading();
 		http.request(params);
 	},
-	updateAuditStatus: function (e) {
+	donate: function (e) {
 		const id = e.currentTarget.dataset.id;
-		const auditStatus = e.currentTarget.dataset.auditStatus;
+        this.updateAuditStatus(id,4);
+	},
+	Mailhome: function (e) {
+		const id = e.currentTarget.dataset.id;
+		this.updateAuditStatus(id,5);
+	},
+	updateAuditStatus: function (id,auditStatus) {
+		console.log(id)
+		console.log(auditStatus)
 		var ths = this;
 		var params = {
 		  url: `/flower/auditStatus/${id}/${auditStatus}`,
