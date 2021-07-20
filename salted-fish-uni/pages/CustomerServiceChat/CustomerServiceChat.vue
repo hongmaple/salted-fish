@@ -19,6 +19,7 @@
 	</view>
 </template>
 <script>
+	var config = require('../../utils/config.js');
 	export default {
 		data() {
 			return {
@@ -49,8 +50,8 @@
 					//实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
 					//等同于socket = new WebSocket("ws://localhost:8888/xxxx/im/25");
 					//var socketUrl="${request.contextPath}/im/"+$("#userId").val();
-					var socketUrl = "http://localhost:9001/ws/" + id;
-					socketUrl = socketUrl.replace("https", "ws").replace("http", "ws");
+					var socketUrl = config.wsDomain+"/ws/" + id;
+					// socketUrl = socketUrl.replace("https", "ws").replace("http", "ws");
 					var socket = new WebSocket(socketUrl);
 					var ths = this;
 					this.setData({
