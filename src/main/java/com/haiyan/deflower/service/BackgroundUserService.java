@@ -57,4 +57,11 @@ public interface BackgroundUserService {
      */
     Boolean deletedUser(Long id);
 
+    /**
+     * 根据用户id获取用户信息
+     * @param id 用户id
+     * @return 用户信息
+     */
+    BackgroundUser getUserById(Long id);
+
 }

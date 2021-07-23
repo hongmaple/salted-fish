@@ -130,4 +130,9 @@ public class BackgroundUserServiceImpl implements BackgroundUserService {
         }
         return true;
     }
+
+    @Override
+    public BackgroundUser getUserById(Long id) {
+        return userDao.getById(id);
+    }
 }

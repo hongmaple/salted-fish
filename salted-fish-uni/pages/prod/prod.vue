@@ -279,6 +279,7 @@ export default {
 	  serverUrl: config.domain,
 	  user: {},
 	  sellerId: 0,
+	  sellerType: 0, //卖家类型，0客户，1系统代理人
 	  backgroundAgentId: 0,
 	  showLeave: false,
 	  evaluation: {},
@@ -369,8 +370,8 @@ export default {
 	   * 私聊
 	 */
 	toCustomerServiceChat: function (e) {
-		console.log(e)
-		      const toUserId = e.currentTarget.dataset.toUserId
+		      console.log(this.user)
+		      const toUserId = e.currentTarget.dataset.touserid
 			  const username = e.currentTarget.dataset.username
 	          uni.navigateTo({
 	            url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&username='+username
@@ -429,6 +430,15 @@ export default {
 			  imgs = this.trimSpace(array);
 		  }
           //var content = util.formatHtml(res.content);
+		  var sellerType = 0;
+		  var sellerId=res.createId
+		  var toUserId = sellerId;
+		  console.log(res.backgroundAgentId);
+		  if(res.backgroundAgentId>0) {
+			  sellerType=1;
+			  sellerId=res.backgroundAgentId
+			  toUserId='admin'+res.backgroundAgentId
+		  }
           this.setData({
             imgs: imgs,
             brief: res.brief,
@@ -438,15 +448,24 @@ export default {
             specification: "规格："+res.specification,
             pic: res.images,
 			oldNewLevel: res.oldNewLevel,
-			sellerId: res.createId,
-			backgroundAgentId: res.backgroundAgentId
+			backgroundAgentId: res.backgroundAgentId,
+			sellerId: sellerId,
+			sellerType: sellerType
           }); 
+		  var url = `/user/${sellerId}`
+		  if(sellerType==1) {
+			  url = `/background/user/${sellerId}`
+		  }
 		  var params = {
-		    url: `/user/${this.sellerId}`,
+		    url: url,
 		    method: "GET",
 		    callBack: res2 => {
+			  var user = {
+				  id: toUserId,
+				  username: res2.data.username
+			  }
 		      this.setData({
-		          user: res2.data
+		          user: user
 		      }); 
 		  		  
 		      uni.hideLoading();
@@ -465,7 +484,6 @@ export default {
 	         {  
 	                  array.splice(i,1);  
 	                  i= i-1;  
-	
 	         }  
 	     }  
 	     return array;  

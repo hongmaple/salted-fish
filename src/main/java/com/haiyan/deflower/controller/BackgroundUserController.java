@@ -102,4 +102,16 @@ public class BackgroundUserController {
         AjaxResult ajaxResult = AjaxResult.success(backgroundUserService.deletedUser(id));
         return ajaxResult;
     }
+
+    /**
+     * 根据用户id获取用户信息
+     * @param id 用户id
+     * @return 用户信息
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据用户id获取用户信息")
+    public AjaxResult getUserById(@PathVariable Long id) {
+        AjaxResult ajaxResult = AjaxResult.success(backgroundUserService.getUserById(id));
+        return ajaxResult;
+    }
 }
