@@ -20,7 +20,7 @@
     <block v-for="(item, index) in orderList" :key="index">
       <view class="prod-item">
         <view class="order-num">
-          <text>订单编号：{{item.orderId}}</text>
+          <text>{{item.sellerName}}</text>
           <view class="order-state">
             <text :class="'order-sts  ' + (item.status==1?'red':'') + '  ' + ((item.status==5||item.status==6)?'gray':'')">{{item.status==1?'待支付':(item.status==2?'待发货':(item.status==3?'待收货':(item.status==5?'已取消':'已完成')))}}</text>
 

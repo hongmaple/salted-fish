@@ -99,6 +99,10 @@
       <image src="/static/images/tabbar/homepage.png"></image>
       首页
     </view>
+	<view class="btn icon">
+	      <image src="/static/images/tabbar/kefu.png"></image>
+	      <text class="apply-service" @tap="toCustomerServiceChat" :data-toUserId='user.id' :data-username='user.username'>私聊</text>
+	</view>
     <view class="btn icon" @tap="toCartPage">
       <image src="/static/images/tabbar/basket.png"></image>
       购物车
@@ -360,6 +364,18 @@ export default {
     };
   },
   methods: {
+	/**
+	   * @param {Object} e
+	   * 私聊
+	 */
+	toCustomerServiceChat: function (e) {
+		console.log(e)
+		      const toUserId = e.currentTarget.dataset.toUserId
+			  const username = e.currentTarget.dataset.username
+	          uni.navigateTo({
+	            url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&username='+username
+	    });
+	},
     /**
      * 添加或者取消收藏商品 
      */

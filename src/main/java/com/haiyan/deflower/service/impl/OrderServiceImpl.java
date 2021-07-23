@@ -2,10 +2,7 @@ package com.haiyan.deflower.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.haiyan.deflower.dao.FlowerDao;
-import com.haiyan.deflower.dao.OrderDao;
-import com.haiyan.deflower.dao.OrderDetailDao;
-import com.haiyan.deflower.dto.request.OrderBody;
+import com.haiyan.deflower.dao.*;
 import com.haiyan.deflower.dto.request.OrderListBody;
 import com.haiyan.deflower.dto.request.OrderQuery;
 import com.haiyan.deflower.dto.response.OrderDetailsVo;
@@ -25,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author haiyan
@@ -45,11 +39,13 @@ public class OrderServiceImpl implements OrderService {
     private final IdWorker idWorker;
     private final ModelMapper modelMapper;
     private final FlowerDao flowerDao;
+    private final BackgroundUserDao backgroundUserDao;
+    private final UserDao userDao;
 
     @Autowired
     private UserUtils userUtils;
 
-    public OrderServiceImpl(OrderMapper orderMapper, OrderDao orderDao, OrderStatusMapper orderStatusMapper, OrderDetailMapper orderDetailMapper, OrderDetailDao orderDetailDao, IdWorker idWorker, ModelMapper modelMapper, FlowerDao flowerDao) {
+    public OrderServiceImpl(OrderMapper orderMapper, OrderDao orderDao, OrderStatusMapper orderStatusMapper, OrderDetailMapper orderDetailMapper, OrderDetailDao orderDetailDao, IdWorker idWorker, ModelMapper modelMapper, FlowerDao flowerDao, BackgroundUserDao backgroundUserDao, UserDao userDao) {
         this.orderMapper = orderMapper;
         this.orderDao = orderDao;
         this.orderStatusMapper = orderStatusMapper;
@@ -58,6 +54,8 @@ public class OrderServiceImpl implements OrderService {
         this.idWorker = idWorker;
         this.modelMapper = modelMapper;
         this.flowerDao = flowerDao;
+        this.backgroundUserDao = backgroundUserDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -118,7 +116,17 @@ public class OrderServiceImpl implements OrderService {
         }
         // 查询订单
         Order order = this.orderMapper.selectById(id);
+        if (Objects.isNull(order)) {
+            throw new ExceptionResult("user","000001",null,"订单不存在");
+        }
         OrderDetailsVo orderDetailsVo = modelMapper.map(order,OrderDetailsVo.class);
+        if (order.getBackgroundAgentId()==0) {
+            BackgroundUser backgroundUser = backgroundUserDao.getById(order.getBackgroundAgentId());
+            orderDetailsVo.setSellerName(Objects.isNull(backgroundUser)? "卖家已注销":backgroundUser.getUsername());
+        }else {
+            User SellerUser = userDao.getById(order.getSellerId());
+            orderDetailsVo.setSellerName(Objects.isNull(SellerUser)? "卖家已注销":SellerUser.getUsername());
+        }
         // 查询订单详情
         OrderDetail detail = new OrderDetail();
         detail.setOrderId(id);
@@ -150,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
                 .eq(Order::getUserId, userUtils.getUser(ServletUtils.getRequest()).getId())
                 .orderByDesc(Order::getCreateTime)
                 .page(new Page<>(page, rows));
-        List<OrderRowVo> orderRowVos = new ArrayList<>();
+        List<OrderRowVo> orderRowVos = new LinkedList<>();
         orderPage.getRecords().forEach(order -> {
             // 查询订单状态
             OrderRowVo orderRowVo = modelMapper.map(order,OrderRowVo.class);
@@ -158,6 +166,13 @@ public class OrderServiceImpl implements OrderService {
                     .lambdaQuery()
                     .eq(OrderDetail::getOrderId,order.getOrderId())
                     .list();
+            if (order.getBackgroundAgentId()==0) {
+                BackgroundUser backgroundUser = backgroundUserDao.getById(order.getBackgroundAgentId());
+                orderRowVo.setSellerName(Objects.isNull(backgroundUser)? "卖家已注销":backgroundUser.getUsername());
+            }else {
+                User SellerUser = userDao.getById(order.getSellerId());
+                orderRowVo.setSellerName(Objects.isNull(SellerUser)? "卖家已注销":SellerUser.getUsername());
+            }
             orderRowVo.setOrderDetails(details);
             orderRowVos.add(orderRowVo);
         });

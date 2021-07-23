@@ -16,4 +16,5 @@ import java.util.List;
 @ApiModel("订单一行数据")
 public class OrderRowVo extends Order {
     private List<OrderDetail> orderDetails;
+    private String sellerName;
 }

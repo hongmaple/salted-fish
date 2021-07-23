@@ -267,8 +267,6 @@ export default {
 		this.updateAuditStatus(id,5);
 	},
 	updateAuditStatus: function (id,auditStatus) {
-		console.log(id)
-		console.log(auditStatus)
 		var ths = this;
 		var params = {
 		  url: `/flower/auditStatus/${id}/${auditStatus}`,

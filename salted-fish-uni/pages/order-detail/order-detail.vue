@@ -16,7 +16,7 @@
 
     <!-- 商品信息 -->
     <view class="prod-item" v-if="OrderDetailsVo.orderDetails">
-      
+      <view style="padding: 10rpx 0 10rpx 30rpx;">{{sellerName}}</view>
       <block v-for="(item, index) in OrderDetailsVo.orderDetails" :key="index">
         <view class="item-cont" @tap="toProdPage" :data-prodid="item.skuId">
           <view class="prod-pic">
@@ -106,7 +106,7 @@
 		 <text v-if="status==1" class="buy-again" @tap="onPayAgain" hover-class="none">付款</text>
 		 <text v-if="status==3 || status==5" class="buy-again" @tap="toDeliveryPage" hover-class="none">查看物流</text>
 		 <text v-if="status==3" class="buy-again" @tap="onConfirmReceive" hover-class="none">确认收货</text>
-         <text class="apply-service" @tap="toCustomerServiceChat">联系客服</text>
+         <text class="apply-service" @tap="toCustomerServiceChat" :data-toUserId='sellerId' :data-username='sellerName'>联系客服</text>
       </view>
     </view>
 
@@ -135,7 +135,9 @@ export default {
       actualTotal: '',
       prodid: '',
 	  OrderDetailsVo: {},
-	  serverUrl: config.domain
+	  serverUrl: config.domain,
+	  sellerName: "系统平台",
+	  sellerId: "admin1"
     };
   },
   components: {},
@@ -194,8 +196,10 @@ export default {
 	 * 咨询客服
 	 */
 	toCustomerServiceChat: function (e) {
-	  uni.navigateTo({
-	    url: '/pages/CustomerServiceChat/CustomerServiceChat'
+	      const toUserId = e.currentTarget.dataset.toUserId
+	  	  const username = e.currentTarget.dataset.username
+	        uni.navigateTo({
+	          url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&username='+username
 	  });
 	},
 
@@ -218,7 +222,9 @@ export default {
             status: res.data.status,
             productTotalAmount: res.data.totalPay,
             transfee: 10,
-			OrderDetailsVo: res.data
+			OrderDetailsVo: res.data,
+			sellerName: res.data.sellerName,
+			sellerId: res.data.backgroundAgentId==0? res.data.sellerId:res.data.backgroundAgentId
           });
           uni.hideLoading();
         }
@@ -309,7 +315,6 @@ export default {
 	    title: '',
 	    content: '我已收到货？',
 	    confirmColor: "#eb2444",
-	
 	    success(res) {
 	      if (res.confirm) {
 	        uni.showLoading({

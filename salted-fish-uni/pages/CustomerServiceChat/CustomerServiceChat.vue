@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<view style="text-align: center;padding-top: 40rpx;font-size: 40rpx;">{{toUsername}}</view>
 		<scroll-view scroll-y="true" style="overflow:scroll;">
 			<block v-for="(item, index) in messagesList" :key="index">
 				<view :class="item.fromUserId==0?'content-right':'content-left'">
@@ -26,10 +27,13 @@
 				socket: {},
 				messagesList: [],
 				danmuValue: '',
-				a: ''
+				a: '',
+				toUserId: 'admin1',
+				toUsername: '系统客服'
 			}
 		},
 		onLoad: function(options) {
+			console.log(options)
 			var ths = this;
 			var user = JSON.parse(uni.getStorageSync('token'));
 			ths.openSocket(user.id);
@@ -37,7 +41,9 @@
 			setInterval(function(){
 				i++;
 				ths.setData({
-					a: i
+					a: i,
+					toUserId: options.toUserId==null? this.toUserId:options.toUserId,
+					toUsername: options.username==null? this.toUsername:options.username,
 				});
 			},100);
 		},
@@ -103,7 +109,7 @@
 						contentText:this.danmuValue,
 						fromUserId: 0,
 						sendTime: new Date(),
-						toUserId: "admin1"
+						toUserId: this.toUserId
 					}
 					var messages = [];
 					messages.push(sendMessages);
