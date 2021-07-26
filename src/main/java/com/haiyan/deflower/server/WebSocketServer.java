@@ -100,7 +100,7 @@ public class WebSocketServer {
                 // 解析发送的报文
                 JSONObject jsonObject = JSON.parseObject(message);
                 // 追加发送人（防窜改）
-                jsonObject.put("fromUserId", this.userId);
+                jsonObject.put("fromUserId", userId);
                 jsonObject.put("sendTime",new Date());
                 String toUserId = jsonObject.getString("toUserId");
                 // 传送给对应 toUserId 用户的 WebSocket

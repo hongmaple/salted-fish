@@ -36,70 +36,18 @@
 			console.log(options)
 			var ths = this;
 			var user = JSON.parse(uni.getStorageSync('token'));
-			ths.openSocket(user.id);
-			var i = 0;
+			var socket = uni.getStorageSync('socket');
+			ths.setData({
+				socket: socket
+			});
 			setInterval(function(){
-				i++;
 				ths.setData({
-					a: i,
 					toUserId: options.toUserId==null? this.toUserId:options.toUserId,
 					toUsername: options.username==null? this.toUsername:options.username,
 				});
 			},100);
 		},
 		methods: {
-			openSocket: function(id) {
-				if (typeof(WebSocket) == "undefined") {
-					console.log("您的浏览器不支持WebSocket");
-				} else {
-					console.log("您的浏览器支持WebSocket");
-					//实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
-					//等同于socket = new WebSocket("ws://localhost:8888/xxxx/im/25");
-					//var socketUrl="${request.contextPath}/im/"+$("#userId").val();
-					var socketUrl = config.wsDomain+"/ws/" + id;
-					// socketUrl = socketUrl.replace("https", "ws").replace("http", "ws");
-					var socket = new WebSocket(socketUrl);
-					var ths = this;
-					this.setData({
-						socket: socket
-					});
-					//打开事件
-					socket.onopen = function() {
-						console.log("websocket已打开");
-						//socket.send("这是来自客户端的消息" + location.href + new Date());
-					};
-					//获得消息事件
-					socket.onmessage = function(msg) {
-						//发现消息进入    开始处理前端触发逻辑
-						var message = JSON.parse(msg.data);
-						if ("连接成功" === message) {
-							return;
-						}
-						var messagesList = [];
-						messagesList.push(message);
-						var list = ths.messagesList;
-						if (ths.messagesList) {
-							Array.prototype.push.apply(list, messagesList);
-						} else {
-							list = messagesList;
-						}
-					    ths.setData({
-					    	messagesList: list
-					    });
-					};
-					//关闭事件
-					socket.onclose = function() {
-						console.log("websocket已关闭");
-					};
-					//发生了错误事件
-					socket.onerror = function() {
-						uni.showToast({
-							title: "连接发生了错误！",
-							icon: "none"
-						})
-					}
-				}
-			},
 			sendMessage: function() {
 				if (typeof(WebSocket) == "undefined") {
 					console.log("您的浏览器不支持WebSocket");

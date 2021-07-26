@@ -34,9 +34,10 @@ export default {
   data() {
     return {
         socket: {},
-	   	  messagesList: [],
-		    danmuValue: '',
-        a: 0
+	   	messagesList: [],
+		danmuValue: '',
+		user: {},
+		fromUserId: ''
     };
   },
   props: {
@@ -87,7 +88,7 @@ export default {
 			};
 			//发生了错误事件
 			socket.onerror = function() {
-         Message.error("连接发生了错误");
+                Message.error("连接发生了错误");
 			}
 		}
 	},
@@ -97,8 +98,10 @@ export default {
 		} else {
 			    console.log("您的浏览器支持WebSocket");
                 var sendMessages = {
-                        contentText:this.danmuValue,
-                        fromUserId: 0,
+                        fromAvatarImage: this.user.avatarImage,
+                        fromUserName: this.user.username,
+                        fromUserId: this.fromUserId,
+                        contentText: this.danmuValue,
                         sendTime: new Date(),
                         toUserId: this.id
                 }
@@ -119,13 +122,16 @@ export default {
   },
   created() {
       var user = JSON.parse(localStorage.getItem("eleToken"));
-      this.openSocket("admin"+user.id);
+      this.user = user;
+      var fromUserId = "admin"+user.id
+      this.fromUserId = fromUserId;
+      this.openSocket(fromUserId);
       var i = 0;
-			setInterval(function(){
-        console.log(i);
+	  setInterval(function(){
+      console.log(i);
 				i++;
 			  this.a=i;
-			},100);
+	  },100);
   }
 };
 </script>

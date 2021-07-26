@@ -187,7 +187,8 @@
                 "enablePullDownRefresh": false
             }
             
-        },{
+        },
+		{
             "path" : "pages/userInfo/userInfo",
             "style" :                                                                                    
             {
@@ -222,7 +223,15 @@
                 "enablePullDownRefresh": false
             }
             
-        }
+        },
+		{
+			"path": "pages/messageList/messageList",
+			"style" :
+			{
+			    "navigationBarTitleText": "消息",
+			    "enablePullDownRefresh": false
+			}
+		}
     ],
 	"tabBar": {
 		"selectedColor": "#3a86b9",
@@ -242,9 +251,15 @@
 			},
 			{
 				"pagePath": "pages/releaseCommodities/releaseCommodities",
-				"text": "",
+				"text": "发布",
 				"iconPath": "/static/images/tabbar/plus.png",
 				"selectedIconPath": "/static/images/tabbar/plus-sel.png"
+			},
+			{
+				"pagePath": "pages/messageList/messageList",
+				"text": "消息",
+				"iconPath": "/static/images/tabbar/message.png",
+				"selectedIconPath": "/static/images/tabbar/message-sel.png"
 			},
 			{
 				"pagePath": "pages/basket/basket",

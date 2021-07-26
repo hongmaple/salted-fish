@@ -2,6 +2,7 @@
 	//app.js
 	var http = require("./utils/http.js");
 	var util = require('./utils/util.js')
+	var websoket = require('./utils/websoket.js')
 
 	export default {
 		onLaunach: function() {},
@@ -24,6 +25,8 @@
 				}
 				http.getCartCount()
 			}
+			var user = JSON.parse(uni.getStorageSync('token'));
+			websoket.openSocket(user.id);
 		},
 		globalData: {
 			// 定义全局请求队列
