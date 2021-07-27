@@ -106,7 +106,7 @@
 		 <text v-if="status==1" class="buy-again" @tap="onPayAgain" hover-class="none">付款</text>
 		 <text v-if="status==3 || status==5" class="buy-again" @tap="toDeliveryPage" hover-class="none">查看物流</text>
 		 <text v-if="status==3" class="buy-again" @tap="onConfirmReceive" hover-class="none">确认收货</text>
-         <text class="apply-service" @tap="toCustomerServiceChat" :data-toUserId='sellerId' :data-username='sellerName'>联系客服</text>
+         <text class="apply-service" @tap="toCustomerServiceChat" :data-touserid='sellerId' :data-username='sellerName'>联系客服</text>
       </view>
     </view>
 
@@ -193,10 +193,10 @@ export default {
       });
     },
 	/**
-	 * 咨询客服
+	 * 聊天
 	 */
 	toCustomerServiceChat: function (e) {
-	      const toUserId = e.currentTarget.dataset.toUserId
+	      const toUserId = e.currentTarget.dataset.touserid
 	  	  const username = e.currentTarget.dataset.username
 	        uni.navigateTo({
 	          url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&username='+username

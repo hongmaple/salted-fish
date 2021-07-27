@@ -1,11 +1,13 @@
 <template>
 	<view class="container">
-		<view style="text-align: center;padding-top: 40rpx;font-size: 40rpx;">{{toUsername}}</view>
-		<scroll-view scroll-y="true" style="overflow:scroll;">
+		<view style="position: fixed;top: 0rpx;text-align: center;z-index: 99;background-color: #00A0EA;width: 100%;">
+			<view style="text-align: center;padding-top: 20rpx;font-size: 40rpx;padding-bottom: 20rpx;">{{toUsername}}</view>
+		</view>
+		<scroll-view scroll-y="true" style="overflow:scroll;padding-bottom: 260rpx;padding-top: 70rpx;">
 			<block v-for="(item, index) in messagesList" :key="index">
-				<view :class="item.fromUserId==0?'content-right':'content-left'">
+				<view :class="item.fromUserId==fromUserId?'content-right':'content-left'">
 					<view style="width: 300rpx;">
-						<view :class="item.fromUserId==0?'text-bs-right':'text-bs-left'" v-html="item.contentText"></view>
+						<view :class="item.fromUserId==fromUserId?'text-bs-right':'text-bs-left'" v-html="item.contentText"></view>
 					</view>
 				</view>
 			</block>
@@ -21,29 +23,42 @@
 </template>
 <script>
 	var config = require('../../utils/config.js');
+	var websoket = require('../../utils/websoket.js')
 	export default {
 		data() {
 			return {
 				socket: {},
 				messagesList: [],
 				danmuValue: '',
-				a: '',
 				toUserId: 'admin1',
-				toUsername: '系统客服'
+				toUsername: '系统客服',
+				toAvatarimage: '../../static/images/icon/head04.png',
+				user: {},
+				fromUserId: 0,
+				a: 0
 			}
 		},
 		onLoad: function(options) {
-			console.log(options)
 			var ths = this;
 			var user = JSON.parse(uni.getStorageSync('token'));
-			var socket = uni.getStorageSync('socket');
+			var socket = websoket.openSocket(user.id);
+			//var socket = JSON.parse(uni.getStorageSync('token'));
+			var fromUserMessagesList = uni.getStorageSync(options.toUserId); 
 			ths.setData({
-				socket: socket
+				socket: socket,
+				messagesList: fromUserMessagesList,
+				fromUserId: user.id,
+				user: user
 			});
 			setInterval(function(){
+				var fromUserMessagesList = uni.getStorageSync(options.toUserId); 
+				ths.setData({
+					messagesList: fromUserMessagesList
+				});
 				ths.setData({
 					toUserId: options.toUserId==null? this.toUserId:options.toUserId,
-					toUsername: options.username==null? this.toUsername:options.username,
+					toUsername: options.toUsername==null? this.toUsername:options.toUsername,
+					toAvatarimage: options.toAvatarimage==null? this.toAvatarimage:options.toAvatarimage
 				});
 			},100);
 		},
@@ -53,10 +68,13 @@
 					console.log("您的浏览器不支持WebSocket");
 				} else {
 					console.log("您的浏览器支持WebSocket");
+					var date = new Date();
 					var sendMessages = {
-						contentText:this.danmuValue,
-						fromUserId: 0,
-						sendTime: new Date(),
+						contentText: this.danmuValue,
+						fromAvatarImage: this.user.avatarImage,
+						fromUserName: this.user.username,
+						fromUserId: this.fromUserId,
+						sendTime: date,
 						toUserId: this.toUserId
 					}
 					var messages = [];
@@ -72,6 +90,31 @@
 						danmuValue: ''
 					});
 					this.socket.send(JSON.stringify(sendMessages));
+					uni.setStorageSync(this.toUserId,list);
+					var messagess = uni.getStorageSync("messagesList_"+this.toUserId);
+					var newMessagesList = [];
+					var fromMessages = {
+						fromAvatarImage: this.toAvatarimage,
+						fromUserId: this.toUserId,
+						fromUserName: this.toUsername,
+						contentText: this.danmuValue,
+						sendTime: date
+					}
+					if(messagess) {
+						for (var i=0;i<messagess.length;i++) {
+							var fromUser = messagess[i];
+							if(fromUser.fromUserId!==this.toUserId) {
+								newMessagesList.push(fromMessages);
+							}else {
+								messagess[i] = fromMessages; 
+							}
+						}
+						Array.prototype.push.apply(messagess,newMessagesList);
+					}else {
+						newMessagesList.push(fromMessages);
+						messagess = newMessagesList
+					}
+					uni.setStorageSync("messagesList_"+this.toUserId,messagess);
 				}
 			}
 		}
@@ -92,7 +135,7 @@
 		display: -moz-box;
 		display: -ms-flexbox;
 		display: flex;
-		padding: 22rpx 0;
+		padding: 50rpx 0;
 		font-size: 26rpx;
 		box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
 	}

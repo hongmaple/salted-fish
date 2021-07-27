@@ -256,16 +256,16 @@
 				"selectedIconPath": "/static/images/tabbar/plus-sel.png"
 			},
 			{
-				"pagePath": "pages/messageList/messageList",
-				"text": "消息",
-				"iconPath": "/static/images/tabbar/message.png",
-				"selectedIconPath": "/static/images/tabbar/message-sel.png"
-			},
-			{
 				"pagePath": "pages/basket/basket",
 				"text": "购物车",
 				"iconPath": "/static/images/tabbar/basket.png",
 				"selectedIconPath": "/static/images/tabbar/basket-sel.png"
+			},
+			{
+				"pagePath": "pages/messageList/messageList",
+				"text": "消息",
+				"iconPath": "/static/images/tabbar/message.png",
+				"selectedIconPath": "/static/images/tabbar/message-sel.png"
 			},
 			{
 				"pagePath": "pages/user/user",

@@ -222,7 +222,6 @@ function loginSuccess (result, fn) {
 	// } else {
 		
 	// }
-	console.log(result)
 	wx.setStorageSync('token', JSON.stringify(result.data)); //把token存入缓存，请求接口数据时要用
 	if (result.data.id) {
 		wx.setStorageSync('hadBindUser', true);
