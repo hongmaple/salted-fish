@@ -19,7 +19,6 @@
       </div>
     </div>
       <div slot="footer" class="dialog-footer">
-          <p style="display: none;" v-text="a"></p>
           <el-input type="textarea" v-model="danmuValue"></el-input>
           <el-button type="primary" @click="sendMessage('formdoalog')">发送</el-button>
       </div>
@@ -34,18 +33,22 @@ export default {
   data() {
     return {
         socket: {},
-	   	messagesList: [],
-		danmuValue: '',
-		user: {},
-		fromUserId: ''
+	   	  messagesList: [],
+	    	danmuValue: '',
+		    user: {},
+		    fromUserId: ''
     };
   },
   props: {
     dialong: Object,
-    id: 0
+    toUser: {
+      toUserId: 0,
+      toUserName: '',
+      toAvatarImage: ''
+    }
   },
   methods: {
-    openSocket: function(id) {
+    openSocket: function(fromUserId) {
 		if (typeof(WebSocket) == "undefined") {
 			console.log("您的浏览器不支持WebSocket");
 		} else {
@@ -53,7 +56,7 @@ export default {
 			//实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
 			//等同于socket = new WebSocket("ws://localhost:8888/xxxx/im/25");
 			//var socketUrl="${request.contextPath}/im/"+$("#userId").val();
-			var socketUrl = "http://localhost:9001/ws/" + id;
+			var socketUrl = "http://localhost:9001/ws/" + fromUserId;
 			socketUrl = socketUrl.replace("https", "ws").replace("http", "ws");
 			var socket = new WebSocket(socketUrl);
             this.socket = socket;
@@ -80,7 +83,6 @@ export default {
                             list = messages;
                         }
                         ths.messagesList=list;
-                        console.log(ths.messagesList);
             };
 			//关闭事件
 			socket.onclose = function() {
@@ -97,14 +99,18 @@ export default {
 			console.log("您的浏览器不支持WebSocket");
 		} else {
 			    console.log("您的浏览器支持WebSocket");
+          var toUser = this.toUser;
                 var sendMessages = {
                         fromAvatarImage: this.user.avatarImage,
                         fromUserName: this.user.username,
                         fromUserId: this.fromUserId,
                         contentText: this.danmuValue,
                         sendTime: new Date(),
-                        toUserId: this.id
+                        toUserId: toUser.toUserId,
+                        toUsername: toUser.toUserName,
+                        toAvatarImage: toUser.toAvatarImage
                 }
+                console.log(sendMessages);
 				var messages = [];
 				messages.push(sendMessages);
                 var list = this.messagesList;
@@ -126,12 +132,9 @@ export default {
       var fromUserId = "admin"+user.id
       this.fromUserId = fromUserId;
       this.openSocket(fromUserId);
-      var i = 0;
 	  setInterval(function(){
-      console.log(i);
-				i++;
-			  this.a=i;
-	  },100);
+         this.messagesList = this.messagesList;
+	  },1000);
   }
 };
 </script>

@@ -101,7 +101,7 @@
     </view>
 	<view class="btn icon">
 	      <image src="/static/images/tabbar/kefu.png"></image>
-	      <text class="apply-service" @tap="toCustomerServiceChat" :data-toUserId='user.id' :data-username='user.username'>私聊</text>
+	      <text class="apply-service" @tap="toCustomerServiceChat" :data-touserid='user.id' :data-tousername='user.username' :data-fromavatarimage='user.avatarImage'>私聊</text>
 	</view>
     <view class="btn icon" @tap="toCartPage">
       <image src="/static/images/tabbar/basket.png"></image>
@@ -370,12 +370,12 @@ export default {
 	   * 私聊
 	 */
 	toCustomerServiceChat: function (e) {
-		      console.log(this.user)
-		      const toUserId = e.currentTarget.dataset.touserid
-			  const username = e.currentTarget.dataset.username
-	          uni.navigateTo({
-	            url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&username='+username
-	    });
+	      const toUserId = e.currentTarget.dataset.touserid;
+	  	  const toUsername = e.currentTarget.dataset.tousername;
+		  const toAvatarimage = e.currentTarget.dataset.fromavatarimage;
+	        uni.navigateTo({
+	          url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&toUsername='+toUsername+"&toAvatarimage="+toAvatarimage
+	  });
 	},
     /**
      * 添加或者取消收藏商品 

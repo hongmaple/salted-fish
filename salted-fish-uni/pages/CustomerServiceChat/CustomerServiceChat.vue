@@ -6,7 +6,11 @@
 		<scroll-view scroll-y="true" style="overflow:scroll;padding-bottom: 260rpx;padding-top: 70rpx;">
 			<block v-for="(item, index) in messagesList" :key="index">
 				<view :class="item.fromUserId==fromUserId?'content-right':'content-left'">
-					<view style="width: 300rpx;">
+					<view :class="item.fromUserId==fromUserId?'fromAvatarImage-right':'fromAvatarImage-left'">
+						<image :src="serverUrl + item.fromAvatarImage" class="more-pic" mode="widthFix"></image>
+					</view>
+					<view :class="item.fromUserId==fromUserId?'nickname_content_right':'nickname_content_left'">
+						<view :class="item.fromUserId==fromUserId?'nickname_right':'nickname_left'">{{item.fromUserName}}</view></br>
 						<view :class="item.fromUserId==fromUserId?'text-bs-right':'text-bs-left'" v-html="item.contentText"></view>
 					</view>
 				</view>
@@ -27,7 +31,7 @@
 	export default {
 		data() {
 			return {
-				socket: {},
+				soket: {},
 				messagesList: [],
 				danmuValue: '',
 				toUserId: 'admin1',
@@ -35,17 +39,21 @@
 				toAvatarimage: '../../static/images/icon/head04.png',
 				user: {},
 				fromUserId: 0,
-				a: 0
+				a: 0,
+				serverUrl: config.domain
 			}
 		},
 		onLoad: function(options) {
 			var ths = this;
 			var user = JSON.parse(uni.getStorageSync('token'));
-			var socket = websoket.openSocket(user.id);
-			//var socket = JSON.parse(uni.getStorageSync('token'));
+			var globalData = getApp().globalData;
+			var soket = globalData.soket
+			if(soket==null) {
+				soket = websoket.openSocket(user.id);
+			}
 			var fromUserMessagesList = uni.getStorageSync(options.toUserId); 
 			ths.setData({
-				socket: socket,
+				soket: soket,
 				messagesList: fromUserMessagesList,
 				fromUserId: user.id,
 				user: user
@@ -75,8 +83,11 @@
 						fromUserName: this.user.username,
 						fromUserId: this.fromUserId,
 						sendTime: date,
-						toUserId: this.toUserId
+						toUserId: this.toUserId,
+						toUsername: this.toUsername,
+						toAvatarImage: this.toAvatarImage
 					}
+					console.log(sendMessages);
 					var messages = [];
 					messages.push(sendMessages);
 					var list = this.messagesList;
@@ -89,7 +100,7 @@
 						messagesList: list,
 						danmuValue: ''
 					});
-					this.socket.send(JSON.stringify(sendMessages));
+					this.soket.send(JSON.stringify(sendMessages));
 					uni.setStorageSync(this.toUserId,list);
 					var messagess = uni.getStorageSync("messagesList_"+this.toUserId);
 					var newMessagesList = [];
@@ -166,21 +177,17 @@
 	.content-left {
 		display: block;
 		float: left;
-		padding-right: 100rpx;
 		width: 100%;
 		margin-top: 20px;
-		padding-right: 440rpx;
-		padding-left: 15rpx;
+		padding-left: 30rpx;
 	}
 
 	.content-right {
 		display: block;
-		float: left;
-		padding-left: 100rpx;
-		padding: 10rpx 20rpx;
+		float: right;
 		width: 100%;
 		margin-top: 20px;
-		padding-left: 440rpx;
+		padding-right: 30rpx;
 	}
 	.text-bs-left{
 			background-color: #fbbd08;
@@ -189,6 +196,8 @@
 			width: auto;
 			height: auto;
 			padding: 10rpx 20rpx;
+			float: left;
+			margin-top: 10rpx;
 	}
 	.text-bs-right{
 			background-color: #0081ff;
@@ -197,5 +206,35 @@
 			width: auto;
 			height: auto;
 			padding: 10rpx 20rpx;
+			float: right;
+			margin-top: 10rpx;
+	}
+	.fromAvatarImage-left {
+		float: left;
+	}
+	.fromAvatarImage-right {
+		float: right;
+	}   
+	.nickname_content_left {
+		float: left;
+		margin-left: 10rpx;
+		width: 70%;
+	}
+	.nickname_content_right {
+		float: right;
+		margin-right: 10rpx;
+		width: 70%;
+	}
+	.nickname_left {
+		float: left;
+	}
+	.nickname_right {
+		float: right;
+	}
+	.more-pic {
+	  max-width: 100rpx;
+	  max-height: 100rpx;
+	  border-radius: 25rpx;
+	  vertical-align: middle;
 	}
 </style>

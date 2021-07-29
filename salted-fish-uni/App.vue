@@ -3,7 +3,7 @@
 	var http = require("./utils/http.js");
 	var util = require('./utils/util.js')
 	var websoket = require('./utils/websoket.js')
-
+    var soket = null;
 	export default {
 		onLaunach: function() {},
 		onShow: function() {
@@ -25,8 +25,15 @@
 				}
 				http.getCartCount()
 			}
+			
+			if(typeof(soket) === "undefined"||soket==null||soket===''||soket=={}) {
+				var user = JSON.parse(uni.getStorageSync('token'));
+				soket = websoket.openSocket(user.id);
+			}
+		},
+		onLoad() {
 			var user = JSON.parse(uni.getStorageSync('token'));
-			websoket.openSocket(user.id);
+			soket = websoket.openSocket(user.id);
 		},
 		globalData: {
 			// 定义全局请求队列
@@ -34,7 +41,8 @@
 			// 是否正在进行登陆
 			isLanding: false,
 			// 购物车商品数量
-			totalCartCount: 0
+			totalCartCount: 0,
+			soket: soket
 		},
 		methods: {
 

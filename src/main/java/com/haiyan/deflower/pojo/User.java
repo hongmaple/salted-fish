@@ -17,7 +17,7 @@ import java.util.Date;
 public class User {
     @TableId(type = IdType.AUTO)
     private Long id;
-    @Length(min = 4, max = 30, message = "用户名只能在4~30位之间")
+    @Length(min = 2, max = 30, message = "用户名只能在4~30位之间")
     private String username;
 
     @Length(min = 12, max = 12, message = "学号只能是12位")

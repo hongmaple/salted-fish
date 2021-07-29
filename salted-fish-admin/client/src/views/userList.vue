@@ -61,7 +61,7 @@
         </el-table>
       </div>
       <cduanUserDialong :dialong="dialong" :form="form" :id="id" @UserData="loadCurrentPageUserList"></cduanUserDialong>
-      <liaotian :dialong="dialong2" :id="id"></liaotian>
+      <liaotian :dialong="dialong2" :toUser="toUser"></liaotian>
       <div class="page">
         <el-pagination
           @size-change="handleSizeChange"
@@ -106,13 +106,14 @@ export default {
         title: "",
         option: "edit"
       },
+      id: 0,
       form: {   //添加和删除需要传递的字段名
         password: "",
         phone: "",
         username: "",
         id: 0
       },
-      id: 0
+      toUser: {}
     };
   },
   methods: {
@@ -180,7 +181,13 @@ export default {
         show: true,
         option:"edit"
       }
-      this.id = row.id;
+      var toUser = {
+        toUserId: row.id,
+        toUserName: row.username,
+        toAvatarImage: row.avatarImage
+      }
+      console.log(toUser);
+      this.toUser = toUser;
     },
     onAddMoney() {
       //添加内容
