@@ -96,10 +96,6 @@
 					} else {
 						list = messages;
 					}
-					this.setData({
-						messagesList: list,
-						danmuValue: ''
-					});
 					this.soket.send(JSON.stringify(sendMessages));
 					uni.setStorageSync(this.toUserId,list);
 					var messagess = uni.getStorageSync("messagesList_"+this.toUserId);
@@ -111,20 +107,27 @@
 						contentText: this.danmuValue,
 						sendTime: date
 					}
+					this.setData({
+						messagesList: list,
+						danmuValue: ''
+					});
 					if(messagess) {
-						for (var i=0;i<messagess.length;i++) {
-							var fromUser = messagess[i];
-							if(fromUser.fromUserId!==this.toUserId) {
-								newMessagesList.push(fromMessages);
-							}else {
-								messagess[i] = fromMessages; 
-							}
-						}
-						Array.prototype.push.apply(messagess,newMessagesList);
+						messagess.push(fromMessages);
+						var newArr = [];
+						for(var i = 0; i < messagess.length; i++){
+						    for(var j = i+1; j < messagess.length; j++){
+						        if(messagess[i].fromUserId == messagess[j].fromUserId){
+						            ++i;
+						        }
+						    }
+						    newArr.push(messagess[i]);
+							messagess = newArr;
+						}    
 					}else {
-						newMessagesList.push(fromMessages);
+						messagess.push(fromMessages);
 						messagess = newMessagesList
 					}
+					messagess = Array.from(new Set(messagess));;
 					uni.setStorageSync("messagesList_"+this.toUserId,messagess);
 				}
 			}

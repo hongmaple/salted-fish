@@ -372,7 +372,8 @@ export default {
 	toCustomerServiceChat: function (e) {
 	      const toUserId = e.currentTarget.dataset.touserid;
 	  	  const toUsername = e.currentTarget.dataset.tousername;
-		  const toAvatarimage = e.currentTarget.dataset.fromavatarimage;
+		  const toAvatarimage = e.currentTarget.dataset.avatarImage;
+		  console.log(toAvatarimage);
 	        uni.navigateTo({
 	          url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&toUsername='+toUsername+"&toAvatarimage="+toAvatarimage
 	  });
