@@ -56,8 +56,6 @@ uni-app 是一个使用 Vue.js 开发所有前端应用的框架，开发者编�
 ##### uni-app相关截图
 ![首页](https://images.gitee.com/uploads/images/2021/0401/112346_5c335774_2099985.jpeg "屏幕截图 2021-04-01 100453.jpg")
 ![分类](https://images.gitee.com/uploads/images/2021/0401/112408_6eac4168_2099985.jpeg "屏幕截图 2021-04-01 100545.jpg")
-![花语解说](https://images.gitee.com/uploads/images/2021/0401/112430_70c4a95e_2099985.jpeg "屏幕截图 2021-04-01 100604.jpg")
-![视频教学播放](https://images.gitee.com/uploads/images/2021/0401/112505_b03d4ee5_2099985.jpeg "屏幕截图 2021-04-01 100649.jpg")
 ![购物车](https://images.gitee.com/uploads/images/2021/0401/112534_5c74d69f_2099985.jpeg "屏幕截图 2021-04-01 100710.jpg")
 ![客服聊天](https://images.gitee.com/uploads/images/2021/0401/112600_7ff93bc3_2099985.jpeg "屏幕截图 2021-04-01 101506.jpg")
 ##### 开发环境启动
