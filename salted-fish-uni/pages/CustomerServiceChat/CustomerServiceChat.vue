@@ -28,6 +28,7 @@
 <script>
 	var config = require('../../utils/config.js');
 	var websoket = require('../../utils/websoket.js')
+	var util = require('../../utils/util.js')
 	export default {
 		data() {
 			return {
@@ -56,17 +57,15 @@
 				soket: soket,
 				messagesList: fromUserMessagesList,
 				fromUserId: user.id,
-				user: user
+				user: user,
+				toUserId: options.toUserId==null? this.toUserId:options.toUserId,
+				toUsername: options.toUsername==null? this.toUsername:options.toUsername,
+				toAvatarimage: options.toAvatarimage==null? this.toAvatarimage:options.toAvatarimage
 			});
 			setInterval(function(){
 				var fromUserMessagesList = uni.getStorageSync(options.toUserId); 
 				ths.setData({
 					messagesList: fromUserMessagesList
-				});
-				ths.setData({
-					toUserId: options.toUserId==null? this.toUserId:options.toUserId,
-					toUsername: options.toUsername==null? this.toUsername:options.toUsername,
-					toAvatarimage: options.toAvatarimage==null? this.toAvatarimage:options.toAvatarimage
 				});
 			},100);
 		},
@@ -76,7 +75,7 @@
 					console.log("您的浏览器不支持WebSocket");
 				} else {
 					console.log("您的浏览器支持WebSocket");
-					var date = new Date();
+					var date = util.formatTime(new Date());
 					var sendMessages = {
 						contentText: this.danmuValue,
 						fromAvatarImage: this.user.avatarImage,
@@ -85,9 +84,15 @@
 						sendTime: date,
 						toUserId: this.toUserId,
 						toUsername: this.toUsername,
-						toAvatarImage: this.toAvatarImage
+						toAvatarImage: this.toAvatarimage
 					}
-					console.log(sendMessages);
+					var fromMessages = {
+						fromAvatarImage: this.toAvatarimage,
+						fromUserId: this.toUserId,
+						fromUserName: this.toUsername,
+						contentText: this.danmuValue,
+						sendTime: date
+					}
 					var messages = [];
 					messages.push(sendMessages);
 					var list = this.messagesList;
@@ -98,19 +103,12 @@
 					}
 					this.soket.send(JSON.stringify(sendMessages));
 					uni.setStorageSync(this.toUserId,list);
-					var messagess = uni.getStorageSync("messagesList_"+this.toUserId);
-					var newMessagesList = [];
-					var fromMessages = {
-						fromAvatarImage: this.toAvatarimage,
-						fromUserId: this.toUserId,
-						fromUserName: this.toUsername,
-						contentText: this.danmuValue,
-						sendTime: date
-					}
 					this.setData({
 						messagesList: list,
 						danmuValue: ''
 					});
+					var messagess = uni.getStorageSync("messagesList_"+this.fromUserId);
+					var newMessagesList = [];
 					if(messagess) {
 						messagess.push(fromMessages);
 						var newArr = [];
@@ -124,11 +122,11 @@
 							messagess = newArr;
 						}    
 					}else {
-						messagess.push(fromMessages);
+						newMessagesList.push(fromMessages);
 						messagess = newMessagesList
 					}
 					messagess = Array.from(new Set(messagess));;
-					uni.setStorageSync("messagesList_"+this.toUserId,messagess);
+					uni.setStorageSync("messagesList_"+this.fromUserId,messagess);
 				}
 			}
 		}

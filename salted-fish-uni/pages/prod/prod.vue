@@ -4,7 +4,7 @@
   <view class="input-box">
 	  <view class="section">
 	    <image style="width: 130rpx;height: 130rpx;" :src="user.avatarImage?serverUrl+user.avatarImage:'../../static/images/icon/head04.png'"></image>
-		<text>{{user.username}}</text>
+		<text style="margin-left: 10rpx;">{{user.username}}</text>
 	  </view>
   </view>
   <!-- 轮播图 -->
@@ -101,7 +101,7 @@
     </view>
 	<view class="btn icon">
 	      <image src="/static/images/tabbar/kefu.png"></image>
-	      <text class="apply-service" @tap="toCustomerServiceChat" :data-touserid='user.id' :data-tousername='user.username' :data-fromavatarimage='user.avatarImage'>私聊</text>
+	      <text class="apply-service" @tap="toCustomerServiceChat" :data-touserid='user.id' :data-tousername='user.username' :data-toavatarimage='user.avatarImage'>私聊</text>
 	</view>
     <view class="btn icon" @tap="toCartPage">
       <image src="/static/images/tabbar/basket.png"></image>
@@ -372,7 +372,7 @@ export default {
 	toCustomerServiceChat: function (e) {
 	      const toUserId = e.currentTarget.dataset.touserid;
 	  	  const toUsername = e.currentTarget.dataset.tousername;
-		  const toAvatarimage = e.currentTarget.dataset.avatarImage;
+		  const toAvatarimage = e.currentTarget.dataset.toavatarimage;
 		  console.log(toAvatarimage);
 	        uni.navigateTo({
 	          url: '/pages/CustomerServiceChat/CustomerServiceChat?toUserId='+toUserId+'&toUsername='+toUsername+"&toAvatarimage="+toAvatarimage
