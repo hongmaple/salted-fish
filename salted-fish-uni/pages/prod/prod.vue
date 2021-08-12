@@ -434,7 +434,6 @@ export default {
 		  var sellerType = 0;
 		  var sellerId=res.createId
 		  var toUserId = sellerId;
-		  console.log(res.backgroundAgentId);
 		  if(res.backgroundAgentId>0) {
 			  sellerType=1;
 			  sellerId=res.backgroundAgentId
