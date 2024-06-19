@@ -1,6 +1,6 @@
 # salted-fish
 * 阿里云服务器优惠：[点我进入](https://www.aliyun.com/daily-act/ecs/activity_selection?userCode=yclv4x57)，腾讯云产品优惠：[点我进入](https://curl.qcloud.com/ZHPbMWTl)&nbsp;&nbsp;
-* 阿里云618：[点我领取](https://www.aliyun.com/minisite/goods?userCode=yclv4x57)&nbsp;&nbsp;， 腾讯云618：[点我领取](https://curl.qcloud.com/6znbHFOM)&nbsp;&nbsp;
+* 腾讯云618：[点我领取](https://curl.qcloud.com/6znbHFOM)&nbsp;&nbsp;
 ## 介绍
 一、登陆界面
 需要注册功能、登录功能和学生、管理员身份选择功能
